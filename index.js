@@ -1,14 +1,14 @@
-const io = require('@actions/io');
+const fs = require('fs');
 
 try {
 
-    const awaitStyle = io.exists('style.css');
+    const awaitStyle = fs.existsSync('style.css');
 
     console.log(awaitStyle);
     
-    const awaitNonExists = io.exists('nomatch.css');
+    const awaitNonExists = fs.existsSync('nomatch.css');
 
-    console.log( awaitNonExists);
+    console.log( awaitNonExists );
 
 } catch (error) {
     console.log(error);
