@@ -17,6 +17,6 @@
 	],
 	"mappings": {
 		"config": "./config",
-		"theme": "./"
+		"theme-to-test": "./"
 	}
 }

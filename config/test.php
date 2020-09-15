@@ -6,7 +6,7 @@ class WPORG_Themes_Upload {
 	 * Get set up to run tests on the uploaded theme.
 	 */
 	public function __construct() {
-		$theme_files = $this->get_all_files( './' );
+		$theme_files = $this->get_all_files( './theme-to-test/' );
 
 		var_dump( $theme_files );
 	}
