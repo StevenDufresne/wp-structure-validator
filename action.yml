@@ -3,5 +3,5 @@ description: 'Fill this in'
 runs:
   using: "composite"
   steps: 
-    - run: ./index.sh
+    - run: ${{ github.action_path }}/goodbye.sh
       shell: bash
