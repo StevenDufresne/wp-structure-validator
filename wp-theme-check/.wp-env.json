@@ -14,5 +14,9 @@
 	"core": "WordPress/WordPress#5.5",
 	"plugins": [
 		"https://downloads.wordpress.org/plugins/theme-check.zip"
-	]
+	],
+	"mappings": {
+		"config": "./config",
+		"theme": "./"
+	}
 }
