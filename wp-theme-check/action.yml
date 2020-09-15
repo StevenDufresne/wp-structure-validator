@@ -9,6 +9,4 @@ outputs:
   time: # id of output
     description: 'The time we greeted you'
 runs:
-  steps: 
-    - run: $/index.sh
-      shell: bash
+  main: 'index.sh'
