@@ -6,5 +6,5 @@ runs:
   steps: 
     - run: echo Hello 
       shell: bash
-    - run: ${{ github.action_path }}/index.sh
+    - run: ./index.sh
       shell: bash
