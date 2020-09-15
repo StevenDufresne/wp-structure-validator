@@ -2,8 +2,11 @@ name: 'Test your theme'
 description: 'Fill this in'
 runs:
   using: "composite"
-  steps: 
-    - run: echo '{ "core": "WordPress/WordPress#5.5", "plugins": [ "https://downloads.wordpress.org/plugins/theme-check.zip" ], "mappings": { "config": "./config", "theme-to-test": "./" } }' > .wp-env.json
+  steps:
+    - name: Create config file
+      env:
+        CONFIG: ${{ toJson( { core: "WordPress/WordPress#5.5", plugins: [ "https://downloads.wordpress.org/plugins/theme-check.zip" ], mappings: { config: "./config", theme: "./" } } ) }}
+      run: echo $CONFIG  > .wp-env.json
     - run: ls
     - run: ${{ github.action_path }}/index.sh
       shell: bash
