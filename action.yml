@@ -1,4 +1,10 @@
 name: 'Test your theme'
 description: 'Fill this in'
+
 runs:
-  main: './index.sh'
+  using: "composite"
+  steps: 
+    - run: echo Hello 
+      shell: bash
+    - run: ${{ github.action_path }}/index.sh
+      shell: bash
