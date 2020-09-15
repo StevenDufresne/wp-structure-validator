@@ -1,12 +1,12 @@
 name: 'Hello World'
 description: 'Greet someone and record the time'
-inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
-    required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
-runs:
-  main: 'index.sh'
+runs-on: 
+
+
+jobs:
+  my-job:
+    name: Go For It
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check theme
+      run: './index.sh'
