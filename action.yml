@@ -5,7 +5,7 @@ runs:
   steps:
     - name: Create config file
       env:
-        CONFIG: ${{ toJson( { core: "WordPress/WordPress#5.5", plugins: [ "https://downloads.wordpress.org/plugins/theme-check.zip" ], mappings: { config: "./config", theme: "./" } } ) }}
+        CONFIG: '{ "core": "WordPress/WordPress#5.5", "plugins": [ "https://downloads.wordpress.org/plugins/theme-check.zip" ], "mappings": { "config": "./config", "theme": "./" } } ) }}'
       run: echo $CONFIG  > .wp-env.json
     - run: ls
     - run: ${{ github.action_path }}/index.sh
