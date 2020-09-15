@@ -1,4 +1,7 @@
 name: 'Test your theme'
 description: 'Fill this in'
 runs:
-  main: './index.sh'
+  using: "composite"
+  steps: 
+    - run: ./index.sh
+      shell: bash
