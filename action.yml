@@ -7,6 +7,8 @@ runs:
       env:
         CONFIG: '{ "core": "WordPress/WordPress#5.5", "plugins": [ "https://downloads.wordpress.org/plugins/theme-check.zip" ], "mappings": { "config": "./config", "theme": "./" } } ) }}'
       run: echo $CONFIG  > .wp-env.json
+      shell: bash
     - run: ls
+      shell: bash
     - run: ${{ github.action_path }}/index.sh
       shell: bash
