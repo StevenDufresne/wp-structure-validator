@@ -31,7 +31,6 @@ class WPORG_Themes_Test {
 		return array( $php_files, $css_files, $other_files );
 	}
 
-
 	/**
 	 * Sends a theme through Theme Check.
 	 *
@@ -62,10 +61,13 @@ class WPORG_Themes_Test {
 		if( ! $passes ) {
 			echo "::set-output name=results::" . display_themechecks();
 			echo "::error::" . display_themechecks();
+			exit(0);
 		}
+
+		exit(1);
 	}
 
-		/**
+	/**
 	 * Returns all (usable) files of a given directory.
 	 *
 	 * @param string $dir Path to directory to search.
@@ -85,7 +87,6 @@ class WPORG_Themes_Test {
 
 		return $files;
 	}
-
 }
 
 // run the test
