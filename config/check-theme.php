@@ -59,10 +59,9 @@ class WPORG_Themes_Test {
 		$theme_files = $this->get_all_files( './test-theme/' );
 		$passes = $this->check_theme( $theme_files );
 
-
 		if( ! $passes ) {
-			echo "::set-output name=" . display_themechecks();
-			exit( 1 );
+			echo "::set-output result=" . display_themechecks();
+			exit( display_themechecks() );
 		}
 	}
 

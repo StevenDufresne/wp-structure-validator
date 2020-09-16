@@ -3,7 +3,9 @@ description: 'Fill this in'
 runs:
   using: "composite"
   steps: 
-    - run: cp -r ./ ${{ github.action_path }}/test-theme
+    - name: Copy host folder to action
+      run: cp -r ./ ${{ github.action_path }}/test-theme
       shell: bash
-    - run: cd ${{ github.action_path }} && npm install && npm run wp-env start && npm run wp-env run cli eval-file ./config/check-theme.php
+    - name: Install & run test
+      run: cd ${{ github.action_path }} && npm install && npm run wp-env start && npm run wp-env run cli eval-file ./config/check-theme.php
       shell: bash
