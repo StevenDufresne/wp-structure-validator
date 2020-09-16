@@ -16,7 +16,6 @@
 		"https://downloads.wordpress.org/plugins/theme-check.zip"
 	],
 	"mappings": {
-		"config": "./config",
-		"theme-to-test": "./"
+		"config": "./config"
 	}
 }
