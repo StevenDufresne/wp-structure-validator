@@ -1,5 +1,7 @@
 name: 'Test your theme'
 description: 'Fill this in'
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: "composite"
+  steps: 
+    - run: npm run wp-env start
+      shell: bash
