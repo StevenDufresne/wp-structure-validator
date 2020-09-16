@@ -3,7 +3,5 @@ description: 'Fill this in'
 runs:
   using: "composite"
   steps: 
-    - run: cd ${{ github.action_path }} && npm install
-      shell: bash
-    - run: cd ${{ github.action_path }} && npm run wp-env start
+    - run: cd ${{ github.action_path }} && npm install && npm run wp-env start && npm run wp-env run cli eval-file ./config/check-theme.php
       shell: bash
