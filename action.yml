@@ -1,7 +1,5 @@
 name: 'Test your theme'
 description: 'Fill this in'
 runs:
-  using: 'composite'
-  steps: 
-    - run: 'node dist/index.js'
-      shell: bash 
+  using: 'node12'
+  main: 'dist/index.js'
