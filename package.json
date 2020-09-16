@@ -17,6 +17,7 @@
   "author": "The WordPress Contributors",
   "license": "GPL-2.0-or-later",
   "dependencies": {
+    "@actions/exec": "^1.0.4",
     "@wordpress/e2e-test-utils": "^4.11.2",
     "@wordpress/env": "1.6.0",
     "@wordpress/jest-console": "^3.7.0",
