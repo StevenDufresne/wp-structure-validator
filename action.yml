@@ -3,5 +3,6 @@ description: 'Fill this in'
 runs:
   using: "composite"
   steps: 
+    - run: cd ${{ github.action_path }} && npm install
     - run: cd ${{ github.action_path }} && npm run wp-env start
       shell: bash
