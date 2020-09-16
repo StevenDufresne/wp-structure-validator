@@ -11,7 +11,8 @@
     "test:unit": "wp-env run phpunit 'phpunit -c ./html/config/phpunit.xml.dist --verbose'",
     "dev:lint": "wp-scripts lint-js specs/*",
     "dev:format": "wp-scripts format-js specs/*",
-    "wp-env": "wp-env"
+    "wp-env": "wp-env",
+    "build:package": "ncc build index.js --license licenses.txt"
   },
   "author": "The WordPress Contributors",
   "license": "GPL-2.0-or-later",

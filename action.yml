@@ -1,15 +1,5 @@
 name: 'Test your theme'
 description: 'Fill this in'
 runs:
-  using: "composite"
-  steps:
-    - name: Create config file
-      env:
-        CONFIG: '{ "core": "WordPress/WordPress#5.5", "plugins": [ "https://downloads.wordpress.org/plugins/theme-check.zip" ], "mappings": { "config": "./config"  } } ) }}'
-      run: echo $CONFIG  > .wp-env.json
-      shell: bash
-    - run: ls
-      shell: bash
-    - name: Run setup file
-      run: ${{ github.action_path }}/index.sh
-      shell: bash
+  using: 'node12'
+  main: 'dist/index.js'
