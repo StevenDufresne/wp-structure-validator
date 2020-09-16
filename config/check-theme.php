@@ -59,7 +59,7 @@ class WPORG_Themes_Test {
 		$passes = $this->check_theme( $theme_files );
 		var_dump( $passes );
 
-
+		exit(  $passes ) );
 		if( ! $passes ) {
 			//echo "::set-output name=results::" . display_themechecks();
 			//echo "::error::" . display_themechecks();
