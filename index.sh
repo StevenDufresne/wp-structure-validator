@@ -1,5 +1,6 @@
 
 ##zip theme.zip -r ./ -x '.*'
+ls
 
 # # Turn it on
 npm run wp-env start
