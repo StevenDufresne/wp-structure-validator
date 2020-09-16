@@ -8,7 +8,8 @@ module.exports =
 const exec = __webpack_require__(49);
 
 const start = async () => {
-	await exec.exec('ls');
+    const resp = await exec.exec('npm run wp-env start');
+    console.log( resp );
 };
 
 start();
