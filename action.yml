@@ -4,5 +4,6 @@ runs:
   using: "composite"
   steps: 
     - run: cd ${{ github.action_path }} && npm install
+      shell: bash
     - run: cd ${{ github.action_path }} && npm run wp-env start
       shell: bash
