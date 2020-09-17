@@ -52,47 +52,49 @@ class WPORG_Themes_Test {
 		return $result;
 	}
 
-
-
-	public function clean_errors( $error_array ) {
-		$cleaned = implode( '%0A', $error_array);
-		$cleaned = str_replace([ '<span class="tc-lead tc-required">', '</span>', "<span class='tc-lead tc-required'>", '<span class="tc-lead tc-recommended">', "<span class='tc-lead tc-recommended'>"], '', $cleaned);
+	public function clean_error( $error_string ) {
+		$cleaned = str_replace([ '<span class="tc-lead tc-required">', '</span>', "<span class='tc-lead tc-required'>", '<span class="tc-lead tc-recommended">', "<span class='tc-lead tc-recommended'>"], '', $error_string);
 		$cleaned = str_replace([ '<strong>', '</strong>'], '`', $cleaned);
-		// $cleaned = preg_replace( '!<a href="([^"]+)".+</a>!i', '$1', $cleaned);
-		// $cleaned = str_replace( '. See', ".%0ASee", $cleaned );
+		$cleaned = preg_replace( '!<a href="([^"]+)".+</a>!i', '$1', $cleaned);
 		$cleaned = html_entity_decode( strip_tags( $cleaned ) );
 		return $cleaned;
 	}
 
-	/**
-	 * Add line breaks to the output
-	 */
+	public function clean_errors( $errors ) {
+		$cleaned_errors = [];
+
+		foreach ($errors as $error) {
+			array_push($cleaned_errors, $this->clean_error( $error ) );
+		}
+
+		return $cleaned_errors;
+	}
+
+	public function print_message($type, $errors) {
+		var_dump(  $errors );
+		echo "::" . $type . "::";
+		foreach ($errors as $key=>$val) {
+			echo  "[ " . $key . " ] %0A" . implode( '%0A', $val );;
+			echo '%0A';
+			echo '%0A';
+		}
+	}
+
 	public function log_errors() {
+		global $themechecks; // global that exists in the theme-check plugin
 
 		$error_array = array();
-		global $themechecks;
-
 		foreach ($themechecks as $check) {
 			if ($check instanceof themecheck) {
 				$error = $check->getError();
 				$error_type = get_class( $check );
 
 				if ( count($error) > 0) {
-					if( ! array_key_exists( $error_type, $error_array)  ) {
-						$error_array[ $error_type ] =  $error;
-					} else {
-						array_push( $error_array[ $error_type ], $error );
-					}	
+					$error_array[ $error_type ] = $this->clean_errors($error);
 				}
 			}
 		}
-		
-		echo "::error::";
-		foreach ($error_array as $key=>$val) {
-			echo  "[ " . $key . " ] %0A" . $this->clean_errors( $val );
-			echo '%0A';
-			echo '%0A';
-		}
+		$this->print_message( "error", $error_array);
 	}
 
 	/**
