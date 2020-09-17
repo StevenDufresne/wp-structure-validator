@@ -1,5 +1,8 @@
 name: 'Test your theme'
 description: 'Fill this in'
+branding:
+  icon: 'clipboard'  
+  color: 'blue'
 runs:
   using: "composite"
   steps: 
@@ -9,3 +12,4 @@ runs:
     - name: Install & run test
       run: cd ${{ github.action_path }} && npm install && npm run wp-env start && npm run wp-env run cli eval-file ./config/check-theme.php
       shell: bash
+      

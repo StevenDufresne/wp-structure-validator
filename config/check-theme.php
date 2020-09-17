@@ -61,7 +61,7 @@ class WPORG_Themes_Test {
 
 		if( ! $passes ) {
 			echo "::set-output name=results::" . display_themechecks();
-			echo "::error::Failed check";
+			echo display_themechecks();
 			exit(1);
 		}
 		
