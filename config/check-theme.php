@@ -71,7 +71,6 @@ class WPORG_Themes_Test {
 	}
 
 	public function print_message($type, $errors) {
-		var_dump(  $errors );
 		echo "::" . $type . "::";
 		foreach ($errors as $key=>$val) {
 			echo  "[ " . $key . " ] %0A" . implode( '%0A', $val );;
