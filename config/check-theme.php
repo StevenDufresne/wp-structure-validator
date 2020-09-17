@@ -52,14 +52,36 @@ class WPORG_Themes_Test {
 		return $result;
 	}
 
+
+
+
 	/**
 	 * Add line breaks to the output
 	 */
 	public function log_errors() {
-		$split_output = preg_split( '/<\/li>/', display_themechecks() );
 
-		foreach($split_output as $item ) {
-			echo "::error::" . $item . PHP_EOL;
+		$error_array = array();
+		global $themechecks;
+
+		foreach ($themechecks as $check) {
+			if ($check instanceof themecheck) {
+				$error = $check->getError();
+				$error_type = get_class( $check );
+
+				if ( count($error) > 0) {
+					if( ! array_key_exists( $error_type, $error_array)  ) {
+						$error_array[ $error_type ] =  $error;
+					} else {
+						array_push( $error_array[ $error_type ], $error );
+					}	
+				}
+
+			}
+		}
+
+		foreach ($error_array as $key=>$val) {
+			echo "::error::" . "[" . $key . "] " . implode( '%0A', $val).  PHP_EOL;
+			echo '' . PHP_EOL;
 		}
 	}
 
@@ -69,7 +91,7 @@ class WPORG_Themes_Test {
 	public function __construct() {
 		$theme_files = $this->get_all_files( './test-theme/' );
 		$passes = $this->check_theme( $theme_files );
-
+	
 		if( ! $passes ) {
 			$this->log_errors();
 		}
