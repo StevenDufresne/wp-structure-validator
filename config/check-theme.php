@@ -75,8 +75,6 @@ class WPORG_Themes_Test {
 				$error = $check->getError();
 				$error_type = get_class( $check );
 
-				var_dump( $error );
-
 				if ( count($error) > 0) {
 					if( ! array_key_exists( $error_type, $error_array)  ) {
 						$error_array[ $error_type ] =  $error;
@@ -88,7 +86,7 @@ class WPORG_Themes_Test {
 		}
 
 		foreach ($error_array as $key=>$val) {
-			echo "::error::" . "[" . $key . "] " . $this->clean_errors( $val ) .  PHP_EOL;
+			echo "::error::" . " [ " . $key . " ] %0A" . $this->clean_errors( $val ) .  PHP_EOL;
 			echo '' . PHP_EOL;
 		}
 	}
