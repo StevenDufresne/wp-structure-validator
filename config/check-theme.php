@@ -59,9 +59,9 @@ class WPORG_Themes_Test {
 
 		$passes = $this->check_theme( $theme_files );
 		if( ! $passes ) {
-			exit(0);
-		} else {
 			exit(1);
+		} else {
+			exit(0);
 		}
 	}
 
