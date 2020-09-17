@@ -42,6 +42,7 @@ class WPORG_Themes_Test {
 		if ( ! function_exists( 'run_themechecks' ) ) {
 			include_once WP_PLUGIN_DIR . '/downloads.wordpress.org%2Fplugins%2Ftheme-check/checkbase.php';
 		}
+		
 
 		list( $php_files, $css_files, $other_files ) = $this->separate_files( $files );
 
@@ -56,10 +57,14 @@ class WPORG_Themes_Test {
 	 */
 	public function __construct() {
 		$theme_files = $this->get_all_files( './test-theme/' );
+
+		var_dump($theme_files);
 		$passes = $this->check_theme( $theme_files );
 		var_dump( $passes );
 
 		if( ! $passes ) {
+			var_dump( 'in the failure' );
+
 			echo "::set-output name=results::" . display_themechecks();
 			echo "::error::Failed check";
 			exit("Failed check");
