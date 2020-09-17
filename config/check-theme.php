@@ -86,7 +86,7 @@ class WPORG_Themes_Test {
 		}
 
 		foreach ($error_array as $key=>$val) {
-			echo "::error::" . " [ " . $key . " ] %0A" . $this->clean_errors( $val ) .  PHP_EOL;
+			echo "::error::" . "[ " . $key . " ] %0A" . $this->clean_errors( $val ) .  PHP_EOL;
 			echo '' . PHP_EOL;
 		}
 	}
