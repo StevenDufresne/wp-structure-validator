@@ -65,10 +65,8 @@ class WPORG_Themes_Test {
 		if( ! $passes ) {
 			var_dump( 'in the failure' );
 
-			echo "::set-output name=results::" . display_themechecks();
-			echo "::error::Failed check";
-			var_dump( 'after echoing' );
 			exit(0);
+			
 		} else {
 			exit(1);
 		}
