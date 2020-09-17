@@ -58,7 +58,9 @@ class WPORG_Themes_Test {
 		$cleaned = implode( '%0A', $error_array);
 		$cleaned = str_replace([ '<span class="tc-lead tc-required">', '</span>', "<span class='tc-lead tc-required'>", '<span class="tc-lead tc-recommended">', "<span class='tc-lead tc-recommended'>"], '', $cleaned);
 		$cleaned = str_replace([ '<strong>', '</strong>'], '`', $cleaned);
-
+		// $cleaned = preg_replace( '!<a href="([^"]+)".+</a>!i', '$1', $cleaned);
+		// $cleaned = str_replace( '. See', ".%0ASee", $cleaned );
+		$cleaned = html_entity_decode( strip_tags( $cleaned ) );
 		return $cleaned;
 	}
 
@@ -84,9 +86,10 @@ class WPORG_Themes_Test {
 				}
 			}
 		}
-
+		
+		echo "::error::";
 		foreach ($error_array as $key=>$val) {
-			echo "::error::" . "[ " . $key . " ] %0A" . $this->clean_errors( $val ) .  PHP_EOL;
+			echo  "[ " . $key . " ] %0A" . $this->clean_errors( $val ) .  PHP_EOL;
 			echo '' . PHP_EOL;
 		}
 	}
