@@ -51,79 +51,117 @@ class WPORG_Themes_Test {
 		return $result;
 	}
 
-	public function clean_error( $error_string ) {
-		$cleaned = str_replace([ '<span class="tc-lead tc-required">', '</span>', "<span class='tc-lead tc-required'>", '<span class="tc-lead tc-recommended">', "<span class='tc-lead tc-recommended'>"], '', $error_string);
+	/**
+	 * Formats the error and removes html
+	 * @param string $message The message
+	 * @return string Message after string replacements 
+	 */
+	public function clean_message( $message ) {
+		$cleaned = str_replace([ '<span class="tc-lead tc-required">', '</span>', "<span class='tc-lead tc-required'>", '<span class="tc-lead tc-recommended">', "<span class='tc-lead tc-recommended'>"], '', $message);
 		$cleaned = str_replace([ '<strong>', '</strong>'], '`', $cleaned);
 		$cleaned = preg_replace( '!<a href="([^"]+)".+</a>!i', '$1', $cleaned);
 		$cleaned = html_entity_decode( strip_tags( $cleaned ) );
 		return $cleaned;
 	}
 
-	public function clean_errors( $errors ) {
-		$cleaned_errors = [];
+	/**
+	 * Loops through all the errors and passes them to cleaning function
+	 * @param array $messages List of messages
+	 * @return array Same messages, cleaned
+	 */
+	public function clean_messages( $messages ) {
+		$cleaned_messages = [];
 
-		foreach ($errors as $error) {
-			array_push($cleaned_errors, $this->clean_error( $error ) );
+		foreach ($messages as $message) {
+			array_push($cleaned_messages, $this->clean_message( $message ) );
 		}
 
-		return $cleaned_errors;
+		return $cleaned_messages;
 	}
 
-	public function print_message($type, $errors) {
+	/**
+	 * Print GitHub actions formatted messages to the console.
+	 * @param string $type The message type. Ie "error/warning"
+	 * @param array $messages The list of messages
+	 */
+	public function print_message($type, $messages) {
 		echo "::" . $type . "::";
-		foreach ($errors as $key=>$val) {
+		foreach ($messages as $key=>$val) {
 			echo  "[ " . $key . " ] %0A" . implode( '%0A', $val );;
 			echo '%0A';
 			echo '%0A';
 		}
 	}
 
+	/**
+	 * Determines if the start string matches
+	 */
 	function startsWith($haystack, $needle) {
 		return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
 	}
 
-	function add_to_array( &$arr, $key, $item ) {
+	/**
+	 * If the array doesn't exist, create the array and add the item to it 
+	 * @param array $arr Associate array to add to.
+	 * @param string $key Key 
+	 * @return string $item_to_add Item added to the array.
+	 */
+	function add_to_array( &$arr, $key, $item_to_add ) {
 		if(!array_key_exists( $key, $arr )) {
 			$arr[ $key ] = [];
 		}
 
-		array_push($arr[ $key ], $item );
+		array_push($arr[ $key ], $item_to_add );
 	}
 
+	/**
+	 * This function looks at the global themechecks array for errors, formats and prints them 
+	 */
 	public function log_errors() {
 		global $themechecks; // global that exists in the theme-check plugin
 
-		$error_array = array();
-		$warning_array = array();
+		$error_list = array();
+		$warning_list = array();
+
 		foreach ($themechecks as $check) {
 			if ($check instanceof themecheck) {
 				$error = $check->getError();
 				$test_id = get_class( $check );
 
 				if ( count($error) > 0) {
-					$cleaned = $this->clean_errors( $error );
-					foreach ($cleaned as $cleaned_error ) {
+					$messages = $this->clean_messages( $error );
 
-						if($this->startsWith( $cleaned_error , 'REQUIRED:')) {
-							$this->add_to_array( $error_array, $test_id, $cleaned_error );
+					foreach ($messages as $clean_message ) {
+						
+						// All strings that contain REQUIRED are considered errors
+						if($this->startsWith( $clean_message , 'REQUIRED:')) {
+							$this->add_to_array( $error_list, $test_id, $clean_message );
 
-						} else if( $this->startsWith( $cleaned_error , 'RECOMMENDED:') || $this->startsWith( $cleaned_error , 'INFO:')   ) {
-							$this->add_to_array( $warning_array, $test_id, $cleaned_error );
+						// All string that contain RECOMMENDED or INFO are considered warnings
+						} else if( $this->startsWith( $clean_message , 'RECOMMENDED:') || $this->startsWith( $clean_message , 'INFO:')   ) {
+							$this->add_to_array( $warning_list, $test_id, $clean_message );
 						}
 					}
 				}
 			}
 		}
-		$this->print_message( "error", $error_array);
+		$this->print_message( "error", $error_list);
 		echo PHP_EOL;
 		echo PHP_EOL;
-		$this->print_message( "warning", $warning_array);
+		$this->print_message( "warning", $warning_list);
 	}
 
 	/**
 	 * Get set up to run tests on the uploaded theme.
 	 */
 	public function __construct() {
+		
+	}
+
+	/**
+	 * Run prepare theme and run theme-check
+	 */
+	public function run_check() {
 		$theme_files = $this->get_all_files( './test-theme/' );
 		$passes = $this->check_theme( $theme_files );
 	
@@ -156,5 +194,7 @@ class WPORG_Themes_Test {
 
 // run the test
 $w = new WPORG_Themes_Test();
+
+$w->run_check();
 
 ?>
