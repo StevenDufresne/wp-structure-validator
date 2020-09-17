@@ -11,6 +11,7 @@ runs:
   using: 'composite'
   steps: 
     - run: echo ${{ inputs.root-folder }}
+      shell: bash
     - name: Copy host folder to action
       run: rsync -av --exclude=.git* ${{ inputs.root-folder }} ${{ github.action_path }}/test-theme
       shell: bash
