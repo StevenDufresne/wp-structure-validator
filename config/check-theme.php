@@ -43,7 +43,6 @@ class WPORG_Themes_Test {
 			include_once WP_PLUGIN_DIR . '/downloads.wordpress.org%2Fplugins%2Ftheme-check/checkbase.php';
 		}
 		
-
 		list( $php_files, $css_files, $other_files ) = $this->separate_files( $files );
 
 		// Run the checks.
@@ -79,21 +78,46 @@ class WPORG_Themes_Test {
 		}
 	}
 
+	function startsWith($haystack, $needle) {
+		return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
+	}
+
+	function add_to_array( &$arr, $key, $item ) {
+		if(!array_key_exists( $key, $arr )) {
+			$arr[ $key ] = [];
+		}
+
+		array_push($arr[ $key ], $item );
+	}
+
 	public function log_errors() {
 		global $themechecks; // global that exists in the theme-check plugin
 
 		$error_array = array();
+		$warning_array = array();
 		foreach ($themechecks as $check) {
 			if ($check instanceof themecheck) {
 				$error = $check->getError();
-				$error_type = get_class( $check );
+				$test_id = get_class( $check );
 
 				if ( count($error) > 0) {
-					$error_array[ $error_type ] = $this->clean_errors($error);
+					$cleaned = $this->clean_errors( $error );
+					foreach ($cleaned as $cleaned_error ) {
+
+						if($this->startsWith( $cleaned_error , 'REQUIRED:')) {
+							$this->add_to_array( $error_array, $test_id, $cleaned_error );
+
+						} else if( $this->startsWith( $cleaned_error , 'RECOMMENDED:') || $this->startsWith( $cleaned_error , 'INFO:')   ) {
+							$this->add_to_array( $warning_array, $test_id, $cleaned_error );
+						}
+					}
 				}
 			}
 		}
 		$this->print_message( "error", $error_array);
+		echo PHP_EOL;
+		echo PHP_EOL;
+		$this->print_message( "warning", $warning_array);
 	}
 
 	/**
