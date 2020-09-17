@@ -55,10 +55,12 @@ class WPORG_Themes_Test {
 	/**
 	 * Add line breaks to the output
 	 */
-	public function get_clean_output() {
+	public function log_errors() {
 		$split_output = preg_split( '/<\/li>/', display_themechecks() );
 
-		return implode( '\n', $split_output );
+		foreach($split_output as $item ) {
+			echo "::error::" . $item;
+		}
 	}
 
 	/**
@@ -69,9 +71,7 @@ class WPORG_Themes_Test {
 		$passes = $this->check_theme( $theme_files );
 
 		if( ! $passes ) {
-			echo "::error::" . $this->get_clean_output() ;
-
-			//echo "::set-output name=results::" . display_themechecks();
+			$this->log_errors();
 		}
 	}
 
