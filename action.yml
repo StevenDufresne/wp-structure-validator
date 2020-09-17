@@ -1,5 +1,6 @@
 name: 'WordPress Theme Check Action'
 description: 'Runs the Theme Check plugin against your theme'
+author: 'WordPress Meta Team'
 inputs:
   root-folder:
     description: 'The location of your theme'
@@ -10,9 +11,7 @@ branding:
 runs:
   using: 'composite'
   steps: 
-    - run: echo ${{ inputs.root-folder }}
-      shell: bash
-    - name: Copy host folder to action
+    - name: Copy host folder
       run: rsync -av --exclude=.git* ${{ inputs.root-folder }} ${{ github.action_path }}/test-theme
       shell: bash
     - name: Install & run test
