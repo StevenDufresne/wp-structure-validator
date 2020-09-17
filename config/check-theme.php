@@ -54,6 +54,13 @@ class WPORG_Themes_Test {
 
 
 
+	public function clean_errors( $error_array ) {
+		$cleaned = implode( '%0A', $error_array);
+		$cleaned = str_replace([ '<span class="tc-lead tc-required">', '</span>', "<span class='tc-lead tc-required'>", '<span class="tc-lead tc-recommended">', "<span class='tc-lead tc-recommended'>"], '', $cleaned);
+		$cleaned = str_replace([ '<strong>', '</strong>'], '`', $cleaned);
+
+		return $cleaned;
+	}
 
 	/**
 	 * Add line breaks to the output
@@ -68,6 +75,8 @@ class WPORG_Themes_Test {
 				$error = $check->getError();
 				$error_type = get_class( $check );
 
+				var_dump( $error );
+
 				if ( count($error) > 0) {
 					if( ! array_key_exists( $error_type, $error_array)  ) {
 						$error_array[ $error_type ] =  $error;
@@ -75,12 +84,11 @@ class WPORG_Themes_Test {
 						array_push( $error_array[ $error_type ], $error );
 					}	
 				}
-
 			}
 		}
 
 		foreach ($error_array as $key=>$val) {
-			echo "::error::" . "[" . $key . "] " . implode( '%0A', $val).  PHP_EOL;
+			echo "::error::" . "[" . $key . "] " . $this->clean_errors( $val ) .  PHP_EOL;
 			echo '' . PHP_EOL;
 		}
 	}
