@@ -59,7 +59,7 @@ class WPORG_Themes_Test {
 		$split_output = preg_split( '/<\/li>/', display_themechecks() );
 
 		foreach($split_output as $item ) {
-			echo "::error::" . $item;
+			echo "::error::" . $item . PHP_EOL;
 		}
 	}
 
