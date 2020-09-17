@@ -1,13 +1,18 @@
-name: 'Test your theme'
-description: 'Fill this in'
+name: 'WordPress Theme Check Action'
+description: 'Runs the Theme Check plugin against your theme'
+inputs:
+  root-folder:
+    description: 'The location of your theme'
+    default: ./
 branding:
   icon: 'clipboard'  
   color: 'blue'
 runs:
-  using: "composite"
+  using: 'composite'
   steps: 
+    - run: echo ${{ inputs.root-folder }}
     - name: Copy host folder to action
-      run: rsync -av --exclude=.git* ./ ${{ github.action_path }}/test-theme
+      run: rsync -av --exclude=.git* ${{ inputs.root-folder }} ${{ github.action_path }}/test-theme
       shell: bash
     - name: Install & run test
       run: cd ${{ github.action_path }} && npm install && npm run wp-env start && npm run wp-env run cli eval-file ./config/check-theme.php
