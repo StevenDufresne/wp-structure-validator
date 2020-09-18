@@ -91,7 +91,7 @@ class WPORG_Themes_Test {
 		echo '::' . esc_attr( $type ) . '::';
 		foreach ( $messages as $key => $val ) {
 			$implode = implode( '%0A', $val );
-			echo '[ ' . esc_attr( $key ) . ' ] %0A' . esc_attr( $implode );
+			echo '[ ' . esc_attr( $key ) . ' ] %0A' . $implode;
 			echo '%0A';
 			echo '%0A';
 		}
