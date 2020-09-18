@@ -88,9 +88,10 @@ class WPORG_Themes_Test {
 	 * @param array  $messages The list of messages.
 	 */
 	public function print_message( $type, $messages ) {
-		echo '::' . esc_attr_e( $type ) . '::';
+		echo '::' . esc_attr( $type ) . '::';
 		foreach ( $messages as $key => $val ) {
-			echo '[ ' . esc_attr_e( $key ) . ' ] %0A' . implode( '%0A', esc_attr_e( $val ) );
+			$implode = implode( '%0A', $val );
+			echo '[ ' . esc_attr( $key ) . ' ] %0A' . esc_attr( $implode );
 			echo '%0A';
 			echo '%0A';
 		}
