@@ -12,4 +12,5 @@ This action runs the ![Theme Check](https://wordpress.org/plugins/theme-check/) 
 
 1. Run `npm install` to install dependencies
 2. Run `npm run wp-env start` to start WordPress
-3. Run `npm run build:package` to create minified production build
+
+If you want to test a theme locally, add the theme to the `/test-theme` folder and run `npm run wp-env run cli eval-file ./config/check-theme.php`
