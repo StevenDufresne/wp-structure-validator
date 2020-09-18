@@ -4,12 +4,14 @@
   "description": "Run Theme Check test for a WordPress theme",
   "main": "index.js",
   "scripts": {
-    "wp-env": "wp-env",
-    "build:package": "ncc build index.js --license licenses.txt"
+    "wp-env": "wp-env"
   },
   "author": "The WordPress Contributors",
   "license": "GPL-2.0-or-later",
   "dependencies": {
     "@wordpress/env": "^2.0.0"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.22.3"
   }
 }
