@@ -89,11 +89,14 @@ class WPORG_Themes_Test {
 	 */
 	public function print_message( $type, $messages ) {
 		echo '::' . esc_attr( $type ) . '::';
+
+		$eol = ( !empty( $_ENV['CI'] ) ? '%0A' : PHP_EOL );
+
 		foreach ( $messages as $key => $val ) {
-			$implode = implode( '%0A', $val );
-			echo '[ ' . esc_attr( $key ) . ' ] %0A' . $implode;
-			echo '%0A';
-			echo '%0A';
+			$implode = implode( $eol, $val );
+			echo '[ ' . esc_attr( $key ) . ' ] '. $eol . $implode;
+			echo $eol;
+			echo $eol;
 		}
 	}
 
