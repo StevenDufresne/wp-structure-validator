@@ -4,7 +4,8 @@
   "description": "Run Theme Check test for a WordPress theme",
   "main": "index.js",
   "scripts": {
-    "wp-env": "wp-env"
+    "wp-env": "wp-env",
+    "theme-check": "npm run wp-env run cli eval-file ./config/check-theme.php"
   },
   "author": "The WordPress Contributors",
   "license": "GPL-2.0-or-later",
