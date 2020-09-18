@@ -14,7 +14,10 @@ runs:
     - name: Copy host folder
       run: rsync -av --exclude=.git* ${{ inputs.root-folder }} ${{ github.action_path }}/test-theme
       shell: bash
-    - name: Install & Run test
-      run: cd ${{ github.action_path }} && npm install && npm run wp-env start && npm run wp-env run cli eval-file ./config/check-theme.php
+    - name: Install
+      run: cd ${{ github.action_path }} && npm install && npm run wp-env start
+      shell: bash
+    - name: Run Theme Check
+      run: npm run wp-env run cli eval-file ./config/check-theme.php
       shell: bash
       
