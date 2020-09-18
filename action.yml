@@ -1,6 +1,6 @@
 name: 'WordPress Theme Check Action'
 description: 'Runs the Theme Check plugin against your theme'
-author: 'WordPress Meta Team'
+author: 'The WordPress Contributors'
 inputs:
   root-folder:
     description: 'The location of your theme'
@@ -14,7 +14,7 @@ runs:
     - name: Copy host folder
       run: rsync -av --exclude=.git* ${{ inputs.root-folder }} ${{ github.action_path }}/test-theme
       shell: bash
-    - name: Install & run test
+    - name: Install & Run test
       run: cd ${{ github.action_path }} && npm install && npm run wp-env start && npm run wp-env run cli eval-file ./config/check-theme.php
       shell: bash
       
