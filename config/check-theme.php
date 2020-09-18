@@ -155,6 +155,10 @@ class WPORG_Themes_Test {
 		echo PHP_EOL;
 		echo PHP_EOL;
 		$this->print_message( 'warning', $warning_list );
+
+		if ( count( $error_list ) > 0 ) {
+			exit( 1 );
+		}
 	}
 
 	/**
