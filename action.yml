@@ -18,6 +18,6 @@ runs:
       run: cd ${{ github.action_path }} && npm install && npm run wp-env start
       shell: bash
     - name: Run Theme Check
-      run: npm run wp-env run cli eval-file ./config/check-theme.php
+      run: cd ${{ github.action_path }} && npm run wp-env run cli eval-file ./config/check-theme.php
       shell: bash
       
