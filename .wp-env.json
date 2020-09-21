@@ -1,6 +1,8 @@
-{
+{	"config": {
+		"THEME_CHECK_FOLDER": "theme-check"
+	},
 	"plugins": [
-		"https://downloads.wordpress.org/plugins/theme-check.zip"
+		"StevenDufresne/theme-check#main"
 	],
 	"mappings": {
 		"config": "./config",

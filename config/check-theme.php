@@ -38,9 +38,14 @@ class WPORG_Themes_Test {
 	 * @return bool Whether the theme passed the checks.
 	 */
 	public function check_theme( $files ) {
+
+		if( ! defined( 'THEME_CHECK_FOLDER' ) ) {
+			exit( 'Missing "THEME_CHECK_FOLDER" from config.' );
+		}
+
 		// Load the theme checking code.
 		if ( ! function_exists( 'run_themechecks' ) ) {
-			include_once WP_PLUGIN_DIR . '/downloads.wordpress.org%2Fplugins%2Ftheme-check/checkbase.php';
+			include_once WP_PLUGIN_DIR . '/' . THEME_CHECK_FOLDER . '/checkbase.php';
 		}
 
 		list( $php_files, $css_files, $other_files ) = $this->separate_files( $files );
