@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "wp-env": "wp-env",
-    "activate-theme" : "npm run wp-env run cli theme activate test-theme",
+    "activate-theme" : "npm run wp-env run cli theme list && npm run wp-env run cli theme activate test-theme",
     "theme-check": "npm run wp-env run cli eval-file ./config/check-theme.php"
   },
   "author": "The WordPress Contributors",
