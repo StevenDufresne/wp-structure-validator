@@ -17,9 +17,9 @@ runs:
     - name: Install
       run: cd ${{ github.action_path }} && npm install && npm run wp-env start && npm run activate-theme
       shell: bash
-    # - name: Run Theme Check
-    #   run: cd ${{ github.action_path }} && npm run theme-check
-    #   shell: bash
+    - name: Run Theme Check
+      run: cd ${{ github.action_path }} && npm run theme-check
+      shell: bash
     - name: Setup && Run JS Check
       run: cd ${{ github.action_path }}/actions/ui-check && npm install && npm run test:e2e
       shell: bash
