@@ -21,6 +21,6 @@ runs:
       run: cd ${{ github.action_path }} && npm run theme-check
       shell: bash
     - name: Run JS Check
-      uses: ./actions/ui-check
+      run: cd ${{ github.action_path }}/actions/ui-check && npm run install && npm test:e2e
       shell: bash
       
