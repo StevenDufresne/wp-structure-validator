@@ -1,5 +1,6 @@
 {
 	"config": {
+		"WPORGPATH": true,
 		"THEME_CHECK_FOLDER": "theme-check"
 	},
 	"plugins": ["StevenDufresne/theme-check#main"],
