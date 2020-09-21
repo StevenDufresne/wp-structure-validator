@@ -15,7 +15,7 @@ runs:
       run: rsync -av --exclude=.git* ${{ inputs.root-folder }} ${{ github.action_path }}/test-theme
       shell: bash
     - name: Install
-      run: cd ${{ github.action_path }} && npm install && npm run wp-env start
+      run: cd ${{ github.action_path }} && npm install && npm run wp-env start && npm run activate-theme
       shell: bash
     # - name: Run Theme Check
     #   run: cd ${{ github.action_path }} && npm run theme-check
