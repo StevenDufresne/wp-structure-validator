@@ -92,8 +92,6 @@ class WPORG_Themes_Test {
 
 		$eol = ( !empty( $_ENV['CI'] ) ? '%0A' : PHP_EOL );
 
-		var_dump($_ENV);
-
 		foreach ( $messages as $key => $val ) {
 			$implode = implode( $eol, $val );
 			echo '[ ' . esc_attr( $key ) . ' ] '. $eol . $implode;
