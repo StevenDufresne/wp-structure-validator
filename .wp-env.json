@@ -1,9 +1,9 @@
-{	"config": {
+{
+	"config": {
 		"THEME_CHECK_FOLDER": "theme-check"
 	},
-	"plugins": [
-		"StevenDufresne/theme-check#main"
-	],
+	"plugins": ["StevenDufresne/theme-check#main"],
+	"themes": ["./test-theme"],
 	"mappings": {
 		"config": "./config",
 		"test-theme": "./test-theme"
