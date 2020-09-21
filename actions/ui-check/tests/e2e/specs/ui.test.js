@@ -17,10 +17,7 @@ describe( 'Browser Console', () => {
 		await page.goto( createURL( '/' ) );
 
 		if ( jsError ) {
-			core.setFailed( `
-				Found a JS error: 
-			   ${ jsError }`
-		);
+			core.setFailed( `Found a JS error: \n ${ jsError }` );
 		}
 
 		expect( true ).toBeTruthy();
