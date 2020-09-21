@@ -20,4 +20,7 @@ runs:
     - name: Run Theme Check
       run: cd ${{ github.action_path }} && npm run theme-check
       shell: bash
+    - name: Run JS Check
+      uses: ./actions/ui-check
+      shell: bash
       

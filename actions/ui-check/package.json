@@ -1,0 +1,25 @@
+{
+	"name": "UI-Check",
+	"version": "1.0.0",
+	"description": "Run tests for themes in WP.org directory",
+	"main": "index.js",
+	"scripts": {
+		"test:e2e:interactive": "PUPPETEER_HEADLESS=false wp-scripts test-e2e --config tests/e2e/jest.config.js",
+		"test:e2e": "wp-scripts test-e2e --config tests/e2e/jest.config.js"
+	},
+	"author": "The WordPress Contributors",
+	"license": "GPL-2.0-or-later",
+	"eslintConfig": {
+		"extends": "plugin:@wordpress/eslint-plugin/recommended",
+		"root": true,
+		"rules": {
+			"no-console": "off"
+		}
+	},
+	"dependencies": {
+		"@actions/core": "^1.2.5",
+		"@wordpress/e2e-test-utils": "^4.13.0",
+		"@wordpress/scripts": "^12.2.1",
+		"puppeteer": "^5.3.0"
+	}
+}

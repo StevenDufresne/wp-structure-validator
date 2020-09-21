@@ -1,0 +1,12 @@
+name: 'WordPress Theme Check Action: UI Check'
+description: 'Runs the Theme Check plugin against your theme'
+author: 'The WordPress Contributors'
+runs:
+  using: 'composite'
+  steps: 
+    - name: Install dependencies
+      run: npm install
+      shell: bash
+    - name: Run tests
+      run: npm run test:e2e
+      shell: bash
