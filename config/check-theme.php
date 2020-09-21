@@ -90,7 +90,7 @@ class WPORG_Themes_Test {
 	public function print_message( $type, $messages ) {
 		echo '::' . esc_attr( $type ) . '::';
 
-		$eol = ( !empty( $_ENV['CI'] ) ? '%0A' : PHP_EOL );
+		$eol = ( ! defined( 'DEV_MODE' ) ? '%0A' : PHP_EOL );
 
 		foreach ( $messages as $key => $val ) {
 			$implode = implode( $eol, $val );
