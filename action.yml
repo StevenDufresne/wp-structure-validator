@@ -20,9 +20,6 @@ runs:
     - name: Install composer
       run: cd ${{ github.action_path }} && curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
       shell: bash
-    - name: Check Composer
-      run: composer
-      shell: bash
     - name: Run Theme Structure Test
       run: cd ${{ github.action_path }} && composer install && npm run unit-tests
       shell: bash

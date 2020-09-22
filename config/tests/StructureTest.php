@@ -4,6 +4,11 @@ final class StructureTest extends TestCase
 {
     public function testsThatStyleIsPresent(): void
     {
+        $h = new ThemeHelper();           
+        $f = $h->get_all_files( './test-theme' );
+
+        var_dump( $f );
+
         $this->assertFileExists( '/test-theme/style.css', 'We require you have a style.css file.' );
     }
 
