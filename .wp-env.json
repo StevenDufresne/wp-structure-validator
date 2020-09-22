@@ -1,10 +1,9 @@
 {
 	"config": {
 		"WPORGPATH": true,
-		"DEV_MODE": true,
-		"THEME_CHECK_FOLDER": "theme-check-update"
+		"THEME_CHECK_FOLDER": "theme-check"
 	},
-	"plugins": ["../theme-check-update"],
+	"plugins": ["StevenDufresne/theme-check#main"],
 	"themes": ["./test-theme"],
 	"mappings": {
 		"config": "./config",
