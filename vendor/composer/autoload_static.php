@@ -653,7 +653,6 @@ class ComposerStaticInite273f9216d0e3bc472c710a988dd7545
         'SebastianBergmann\\Type\\UnknownType' => __DIR__ . '/..' . '/sebastian/type/src/UnknownType.php',
         'SebastianBergmann\\Type\\VoidType' => __DIR__ . '/..' . '/sebastian/type/src/VoidType.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
-        'StructureHelper' => __DIR__ . '/../..' . '/config/StructureHelper.php',
         'StructureTest' => __DIR__ . '/../..' . '/config/tests/StructureTest.php',
         'TheSeer\\Tokenizer\\Exception' => __DIR__ . '/..' . '/theseer/tokenizer/src/Exception.php',
         'TheSeer\\Tokenizer\\NamespaceUri' => __DIR__ . '/..' . '/theseer/tokenizer/src/NamespaceUri.php',
@@ -663,7 +662,8 @@ class ComposerStaticInite273f9216d0e3bc472c710a988dd7545
         'TheSeer\\Tokenizer\\TokenCollectionException' => __DIR__ . '/..' . '/theseer/tokenizer/src/TokenCollectionException.php',
         'TheSeer\\Tokenizer\\Tokenizer' => __DIR__ . '/..' . '/theseer/tokenizer/src/Tokenizer.php',
         'TheSeer\\Tokenizer\\XMLSerializer' => __DIR__ . '/..' . '/theseer/tokenizer/src/XMLSerializer.php',
-        'WPORG_Themes_Test' => __DIR__ . '/../..' . '/config/check-theme.php',
+        'ThemeHelper' => __DIR__ . '/../..' . '/config/ThemeHelper.php',
+        'WPORG_CheckTheme' => __DIR__ . '/../..' . '/config/CheckTheme.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
