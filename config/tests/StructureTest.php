@@ -14,11 +14,11 @@ final class StructureTest extends TestCase
 
     public function testsThatCommentsIsPresent(): void
     {
-        $this->assertFileExists( './test-theme/comments.php', 'We require you have a comments.php file.' );
+        $this->assertFileExists( './test-theme/comments.php', '::error::We require you have a comments.php file.' );
     }
 
     public function testsThatScreenshotIsPresent(): void
     {
-        $this->assertFileExists( './test-theme/screenshot.png', 'We require you have a screenshot.png file.' );
+        $this->assertFileExists( './test-theme/screenshot.png', '::error::We require you have a screenshot.png file.' );
     }
 }
