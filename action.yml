@@ -14,18 +14,27 @@ runs:
     - name: Copy host folder
       run: rsync -av --exclude=.git* ${{ inputs.root-folder }} ${{ github.action_path }}/test-theme
       shell: bash
-    - name: Install
-      run: cd ${{ github.action_path }} && npm install && npm run wp-env start && npm run activate-theme
+
+    - name: Install NPM dependencies
+      run: cd ${{ github.action_path }} && npm install
       shell: bash
+
     - name: Install composer
       run: cd ${{ github.action_path }} && curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
       shell: bash
+
     - name: Run Theme Structure Test
       run: cd ${{ github.action_path }} && composer install && npm run unit-tests
       shell: bash
+
+    - name: Install
+      run: cd ${{ github.action_path }} && npm run wp-env start && npm run activate-theme
+      shell: bash
+
     - name: Run Theme Check
       run: cd ${{ github.action_path }} && npm run theme-check
       shell: bash
+
     - name: Setup && Run JS Check
       run: cd ${{ github.action_path }}/actions/ui-check && npm install && npm run test:e2e
       shell: bash
