@@ -4,12 +4,12 @@ final class StructureTest extends TestCase
 {
     public function testsThatStyleIsPresent(): void
     {
-        $this->assertFileExists( './test-theme/style.css', 'We require you have a style.css file.' );
+        $this->assertFileExists( './test-theme/style.css', '::error:: We require you have a style.css file.' );
     }
 
     public function testsThatIndexIsPresent(): void
     {
-        $this->assertFileExists( './test-theme/index.php', 'We require you have a index.php file.' );
+        $this->assertFileExists( './test-theme/index.php', '::error::We require you have a index.php file.' );
     }
 
     public function testsThatCommentsIsPresent(): void
