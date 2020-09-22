@@ -160,10 +160,17 @@ class WPORG_Themes_Test {
 				}
 			}
 		}
-		$this->print_message( 'error', $error_list );
+
+		if( count( $error_list ) > 0) {
+			$this->print_message( 'error', $error_list );
+		}
+
 		echo PHP_EOL;
 		echo PHP_EOL;
-		$this->print_message( 'warning', $warning_list );
+
+		if( count( $warning_list ) > 0) {
+			$this->print_message( 'warning', $warning_list );
+		}
 
 		if ( count( $error_list ) > 0 ) {
 			exit( 1 );
