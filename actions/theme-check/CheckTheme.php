@@ -21,7 +21,7 @@ class WPORG_CheckTheme {
 			include_once WP_PLUGIN_DIR . '/' . THEME_CHECK_FOLDER . '/checkbase.php';
 		}
 
-		list( $php_files, $css_files, $other_files ) = $this->$themeHelper->separate_files( $files );
+		list( $php_files, $css_files, $other_files ) = $this->themeHelper->separate_files( $files );
 
 		// Run the checks.
 		$result = run_themechecks( $php_files, $css_files, $other_files );
@@ -154,16 +154,17 @@ class WPORG_CheckTheme {
 	 * Get set up to run tests on the uploaded theme.
 	 */
 	public function __construct() {
-		include 'config/ThemeHelper.php';
+		include './helpers/ThemeHelper.php';
 
-		$this->$themeHelper = new ThemeHelper();
+		$this->themeHelper = new ThemeHelper();
+
 	}
 
 	/**
 	 * Run prepare theme and run theme-check
 	 */
 	public function run_check() {
-		$theme_files = $this->$themeHelper->get_all_files( './test-theme/' );
+		$theme_files = $this->themeHelper->get_all_files( './test-theme/' );
 		$passes = $this->check_theme( $theme_files );
 
 		if ( ! $passes ) {
