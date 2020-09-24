@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "wp-env": "wp-env",
-    "activate-theme" : "npm run wp-env run cli theme activate test-theme && npm run wp-env run tests-cli theme activate test-theme",
-    "check:structure": "vendor/bin/phpunit",
+    "install:environment": "npm install && npm run wp-env start && npm run activate-theme",
+    "activate-theme": "npm run wp-env run cli theme activate test-theme && npm run wp-env run tests-cli theme activate test-theme",
+    "check:structure": "cd ./actions/structure-check && curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer && composer install && vendor/bin/phpunit",
     "check:theme-check": "npm run wp-env run cli eval-file ./actions/theme-check/CheckTheme.php",
-    "check:ui": "cd actions/ui-check && npm run test:e2e"
+    "check:ui": "cd ./actions/ui-check && npm install && npm run test:e2e"
   },
   "author": "The WordPress Contributors",
   "license": "GPL-2.0-or-later",
