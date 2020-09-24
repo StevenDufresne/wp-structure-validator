@@ -22,7 +22,7 @@ runs:
 
       ## Run unit tests to test the correct files exist.
     - name: Run Theme Structure Test
-      run: cd ${{ github.action_path }}/actions/structure-check && composer install && npm run check:structure
+      run: cd ${{ github.action_path }}/actions/structure-check && composer install && vendor/bin/phpunit
       shell: bash
 
       ## The following tests require an environment
