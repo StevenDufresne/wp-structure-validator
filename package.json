@@ -6,8 +6,9 @@
   "scripts": {
     "wp-env": "wp-env",
     "activate-theme" : "npm run wp-env run cli theme activate test-theme && npm run wp-env run tests-cli theme activate test-theme",
-    "unit-tests": "./vendor/bin/phpunit",
-    "theme-check": "npm run wp-env run cli eval-file ./config/CheckTheme.php"
+    "check:structure": "cd actions/structure-check && vendor/bin/phpunit",
+    "check:theme-check": "npm run wp-env run cli eval-file ./actions/theme-check/CheckTheme.php",
+    "check:ui": "cd actions/ui-check && npm run test:e2e"
   },
   "author": "The WordPress Contributors",
   "license": "GPL-2.0-or-later",

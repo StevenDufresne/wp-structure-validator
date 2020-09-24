@@ -15,26 +15,34 @@ runs:
       run: rsync -av --exclude=.git* ${{ inputs.root-folder }} ${{ github.action_path }}/test-theme
       shell: bash
 
-    - name: Install NPM dependencies
-      run: cd ${{ github.action_path }} && npm install
-      shell: bash
-
+      ## Install unit test dependencies
     - name: Install composer
       run: cd ${{ github.action_path }} && curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
       shell: bash
 
+      ## Run unit tests to test the correct files exist.
     - name: Run Theme Structure Test
-      run: cd ${{ github.action_path }} && composer install && npm run unit-tests
+      run: cd ${{ github.action_path }} && composer install && npm run check:structure
       shell: bash
 
+      ## The following tests require an environment
+
+      ## Install the dependencies
+    - name: Install NPM dependencies
+      run: cd ${{ github.action_path }} && npm install
+      shell: bash
+
+      ## Start the environment
     - name: Install
       run: cd ${{ github.action_path }} && npm run wp-env start && npm run activate-theme
       shell: bash
 
+      ## Run checks using theme-check plugin
     - name: Run Theme Check
-      run: cd ${{ github.action_path }} && npm run theme-check
+      run: cd ${{ github.action_path }} && npm run check:theme-check
       shell: bash
 
+      ## Run checks using e2e
     - name: Setup && Run JS Check
       run: cd ${{ github.action_path }}/actions/ui-check && npm install && npm run test:e2e
       shell: bash
