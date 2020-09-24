@@ -17,12 +17,12 @@ runs:
 
       ## Install unit test dependencies
     - name: Install composer
-      run: cd ${{ github.action_path }}/actions/structure-check && curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
+      run: cd ${{ github.action_path }}/actions/structure-check && curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer && composer install
       shell: bash
 
-      ## Run unit tests to test the correct files exist.
+      ## Run unit tests to test that the correct files exist.
     - name: Run Theme Structure Test
-      run: cd ${{ github.action_path }}/actions/structure-check && composer install && vendor/bin/phpunit
+      run: cd ${{ github.action_path }}/actions/structure-check && check:structure
       shell: bash
 
       ## The following tests require an environment
