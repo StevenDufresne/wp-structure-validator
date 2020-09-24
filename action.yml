@@ -15,7 +15,6 @@ runs:
       run: rsync -av --exclude=.git* ${{ inputs.root-folder }} ${{ github.action_path }}/test-theme
       shell: bash
 
-
       ## Run unit tests to test that the correct files exist.
     - name: Run Theme Structure Test
       run: cd ${{ github.action_path }} && npm run check:structure
