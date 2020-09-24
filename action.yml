@@ -22,7 +22,7 @@ runs:
 
       ## Run unit tests to test that the correct files exist.
     - name: Run Theme Structure Test
-      run: cd ${{ github.action_path }}/actions/structure-check && check:structure
+      run: cd ${{ github.action_path }}/actions/structure-check && npm run check:structure
       shell: bash
 
       ## The following tests require an environment
