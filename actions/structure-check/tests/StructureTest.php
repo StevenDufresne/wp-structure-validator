@@ -21,6 +21,9 @@ final class StructureTest extends TestCase
 
     public function testsThatScreenshotIsPresent(): void
     {
-        $this->assertFileExists( self::REL_THEME_LOCATION . '/screenshot.png', '::error::We require you have a screenshot.png file.' );
+        $hasPNG = file_exists( self::REL_THEME_LOCATION . '/screenshot.png' );
+        $hasJPG = file_exists( self::REL_THEME_LOCATION . '/screenshot.jpg' ) || file_exists( self::REL_THEME_LOCATION . '/screenshot.jpeg' );
+
+        $this->assertTrue( $hasPNG || $hasJPG, '::error::We require you have a screenshot.png or screenshot.jpg file.' );
     }
 }
