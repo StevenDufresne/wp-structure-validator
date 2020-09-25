@@ -4,7 +4,7 @@ author: 'The WordPress Contributors'
 inputs:
   root-folder:
     description: 'The location of your theme'
-    default: ./
+    default: .
 branding:
   icon: 'clipboard'  
   color: 'blue'
