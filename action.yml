@@ -15,6 +15,9 @@ runs:
       run: rsync -av --exclude=.git* ${{ inputs.root-folder }} ${{ github.action_path }}/test-theme
       shell: bash
 
+    - name: List thing
+      run:  cd ${{ github.action_path }} && ls
+
       ## Run unit tests to test that the correct files exist.
       ## If these files don't exist, the environment won't start up
     - name: Run Theme Structure Test
