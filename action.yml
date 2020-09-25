@@ -16,7 +16,7 @@ runs:
       shell: bash
 
     - name: Install wp-env
-      run: npm install -g wp-env
+      run: npm -g i @wordpress/env
       shell: bash
 
       ## Run unit tests to test that the correct files exist.
