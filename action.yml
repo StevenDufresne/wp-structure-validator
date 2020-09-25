@@ -12,7 +12,7 @@ runs:
   using: 'composite'
   steps: 
     - name: Copy host folder
-      run: rsync -av --exclude=.git* ${{ inputs.root-folder }} ${{ github.action_path }}/test-theme
+      run: rsync -av --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
       shell: bash
 
     - name: List thing
