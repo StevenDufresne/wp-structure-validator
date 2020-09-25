@@ -7,16 +7,13 @@
     "wp-env": "wp-env",
     "install:environment": "npm install && npm run wp-env start && npm run activate-theme",
     "activate-theme": "npm run wp-env run cli theme activate test-theme && npm run wp-env run tests-cli theme activate test-theme",
-    "check:structure": "cd ./actions/structure-check && curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer && composer install && vendor/bin/phpunit",
     "check:theme-check": "npm run wp-env run cli eval-file ./actions/theme-check/CheckTheme.php",
-    "check:ui": "cd ./actions/ui-check && npm install && npm run test:e2e"
+    "check:structure": "cd ./actions/structure-check && npm run start",
+    "check:ui": "cd ./actions/ui-check && npm run start"
   },
   "author": "The WordPress Contributors",
   "license": "GPL-2.0-or-later",
   "dependencies": {
     "@wordpress/env": "^2.0.0"
-  },
-  "devDependencies": {
-    "@zeit/ncc": "^0.22.3"
   }
 }
