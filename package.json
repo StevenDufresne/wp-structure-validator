@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "wp-env": "wp-env",
-    "install:environment": "npm install && npm run wp-env start && npm run activate-theme",
     "activate-theme": "npm run wp-env run cli theme activate test-theme && npm run wp-env run tests-cli theme activate test-theme",
+    "install:environment": "npm install && npm run wp-env start && npm run activate-theme",
     "check:theme-check": "npm run wp-env run cli eval-file ./actions/theme-check/CheckTheme.php",
     "check:structure": "cd ./actions/structure-check && npm run start",
     "check:ui": "cd ./actions/ui-check && npm run start"
