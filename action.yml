@@ -16,7 +16,7 @@ runs:
       shell: bash
 
     - name: List thing
-      run:  cd ${{ github.action_path }} && ls
+      run:  ls
       shell: bash
 
       ## Run unit tests to test that the correct files exist.
