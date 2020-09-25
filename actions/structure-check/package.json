@@ -1,0 +1,12 @@
+{
+	"name": "Structure-Check",
+	"version": "1.0.0",
+	"description": "Run tests for themes in WP.org directory",
+	"main": "index.js",
+	"scripts": {
+		"install:composer": "curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer",
+		"start": "npm run install:composer && composer install && vendor/bin/phpunit"
+	},
+	"author": "The WordPress Contributors",
+	"license": "GPL-2.0-or-later"
+}

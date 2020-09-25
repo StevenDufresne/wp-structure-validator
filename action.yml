@@ -16,6 +16,7 @@ runs:
       shell: bash
 
       ## Run unit tests to test that the correct files exist.
+      ## If the correct files don't exist, the environment will fail
     - name: Run Theme Structure Test
       run: cd ${{ github.action_path }} && npm run check:structure
       shell: bash

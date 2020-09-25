@@ -1,0 +1,11 @@
+{
+	"name": "Theme-Check",
+	"version": "1.0.0",
+	"description": "Run tests for themes in WP.org directory",
+	"main": "index.js",
+	"scripts": {
+		"start": "wp-env run cli eval-file ./CheckTheme.php"
+	},
+	"author": "The WordPress Contributors",
+	"license": "GPL-2.0-or-later"
+}

@@ -4,10 +4,10 @@
 		"THEME_CHECK_FOLDER": "theme-check"
 	},
 	"plugins": ["StevenDufresne/theme-check#main"],
-	"themes": ["./test-theme"],
+	"themes": ["../../test-theme"],
 	"mappings": {
-		"actions": "./actions",
-		"test-theme": "./test-theme",
-		"helpers": "./helpers"
+		"actions": "../../actions",
+		"test-theme": "../../test-theme",
+		"helpers": "../../helpers"
 	}
 }
