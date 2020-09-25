@@ -4,7 +4,7 @@
 	"description": "Run Theme Check test for a WordPress theme",
 	"main": "index.js",
 	"scripts": {
-		"install:composer": "curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer && composer install",
+		"install:composer": "curl -sS https://getcomposer.org/installer | php -- --install-dir=./vendor/bin/ --filename=composer && ./vendor/bin/composer install",
 		"start": "npm run install:composer && vendor/bin/phpunit"
 	},
 	"author": "The WordPress Contributors",
