@@ -1,3 +1,4 @@
 node_modules
 .DS_Store
-test-theme
+test-theme/*
+!test-theme/README.md
