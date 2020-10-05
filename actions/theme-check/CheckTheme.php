@@ -105,7 +105,7 @@ class WPORG_CheckTheme {
 	/**
 	 * This function looks at the global themechecks array for errors, formats and prints them
 	 */
-	public function log_errors() {
+	public function display_results() {
 		global $themechecks; // global that exists in the theme-check plugin
 
 		$error_list = array();
@@ -167,9 +167,7 @@ class WPORG_CheckTheme {
 		$theme_files = $this->themeHelper->get_all_files( './test-theme/' );
 		$passes = $this->check_theme( $theme_files );
 
-		if ( ! $passes ) {
-			$this->log_errors();
-		}
+		$this->display_results();
 	}
 
 }
