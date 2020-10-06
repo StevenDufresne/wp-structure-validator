@@ -34,4 +34,25 @@ describe( 'Accessibility', () => {
 			}
 		}
 	);
+
+	test.each( urls )(
+		'Should pass Optional Axe tests on %s',
+		async ( name, path, query ) => {
+			await page.goto( createURL( path, query ) );
+
+			try {
+				await expect( page ).toPassAxeTests( {
+					options: {
+						runOnly: {
+							type: 'tag',
+							values: [ 'best-practice' ],
+						},
+						exclude: [ [ '.entry-content' ] ],
+					},
+				} );
+			} catch ( e ) {
+				core.setWarning( `[ Accessibility Tests ]: \n\n Should pass Optional Axe tests on ${ name } \n\n ${ e }` );
+			}
+		}
+	);
 } );
