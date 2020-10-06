@@ -16,7 +16,17 @@ const cleanErrorMessage = ( msg ) => {
 describe( 'Accessibility', () => {
 	beforeAll( async () => {
 		await page.goto( createURL( '/' ) );
-	} );
+    } );
+    
+    const defaultUrl = ( path, query ) => {
+        let defaultUrl = path;
+
+        if( query.length > 1 ) {
+            defaultUrl += `?${ query }`;
+        }
+
+        return `(${ defaultUrl })`;
+    }
 
 	test.each( urls )(
 		'Should pass Axe tests on %s',
@@ -34,7 +44,7 @@ describe( 'Accessibility', () => {
 					},
 				} );
 			} catch ( e ) {
-				core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on ${ name }(${ path }?${ query }) using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test ${ cleanErrorMessage( e.message ) }` );
+				core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on ${ name }${ defaultUrl( path, query ) } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test ${ cleanErrorMessage( e.message ) }` );
 			}
 		}
 	);
@@ -56,7 +66,7 @@ describe( 'Accessibility', () => {
 					},
 				} );
 			} catch ( e ) {
-				core.warning( `[ Accessibility - Optional Tests ]: \n\nRunning tests on ${ name }(${ path }?${ query }) using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test ${ cleanErrorMessage( e.message ) }` );
+				core.warning( `[ Accessibility - Optional Tests ]: \n\nRunning tests on ${ name }${ defaultUrl( path, query ) } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test ${ cleanErrorMessage( e.message ) }` );
 			}
 		}
 	);
