@@ -24,7 +24,7 @@ describe( 'Accessibility', () => {
 					options: {
 						runOnly: {
 							type: 'tag',
-							values: [ 'best-practice' ],
+							values: [ 'wcag2a' ],
 						},
 						exclude: [ [ '.entry-content' ] ],
 					},
