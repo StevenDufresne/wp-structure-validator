@@ -6,6 +6,7 @@
 	"plugins": ["StevenDufresne/theme-check#main"],
 	"themes": ["./test-theme"],
 	"mappings": {
+		"config": "./config",
 		"actions": "./actions",
 		"test-theme": "./test-theme",
 		"helpers": "./helpers"
