@@ -6,7 +6,7 @@
   "scripts": {
     "wp-env": "wp-env",
     "activate-theme": "npm run wp-env run cli theme activate test-theme && npm run wp-env run tests-cli theme activate test-theme",
-    "download:accessibility": "sudo curl -L https://raw.githubusercontent.com/wpaccessibility/a11y-theme-unit-test/master/a11y-theme-unit-test-data.xml > config/a11y-theme-unit-test-data.xml",
+    "download:accessibility": "curl -L https://raw.githubusercontent.com/wpaccessibility/a11y-theme-unit-test/master/a11y-theme-unit-test-data.xml > config/a11y-theme-unit-test-data.xml",
     "import:accessibility": "npm run wp-env run tests-cli 'plugin install wordpress-importer --activate' && npm run wp-env run tests-cli 'import config/a11y-theme-unit-test-data.xml --authors=create --quiet'",
     "install:accessibility": "npm run download:accessibility && npm run import:accessibility",
     "install:environment": "npm install && npm run wp-env start && npm run activate-theme && npm run install:accessibility",
