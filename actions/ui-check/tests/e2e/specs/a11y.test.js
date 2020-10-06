@@ -30,7 +30,7 @@ describe( 'Accessibility', () => {
 					},
 				} );
 			} catch ( e ) {
-				core.setFailed( `[ Accessibility Tests: Required ]: \n\nRunning tests on  ${ name } \n\n${ e.message }` );
+				core.setFailed( `[ Accessibility: Required Tests ]: \n\nRunning tests on ${ name } ( ${ path }${ query } ) \n\n${ e.message }` );
 			}
 		}
 	);
@@ -52,7 +52,7 @@ describe( 'Accessibility', () => {
 					},
 				} );
 			} catch ( e ) {
-				core.warning( `[ Accessibility Tests: Optional ]: \n\nRunning tests on ${ name } \n\n${ e.message }` );
+				core.warning( `[ Accessibility: Optional Tests ]: \n\nRunning tests on ${ name } ( ${ path }${ query } ) \n\n${ e.message }` );
 			}
 		}
 	);
