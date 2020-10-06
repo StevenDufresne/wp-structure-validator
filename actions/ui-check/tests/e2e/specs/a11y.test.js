@@ -9,16 +9,20 @@ const core = require( '@actions/core' );
  */
 import urls from './pages';
 
-describe( 'Accessibility', () => {
-	beforeAll( async () => {
-		await page.goto( createURL( '/' ) );
-	} );
+const cleanErrorMessage = ( msg ) => {
+	return msg.replace( 'expect(received).toPassAxeTests(expected)', '' );
+}
 
-core.info(`
+core.debug(`
 Running accessibility tests using:
 
 https://raw.githubusercontent.com/wpaccessibility/a11y-theme-unit-test/master/a11y-theme-unit-test-data.xml
 `)
+
+describe( 'Accessibility', () => {
+	beforeAll( async () => {
+		await page.goto( createURL( '/' ) );
+	} );
 
 	test.each( urls )(
 		'Should pass Axe tests on %s',
@@ -36,7 +40,7 @@ https://raw.githubusercontent.com/wpaccessibility/a11y-theme-unit-test/master/a1
 					},
 				} );
 			} catch ( e ) {
-				core.setFailed( `[ Accessibility: Required Tests ]: \n\nRunning tests on ${ name }(${ path }?${ query }) \n\n${ e.message }` );
+				core.setFailed( `[ Accessibility: Required Tests ]: \n\nRunning tests on ${ name }(${ path }?${ query }) \n\n${ cleanErrorMessage( e.message ) }` );
 			}
 		}
 	);
@@ -58,7 +62,7 @@ https://raw.githubusercontent.com/wpaccessibility/a11y-theme-unit-test/master/a1
 					},
 				} );
 			} catch ( e ) {
-				core.warning( `[ Accessibility: Optional Tests ]: \n\nRunning tests on ${ name }(${ path }?${ query }) \n\n${ e.message }` );
+				core.warning( `[ Accessibility: Optional Tests ]: \n\nRunning tests on ${ name }(${ path }?${ query }) \n\n${ cleanErrorMessage( e.message ) }` );
 			}
 		}
 	);
