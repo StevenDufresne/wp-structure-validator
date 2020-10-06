@@ -29,7 +29,7 @@ describe( 'Accessibility', () => {
 					},
 				} );
 			} catch (e) {
-				core.setFailed( `Found accessibility Errors: \n\n${ e }` );
+				core.setFailed( `[ Accessibility Tests ]: \n\n${ e }` );
 			}
 		}
 	);
