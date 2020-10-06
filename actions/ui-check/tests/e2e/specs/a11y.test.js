@@ -35,8 +35,9 @@ describe( 'Accessibility', () => {
 		}
 	);
 
+	// OPTIONAL: Alert user about other important tests
 	test.each( urls )(
-		'Should pass Optional Axe tests on %s',
+		'Should pass optional Axe tests on %s',
 		async ( name, path, query ) => {
 			await page.goto( createURL( path, query ) );
 
@@ -51,7 +52,7 @@ describe( 'Accessibility', () => {
 					},
 				} );
 			} catch ( e ) {
-				core.setWarning( `[ Accessibility Tests ]: \n\n Should pass Optional Axe tests on ${ name } \n\n ${ e }` );
+				core.warning( `[ Accessibility Tests ]: \n\n Should pass optional Axe tests on ${ name } \n\n ${ e }` );
 			}
 		}
 	);
