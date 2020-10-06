@@ -13,7 +13,7 @@ page.on( 'pageerror', ( error ) => {
 } );
 
 describe( 'Browser Console', () => {
-	it( 'Shouldn\'t have any JS errors', async () => {
+	it( "Shouldn't have any JS errors", async () => {
 		await page.goto( createURL( '/' ) );
 
 		if ( jsError ) {

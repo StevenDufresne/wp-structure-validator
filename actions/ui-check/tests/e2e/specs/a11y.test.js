@@ -18,6 +18,7 @@ describe( 'Accessibility', () => {
 		'Should pass Axe tests on %s',
 		async ( name, path, query ) => {
 			await page.goto( createURL( path, query ) );
+
 			try {
 				await expect( page ).toPassAxeTests( {
 					options: {
@@ -28,8 +29,11 @@ describe( 'Accessibility', () => {
 						exclude: [ [ '.entry-content' ] ],
 					},
 				} );
-			} catch (e) {
-				core.setFailed( `[ Accessibility Tests ]: \n\n${ e }` );
+			} catch ( e ) {
+				core.setFailed( `
+				[ Accessibility Tests ]: \n\n 
+				'Should pass Axe tests on ${ name } \n\n
+				${ e }` );
 			}
 		}
 	);
