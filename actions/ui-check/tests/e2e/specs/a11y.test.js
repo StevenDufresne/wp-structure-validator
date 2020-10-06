@@ -36,7 +36,7 @@ https://raw.githubusercontent.com/wpaccessibility/a11y-theme-unit-test/master/a1
 					},
 				} );
 			} catch ( e ) {
-				core.setFailed( `[ Accessibility: Required Tests ]: \n\nRunning tests on ${ name } ( ${ path }${ query } ) \n\n${ e.message }` );
+				core.setFailed( `[ Accessibility: Required Tests ]: \n\nRunning tests on ${ name }(${ path }?${ query }) \n\n${ e.message }` );
 			}
 		}
 	);
@@ -58,7 +58,7 @@ https://raw.githubusercontent.com/wpaccessibility/a11y-theme-unit-test/master/a1
 					},
 				} );
 			} catch ( e ) {
-				core.warning( `[ Accessibility: Optional Tests ]: \n\nRunning tests on ${ name } ( ${ path }${ query } ) \n\n${ e.message }` );
+				core.warning( `[ Accessibility: Optional Tests ]: \n\nRunning tests on ${ name }(${ path }?${ query }) \n\n${ e.message }` );
 			}
 		}
 	);
