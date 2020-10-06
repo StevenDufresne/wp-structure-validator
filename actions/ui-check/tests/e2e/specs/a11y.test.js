@@ -30,10 +30,7 @@ describe( 'Accessibility', () => {
 					},
 				} );
 			} catch ( e ) {
-				core.setFailed( `
-				[ Accessibility Tests ]: \n\n 
-				'Should pass Axe tests on ${ name } \n\n
-				${ e }` );
+				core.setFailed( `[ Accessibility Tests ]: \n\n Should pass Axe tests on ${ name } \n\n ${ e }` );
 			}
 		}
 	);
