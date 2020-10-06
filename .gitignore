@@ -4,4 +4,4 @@ test-theme/*
 !test-theme/README.md
 
 # We will download this file every install
-a11y-theme-unit-test-data.xml
+config/a11y-theme-unit-test-data.xml
