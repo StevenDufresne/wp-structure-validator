@@ -30,7 +30,7 @@ describe( 'Accessibility', () => {
 					},
 				} );
 			} catch ( e ) {
-				core.setFailed( `[ Accessibility Tests ]: \n\n Should pass Axe tests on ${ name } \n\n ${ e }` );
+				core.setFailed( `[ Accessibility Tests: Required ]: \n\nRunning tests on  ${ name } \n\n${ e.message }` );
 			}
 		}
 	);
@@ -52,7 +52,7 @@ describe( 'Accessibility', () => {
 					},
 				} );
 			} catch ( e ) {
-				core.warning( `[ Accessibility Tests ]: \n\n Should pass optional Axe tests on ${ name } \n\n ${ e }` );
+				core.warning( `[ Accessibility Tests: Optional ]: \n\nRunning tests on ${ name } \n\n${ e.message }` );
 			}
 		}
 	);
