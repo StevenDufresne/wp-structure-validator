@@ -14,6 +14,12 @@ describe( 'Accessibility', () => {
 		await page.goto( createURL( '/' ) );
 	} );
 
+core.info(`
+Running accessibility tests using:
+
+https://raw.githubusercontent.com/wpaccessibility/a11y-theme-unit-test/master/a11y-theme-unit-test-data.xml
+`)
+
 	test.each( urls )(
 		'Should pass Axe tests on %s',
 		async ( name, path, query ) => {
