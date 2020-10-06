@@ -2,6 +2,7 @@
  * External dependencies
  */
 import { createURL } from '@wordpress/e2e-test-utils';
+const core = require( '@actions/core' );
 
 /**
  * Internal dependencies
@@ -17,15 +18,19 @@ describe( 'Accessibility', () => {
 		'Should pass Axe tests on %s',
 		async ( name, path, query ) => {
 			await page.goto( createURL( path, query ) );
-			await expect( page ).toPassAxeTests( {
-				options: {
-					runOnly: {
-						type: 'tag',
-						values: [ 'best-practice' ],
+			try {
+				await expect( page ).toPassAxeTests( {
+					options: {
+						runOnly: {
+							type: 'tag',
+							values: [ 'best-practice' ],
+						},
+						exclude: [ [ '.entry-content' ] ],
 					},
-					exclude: [ [ '.entry-content' ] ],
-				},
-			} );
+				} );
+			} catch (e) {
+				core.setFailed( `Found accessibility Errors: \n\n${ e }` );
+			}
 		}
 	);
 } );
