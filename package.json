@@ -11,7 +11,7 @@
     "install:accessibility": "npm run download:accessibility && npm run import:accessibility",
     "install:environment": "npm install && npm run wp-env start && npm run activate-theme && npm run install:accessibility",
     "check:theme-check": "npm run wp-env run cli eval-file ./actions/theme-check/CheckTheme.php",
-    "check:structure": "cd ./actions/structure-check && npm run start",
+    "check:structure": "npm run wp-env run phpunit 'phpunit -c ./html/actions/structure-check/phpunit.xml'",
     "check:ui": "cd ./actions/ui-check && npm run start"
   },
   "author": "The WordPress Contributors",
