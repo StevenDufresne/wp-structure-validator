@@ -1,1 +1,0 @@
-Replace everything in this folder with your theme to test locally.
