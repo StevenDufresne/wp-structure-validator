@@ -16,17 +16,17 @@ const cleanErrorMessage = ( msg ) => {
 describe( 'Accessibility', () => {
 	beforeAll( async () => {
 		await page.goto( createURL( '/' ) );
-    } );
-    
-    const defaultUrl = ( path, query ) => {
-        let defaultUrl = path;
+	} );
+	
+	const defaultUrl = ( path, query ) => {
+		let defaultUrl = path;
 
-        if( query.length > 1 ) {
-            defaultUrl += `?${ query }`;
-        }
+		if( query.length > 1 ) {
+			defaultUrl += `?${ query }`;
+		}
 
-        return `(${ defaultUrl })`;
-    }
+		return `(${ defaultUrl })`;
+	}
 
 	test.each( urls )(
 		'Should pass Axe tests on %s',
@@ -47,21 +47,21 @@ describe( 'Accessibility', () => {
 				core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on ${ name }${ defaultUrl( path, query ) } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test ${ cleanErrorMessage( e.message ) }` );
 			}
 		}
-    );
-    
-    it( "Should contain skip links", async () => {
-        await page.keyboard.press('Tab');
+	);
+	
+	it( "Should contain skip links", async () => {
+		await page.keyboard.press('Tab');
 
-        try {
-            const elementCopy = await page.evaluate( () =>  {
-                return document.activeElement.innerText;
-            } );
-            
-            expect( elementCopy.toLowerCase().indexOf( 'skip' ) >= 0 ).toBeTruthy();
-        } catch ( e ) {
-            core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on ${ name }${ defaultUrl( path, query ) } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test Problems with Skip Links` );
-        }
-    } );
+		try {
+			const elementCopy = await page.evaluate( () =>  {
+				return document.activeElement.innerText;
+			} );
+			
+			expect( elementCopy.toLowerCase().indexOf( 'skip' ) >= 0 ).toBeTruthy();
+		} catch ( e ) {
+			core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on Home(/) using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test Problems with Skip Links` );
+		}
+	} );
 
 	// OPTIONAL: Alert user about other important tests
 	test.each( urls )(
@@ -83,5 +83,5 @@ describe( 'Accessibility', () => {
 				core.warning( `[ Accessibility - Optional Tests ]: \n\nRunning tests on ${ name }${ defaultUrl( path, query ) } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test ${ cleanErrorMessage( e.message ) }` );
 			}
 		}
-    );
+	);
 } );
