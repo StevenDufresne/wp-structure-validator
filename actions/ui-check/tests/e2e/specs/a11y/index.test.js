@@ -45,18 +45,29 @@ describe( 'Accessibility', () => {
 		}
 		
 		try {
-			// Expect it to have the right copy
-			expect( activeElement.text.toLowerCase().indexOf( 'skip' ) >= 0 ).toBeTruthy();
+			// Expect it to be visible
+			expect( activeElement.tag ).toEqual( 'a' );
 		} catch ( e ) {
-			core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on Home(/) \n\n Skip link doesn't contain the word 'Skip' ` );
+			core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on Home(/) \n\n First tab doesn't select a link` );
+			return;
 		}
-
+		
 		try {
 			// Expect it to be visible
 			expect( activeElement.isVisible ).toBeTruthy();
 		} catch ( e ) {
 			core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on Home(/) \n\n Skip link is not visible` );
+			return;
 		}
+		
+		try {
+			// Expect it to have the right copy
+			expect( activeElement.text.toLowerCase().indexOf( 'skip' ) >= 0 ).toBeTruthy();
+		} catch ( e ) {
+			core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on Home(/) \n\n Skip link doesn't contain the word 'Skip' ` );
+			return;
+		}
+
 	} );
 
 	// Required: These test must pass
