@@ -14,13 +14,12 @@ export const getDefaultUrl = ( path, query ) => {
 	return `(${ defaultUrl })`;
 };
 
-export const printMessage = ( command, lines) => {
+export const printMessage = ( command, lines ) => {
+	// Github actions should automatically set CI
+	if ( ! process.env.CI ) {
+		console.log( lines.join( '\n\n' ) );
+		return;
+	}
 
-    // Github actions should automatically set CI
-    if( ! process.env.CI ) {
-        console.log( lines.join( '\n\n' ) );
-        return;
-    }
-
-    core[ command ]( lines.join( '\n\n' ) );
-}
+	core[ command ]( lines.join( '\n\n' ) );
+};

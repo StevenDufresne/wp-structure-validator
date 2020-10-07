@@ -69,6 +69,7 @@ describe( 'Accessibility: Required', () => {
 				'[ Accessibility - Required Tests ]:',
 				'Running tests on Home (/)',
 				"The skip link doesn't have a matching element on the page.",
+				`Expecting to find "${ el.href }.`,
 			] );
 			throw Error();
 		}

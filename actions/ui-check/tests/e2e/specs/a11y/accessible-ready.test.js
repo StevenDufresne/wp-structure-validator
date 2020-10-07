@@ -29,7 +29,7 @@ describe( 'Accessible: Tag Ready', () => {
 			} catch ( e ) {
 				printMessage( 'setFailed', [
 					'[ Accessibility - Required Tests ]:',
-					`Running tests on ${ name }${ getDefaultUrl(
+					`Running tests on ${ name } ${ getDefaultUrl(
 						path,
 						query
 					) } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test`,
