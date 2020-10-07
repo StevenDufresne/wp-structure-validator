@@ -43,7 +43,7 @@ describe( 'Accessibility', () => {
 			} );
 		} catch ( e ) {
 			core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on Home (/) \n\nCouldn't find skip links.` );
-			process.exit(1);
+			throw Error();
 		}
 		
 		try {
@@ -51,7 +51,7 @@ describe( 'Accessibility', () => {
 			expect( activeElement.tag.toLowerCase() ).toEqual( 'a' );
 		} catch ( e ) {
 			core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on Home (/) \n\nFirst tab doesn't select a link.` );
-			process.exit(1);
+			throw Error();
 			return;
 		}
 
@@ -60,7 +60,7 @@ describe( 'Accessibility', () => {
 			expect( activeElement.href.toLowerCase().indexOf( '#' ) >= 0 ).toBeTruthy( );
 		} catch ( e ) {
 			core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on Home (/) \n\nSkip link doesn't include an '#' pointing at an element on the page.` );
-			process.exit(1);
+			throw Error();
 			return;
 		}
 
@@ -69,7 +69,7 @@ describe( 'Accessibility', () => {
 			await page.$( el.href, ti );
 		} catch ( e ) {
 			core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on Home (/) \n\nThe skip link doesn't have a matching element on the page.` );
-			process.exit(1);
+			throw Error();
 			return;
 		}
 		
@@ -78,7 +78,7 @@ describe( 'Accessibility', () => {
 			expect( activeElement.isVisible ).toBeTruthy();
 		} catch ( e ) {
 			core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on Home (/) \n\nSkip link is not visible.` );
-			process.exit(1);
+			throw Error();
 			return;
 		}
 		
