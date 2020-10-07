@@ -13,23 +13,55 @@ const cleanErrorMessage = ( msg ) => {
 	return msg.replace( 'expect(received).toPassAxeTests(expected)', '' );
 }
 
-describe( 'Accessibility', () => {
-	beforeAll( async () => {
-		await page.goto( createURL( '/' ) );
-	} );
-	
-	const defaultUrl = ( path, query ) => {
-		let defaultUrl = path;
+const getDefaultUrl = ( path, query ) => {
+	let defaultUrl = path;
 
-		if( query.length > 1 ) {
-			defaultUrl += `?${ query }`;
-		}
-
-		return `(${ defaultUrl })`;
+	if( query.length > 1 ) {
+		defaultUrl += `?${ query }`;
 	}
 
+	return `(${ defaultUrl })`;
+}
+
+describe( 'Accessibility', () => {
+
+	it( "Must contain skip links", async () => {
+		let activeElement;
+		await page.goto( createURL( '/' ) );
+		await page.keyboard.press('Tab');
+
+		try {
+			activeElement = await page.evaluate( () =>  {
+				const el = document.activeElement;
+
+				return {
+					tag:el.tagName,
+					text: el.innerText,
+					isVisible: el.offsetHeight > 0 && el.offsetWidth > 0
+				};
+			} );
+		} catch ( e ) {
+			core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on Home(/) \n\n Couldn't find skip links.` );
+		}
+		
+		try {
+			// Expect it to have the right copy
+			expect( activeElement.text.toLowerCase().indexOf( 'skip' ) >= 0 ).toBeTruthy();
+		} catch ( e ) {
+			core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on Home(/) \n\n Skip link doesn't contain the word 'Skip' ` );
+		}
+
+		try {
+			// Expect it to be visible
+			expect( activeElement.isVisible ).toBeTruthy();
+		} catch ( e ) {
+			core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on Home(/) \n\n Skip link is not visible` );
+		}
+	} );
+
+	// Required: These test must pass
 	test.each( urls )(
-		'Should pass Axe tests on %s',
+		'Must pass Axe tests on %s',
 		async ( name, path, query ) => {
 			await page.goto( createURL( path, query ) );
 
@@ -44,24 +76,10 @@ describe( 'Accessibility', () => {
 					},
 				} );
 			} catch ( e ) {
-				core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on ${ name }${ defaultUrl( path, query ) } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test ${ cleanErrorMessage( e.message ) }` );
+				core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on ${ name }${ getDefaultUrl( path, query ) } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test ${ cleanErrorMessage( e.message ) }` );
 			}
 		}
 	);
-	
-	it( "Should contain skip links", async () => {
-		await page.keyboard.press('Tab');
-
-		try {
-			const elementCopy = await page.evaluate( () =>  {
-				return document.activeElement.innerText;
-			} );
-			
-			expect( elementCopy.toLowerCase().indexOf( 'skip' ) >= 0 ).toBeTruthy();
-		} catch ( e ) {
-			core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on Home(/) using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test Problems with Skip Links` );
-		}
-	} );
 
 	// OPTIONAL: Alert user about other important tests
 	test.each( urls )(
@@ -80,7 +98,7 @@ describe( 'Accessibility', () => {
 					},
 				} );
 			} catch ( e ) {
-				core.warning( `[ Accessibility - Optional Tests ]: \n\nRunning tests on ${ name }${ defaultUrl( path, query ) } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test ${ cleanErrorMessage( e.message ) }` );
+				core.warning( `[ Accessibility - Optional Tests ]: \n\nRunning tests on ${ name }${ getDefaultUrl( path, query ) } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test ${ cleanErrorMessage( e.message ) }` );
 			}
 		}
 	);
