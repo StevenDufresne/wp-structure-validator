@@ -12,7 +12,9 @@ runs:
   using: 'composite'
   steps: 
     - name: Copy host folder
-      run: rsync -av --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
+      run: |
+        echo Copying theme folder ...
+        rsync -av -q --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
       shell: bash
 
       ## Run unit tests to test that the correct files exist.
