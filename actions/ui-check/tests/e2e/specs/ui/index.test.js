@@ -4,6 +4,11 @@
 import { createURL } from '@wordpress/e2e-test-utils';
 const core = require( '@actions/core' );
 
+/**
+ * Internal dependencies
+ */
+import { printMessage } from '../../utils';
+
 jest.setTimeout( 1000000 );
 
 let jsError;
@@ -17,7 +22,10 @@ describe( 'Browser Console', () => {
 		await page.goto( createURL( '/' ) );
 
 		if ( jsError ) {
-			core.setFailed( `Found a JS error: \n\n${ jsError }` );
+			printMessage( 'setFailed', [
+				'[ UI ]',
+				`Found a JS error: \n\n${ jsError }`,
+			] );
 		}
 
 		expect( true ).toBeTruthy();
