@@ -45,7 +45,7 @@ describe( 'Accessibility', () => {
 		}
 		
 		try {
-			// Expect it to be visible
+			// Expect it to be a link
 			expect( activeElement.tag ).toEqual( 'a' );
 		} catch ( e ) {
 			core.setFailed( `[ Accessibility - Required Tests ]: \n\nRunning tests on Home(/) \n\n First tab doesn't select a link` );
