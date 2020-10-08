@@ -3,9 +3,9 @@
  */
 import { createURL } from '@wordpress/e2e-test-utils';
 const core = require( '@actions/core' );
-const fs = require('fs');
-const PNG = require('pngjs').PNG;
-const pixelmatch = require('pixelmatch');
+const fs = require( 'fs' );
+const PNG = require( 'pngjs' ).PNG;
+const pixelmatch = require( 'pixelmatch' );
 
 /**
  * Internal dependencies
@@ -74,49 +74,66 @@ describe( 'Accessibility: Required', () => {
 	// } );
 
 	it( 'Must keyboard well :)', async () => {
-        await page.goto( createURL( '/' ) );
+		await page.goto( createURL( '/' ) );
 
+		const hasAcceptableFocusState = async ( element, idx ) => {
 
-        const hasAcceptableFocusState = async () =>  {
-            const m = await page.waitForSelector( '#skip-link' );
-            
-            // Grab the element dimension
-            const el = await m.boundingBox();
-            
-            // Pad the element to catch outlines
-            const padding = 5; 
-            const clip = { x: el.x-padding, y: el.y-padding, width: el.width + (padding * 2), height: el.height + (padding * 2) } ;
-            
-            // Take a screenshot before focus
-            const s1 = await m.screenshot( { type: 'png', clip });
-    
-            await page.keyboard.press( 'Tab' );
-            
-            // Take a screenshot after focus
-            const s2 = await m.screenshot( { type: 'png', clip });
-            
-            // Compare images, create diff
-            const img1 = PNG.sync.read(s1);
-            const img2 = PNG.sync.read(s2);
-    
-            const {width, height} = img1;
-            const diff = new PNG({width, height});
-            
-            // Create a png with the diff overlayed on a transparent background
-            // The threshold controls how 'different' the new state should be. ( 0 Low/1 High )
-            pixelmatch(img1.data, img2.data, diff.data, width, height, { threshold: 0.3, diffMask: true });
-    
-            // Save it so we can spot check during development
-            fs.writeFileSync('debug-diff.png', PNG.sync.write(diff));
+			// Grab the element dimension
+			const dimensions = await element.boundingBox();
 
-            // Check to see if the image data has an opaque pixel, meaning the threshold was met
-            return diff.data.includes( 255 )
+			// Pad the element to catch outlines
+			const padding = 5;
+			const clip = {
+				x: dimensions.x - padding,
+				y: dimensions.y - padding,
+				width: dimensions.width + padding * 2,
+				height: dimensions.height + padding * 2,
+			};
+
+			// Take a screenshot before focus
+			const beforeSnap = await element.screenshot( { type: 'png', clip } );
+
+			// Set focus to the elements
+			await element.focus();
+
+			// Take a screenshot after focus
+			const afterSnap = await element.screenshot( { type: 'png', clip } );
+
+			// Compare images, create diff
+			const img1 = PNG.sync.read( beforeSnap );
+			const img2 = PNG.sync.read( afterSnap );
+
+            // Use the first image to determine size
+			const { width, height } = img1;
+			const diff = new PNG( { width, height } );
+
+			// Create a png with the diff overlayed on a transparent background
+			// The threshold controls how 'different' the new state should be. ( 0 Low/1 High )
+			pixelmatch( img1.data, img2.data, diff.data, width, height, {
+				threshold: 0.3,
+				diffMask: true,
+			} );
+
+			// Save it so we can spot check during development
+			fs.writeFileSync( `debug/debug-diff-${idx}.png`, PNG.sync.write( diff ) );
+
+			// Check to see if the image data has an opaque pixel, meaning the threshold was met
+			return diff.data.includes( 255 );
+		};
+
+        // TO DO: Filter out disabled elements
+		const els = await page.$$(
+			'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
+		);
+
+		for ( let i = 0; i < els.length; i++ ) {
+            const result = await hasAcceptableFocusState( els[ i ], i );
+            
+            if(! result ) {
+                throw Error(`Found a problem with: Element #${i}.`)
+            }
         }
         
-       const result =  await hasAcceptableFocusState();
-
-       expect( result ).toBeTruthy();
-
-
+        expect( true ).toBeTruthy();
 	} );
 } );
