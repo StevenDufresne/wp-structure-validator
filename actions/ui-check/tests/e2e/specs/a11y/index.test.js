@@ -117,18 +117,6 @@ describe( 'Accessibility: Required', () => {
 
        expect( result ).toBeTruthy();
 
-        
 
-		// const focusableElements = await page.evaluate( () => {
-		// 	return [
-		// 		...document.querySelectorAll(
-		// 			'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
-		// 		),
-		// 	].filter( ( el ) => ! el.hasAttribute( 'disabled' ) );
-		// } );
-
-		// console.log( focusableElements );
-
-		// await new Promise( ( resolve ) => setTimeout( resolve, 200000 ) );
 	} );
 } );
