@@ -23,8 +23,8 @@ describe( 'Accessible: Tag Ready', () => {
 							type: 'tag',
 							values: [ 'wcag2a' ],
 						},
-						exclude: [ [ '.entry-content' ] ],
-					},
+                    },
+                    exclude: [ [ '.entry-content' ] ],
 				} );
 			} catch ( e ) {
 				printMessage( 'setFailed', [
