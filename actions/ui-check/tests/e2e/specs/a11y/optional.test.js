@@ -10,7 +10,9 @@ import urls from './pages';
 import { cleanErrorMessage, getDefaultUrl, printMessage } from '../../utils';
 
 describe( 'Accessibility: Best Practices', () => {
-	test.each( urls )(
+	const fn = process.env.TEST_ACCESSIBILITY ? test.skip : test;
+
+	fn.each( urls )(
 		'Should pass Best Practice Axe tests on %s',
 		async ( name, path, query ) => {
 			await page.goto( createURL( path, query ) );
