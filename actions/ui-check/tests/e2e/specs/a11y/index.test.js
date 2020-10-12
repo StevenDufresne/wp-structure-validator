@@ -120,16 +120,10 @@ describe( 'Accessibility: Required', () => {
 			return error;
 		} );
 
-		printMessage( 'warning', [
-			'[ Accessibility - Required Tests ]:',
-			'Running tests on Home (/)',
-			'Skip link should contain the word "Skip".',
-		] );
-
 		try {
 			expect( error ).toBeUndefined();
 		} catch ( ex ) {
-			printMessage( 'warning', [
+			printMessage( 'setFailed', [
 				'[ Accessibility - Required Tests ]:',
 				'Running tests on Home (/)',
 				'Navigation is not following the rules',
@@ -141,60 +135,67 @@ describe( 'Accessibility: Required', () => {
 		await page.goto( createURL( '/' ) );
 
 		const hasAcceptableFocusState = async ( element, idx ) => {
-			// Grab the element dimension
-			const dimensions = await element.boundingBox();
+			try {
+				// Grab the element dimension
+				const dimensions = await element.boundingBox();
 
-			// It's a hidden element
-			if ( ! dimensions || dimensions.x < 0 || dimensions.y < 0 ) {
-				return true;
+				// It's a hidden element
+				if ( ! dimensions || dimensions.x < 0 || dimensions.y < 0 ) {
+					return true;
+				}
+
+				// Pad the element to catch outlines
+				const padding = 5;
+				const clip = {
+					x: dimensions.x - padding,
+					y: dimensions.y - padding,
+					width: dimensions.width + padding * 2,
+					height: dimensions.height + padding * 2,
+				};
+
+				// Take a screenshot before focus
+				const beforeSnap = await element.screenshot( {
+					type: 'png',
+					clip,
+				} );
+
+				// Set focus to the element
+				await element.focus();
+
+				await new Promise( ( resolve ) => setTimeout( resolve, 500 ) );
+
+				// Take a screenshot after focus
+				const afterSnap = await element.screenshot( {
+					type: 'png',
+					clip,
+				} );
+
+				// Compare images, create diff
+				const img1 = PNG.sync.read( beforeSnap );
+				const img2 = PNG.sync.read( afterSnap );
+
+				// Use the first image to determine size
+				const { width, height } = img1;
+				const diff = new PNG( { width, height } );
+
+				// Create a png with the diff overlayed on a transparent background
+				// The threshold controls how 'different' the new state should be. ( 0 Low/1 High )
+				pixelmatch( img1.data, img2.data, diff.data, width, height, {
+					threshold: 0.3,
+					diffMask: true,
+				} );
+
+				// Save it so we can spot check during development
+				fs.writeFileSync(
+					`debug/debug-diff-${ idx }.png`,
+					PNG.sync.write( diff )
+				);
+
+				// Check to see if the image data has an opaque pixel, meaning the threshold was met
+				return meetsChangeThreshold( percentOpaque( diff.data ) );
+			} catch ( ex ) {
+				return false;
 			}
-
-			// Pad the element to catch outlines
-			const padding = 5;
-			const clip = {
-				x: dimensions.x - padding,
-				y: dimensions.y - padding,
-				width: dimensions.width + padding * 2,
-				height: dimensions.height + padding * 2,
-			};
-
-			// Take a screenshot before focus
-			const beforeSnap = await element.screenshot( {
-				type: 'png',
-				clip,
-			} );
-
-			// Set focus to the element
-			await element.focus();
-
-			await new Promise( ( resolve ) => setTimeout( resolve, 500 ) );
-
-			// Take a screenshot after focus
-			const afterSnap = await element.screenshot( { type: 'png', clip } );
-
-			// Compare images, create diff
-			const img1 = PNG.sync.read( beforeSnap );
-			const img2 = PNG.sync.read( afterSnap );
-
-			// Use the first image to determine size
-			const { width, height } = img1;
-			const diff = new PNG( { width, height } );
-
-			// Create a png with the diff overlayed on a transparent background
-			// The threshold controls how 'different' the new state should be. ( 0 Low/1 High )
-			pixelmatch( img1.data, img2.data, diff.data, width, height, {
-				threshold: 0.3,
-				diffMask: true,
-			} );
-
-			// Save it so we can spot check during development
-			fs.writeFileSync(
-				`debug/debug-diff-${ idx }.png`,
-				PNG.sync.write( diff )
-			);
-
-			// Check to see if the image data has an opaque pixel, meaning the threshold was met
-			return meetsChangeThreshold( percentOpaque( diff.data ) );
 		};
 
 		// TO DO: Filter out disabled elements
@@ -217,7 +218,7 @@ describe( 'Accessibility: Required', () => {
 				}
 			}
 		} catch ( ex ) {
-			printMessage( 'warning', [
+			printMessage( 'setFailed', [
 				'[ Accessibility - Required Tests ]:',
 				'Running tests on Home (/)',
 				ex.message,
