@@ -43,6 +43,11 @@ export const printMessage = ( command, lines ) => {
 	core[ command ]( lines.join( '\n\n' ) );
 };
 
+/**
+ *
+ * @param {imageData} imageData Representation of the png
+ * @return {number} Number between 0 - 100 representing the percentage of opaque pixels within the transparent png
+ */
 export const percentOpaque = ( imageData ) => {
 	let i;
 	let opaquePixels = 0;
@@ -50,13 +55,17 @@ export const percentOpaque = ( imageData ) => {
 	for ( i = 3; i < imageData.length; i += 4 ) {
 		if ( imageData[ i ] === 255 ) {
 			opaquePixels++;
-        }
-    }
+		}
+	}
 
-    const totalPixels = imageData.length / 4;
+	const totalPixels = imageData.length / 4;
 	return ( opaquePixels / totalPixels ) * 100;
 };
 
+/**
+ *
+ * @param {number} changePercent
+ */
 export const meetsChangeThreshold = ( changePercent ) => {
-    return changePercent > 1;
-}
+	return changePercent > 1;
+};
