@@ -42,3 +42,21 @@ export const printMessage = ( command, lines ) => {
 
 	core[ command ]( lines.join( '\n\n' ) );
 };
+
+export const percentOpaque = ( imageData ) => {
+	let i;
+	let opaquePixels = 0;
+
+	for ( i = 3; i < imageData.length; i += 4 ) {
+		if ( imageData[ i ] === 255 ) {
+			opaquePixels++;
+        }
+    }
+
+    const totalPixels = imageData.length / 4;
+	return ( opaquePixels / totalPixels ) * 100;
+};
+
+export const meetsChangeThreshold = ( changePercent ) => {
+    return changePercent > 1;
+}
