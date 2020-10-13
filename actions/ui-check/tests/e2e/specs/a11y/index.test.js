@@ -63,20 +63,6 @@ describe( 'Accessibility: Required', () => {
 			] );
 			throw Error();
 		}
-
-		try {
-			// Expect it to have the right copy
-			expect(
-				activeElement.text.toLowerCase().indexOf( 'skip' ) >= 0
-			).toBeTruthy();
-		} catch ( e ) {
-			printMessage( 'warning', [
-				'[ Accessibility - Required Tests ]:',
-				'Running tests on "/".',
-				'Skip link should contain the word "Skip".',
-				'See https://make.wordpress.org/themes/handbook/review/required/#skip-links for more information.',
-			] );
-		}
     } );
 
 	it( 'Navigation submenus are not working properly', async () => {
