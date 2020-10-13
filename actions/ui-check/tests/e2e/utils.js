@@ -69,3 +69,32 @@ export const percentOpaque = ( imageData ) => {
 export const meetsChangeThreshold = ( changePercent ) => {
 	return changePercent > 1;
 };
+
+export const getFocusableElements = async () => {
+	const elements = await page.$$(
+		'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
+	);
+
+	const final = [];
+
+	for ( let i = 0; i < elements.length; i++ ) {
+
+		// Check if it disabled
+		const disabled = await (
+			await elements[ i ].getProperty( 'disabled' )
+		 ).jsonValue();
+
+		// If this is null, it's not visible
+        const boundingBox = await elements[ i ].boundingBox();
+
+        const innerText = await (
+			await elements[ i ].getProperty( 'innerText' )
+		 ).jsonValue();
+
+		if ( ! disabled && boundingBox !== null ) {
+			final.push( elements[i] );
+		}
+	}
+
+	return final;
+};

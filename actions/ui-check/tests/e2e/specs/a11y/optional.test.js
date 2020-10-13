@@ -7,10 +7,50 @@ import { createURL } from '@wordpress/e2e-test-utils';
  * Internal dependencies
  */
 import urls from './pages';
-import { cleanErrorMessage, getDefaultUrl, printMessage } from '../../utils';
+import {
+	cleanErrorMessage,
+	getDefaultUrl,
+	printMessage,
+	getFocusableElements,
+} from '../../utils';
 
 describe( 'Accessibility: Best Practices', () => {
-	test.each( urls )(
+	it( 'Should have logical tabbing', async () => {
+		let hasMismatch = false;
+		await page.goto( createURL( '/' ) );
+
+		const focusableElements = await getFocusableElements();
+
+		for ( let i = 0; i < focusableElements.length; i++ ) {
+			await page.keyboard.press( 'Tab' );
+
+			const currentElement = await (
+				await focusableElements[ i ].getProperty( 'innerText' )
+			 ).jsonValue();
+
+			const currentFocus = await page.evaluate(
+				( x ) => document.activeElement.innerText
+			);
+
+			if ( currentFocus !== currentElement ) {
+				hasMismatch = true;
+				break;
+			}
+		}
+
+		try {
+			expect( hasMismatch ).toBeFalsy();
+		} catch ( ex ) {
+			printMessage( 'warning', [
+				'[ Accessibility - Best Practice Tests ]:',
+				'Running test on "/".',
+				'Tabbing is not working as expected.',
+				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
+			] );
+		}
+	} );
+
+	test.skip.each( urls )(
 		'Should pass Best Practice Axe tests on %s',
 		async ( name, path, query ) => {
 			await page.goto( createURL( path, query ) );

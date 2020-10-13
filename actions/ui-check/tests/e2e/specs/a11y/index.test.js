@@ -10,7 +10,7 @@ const pixelmatch = require( 'pixelmatch' );
 /**
  * Internal dependencies
  */
-import { printMessage, meetsChangeThreshold, percentOpaque } from '../../utils';
+import { printMessage, meetsChangeThreshold, percentOpaque, getFocusableElements } from '../../utils';
 
 describe( 'Accessibility: Required', () => {
  
@@ -77,7 +77,7 @@ describe( 'Accessibility: Required', () => {
 				'See https://make.wordpress.org/themes/handbook/review/required/#skip-links for more information.',
 			] );
 		}
-	} );
+    } );
 
 	it( 'Navigation submenus are not working properly', async () => {
 		await page.goto( createURL( '/' ) );
@@ -209,17 +209,15 @@ describe( 'Accessibility: Required', () => {
 		};
 
 		// TO DO: Filter out disabled elements
-		const els = await page.$$(
-			'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
-		);
+        const focusableElements = await getFocusableElements();
 
 		try {
-			for ( let i = 0; i < els.length; i++ ) {
-				const result = await hasAcceptableFocusState( els[ i ], i );
+			for ( let i = 0; i < focusableElements.length; i++ ) {
+				const result = await hasAcceptableFocusState( focusableElements[ i ], i );
 
 				if ( ! result ) {
 					const domElement = await (
-						await els[ i ].getProperty( 'outerHTML' )
+						await focusableElements[ i ].getProperty( 'outerHTML' )
 					 ).jsonValue();
 
 					const openingTag = domElement.substring(
