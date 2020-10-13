@@ -16,10 +16,10 @@ import {
 
 describe( 'Accessibility: Best Practices', () => {
 	it( 'Should have logical tabbing', async () => {
-		let hasMismatch = false;
 		await page.goto( createURL( '/' ) );
-
 		const focusableElements = await getFocusableElements();
+
+		let hasMismatch = false;
 
 		for ( let i = 0; i < focusableElements.length; i++ ) {
 			await page.keyboard.press( 'Tab' );
@@ -29,9 +29,10 @@ describe( 'Accessibility: Best Practices', () => {
 			 ).jsonValue();
 
 			const currentFocus = await page.evaluate(
-				( x ) => document.activeElement.innerText
+				() => document.activeElement.innerText
 			);
 
+			// If the innerText don't match, we assume the tabbing order is not obvious
 			if ( currentFocus !== currentElement ) {
 				hasMismatch = true;
 				break;
