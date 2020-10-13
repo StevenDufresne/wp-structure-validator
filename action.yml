@@ -5,6 +5,9 @@ inputs:
   root-folder:
     description: 'The location of your theme'
     default: .
+  accessible-ready:
+    description: 'Whether to run the full accessibility tests'
+    default: false
 branding:
   icon: 'clipboard'  
   color: 'blue'
