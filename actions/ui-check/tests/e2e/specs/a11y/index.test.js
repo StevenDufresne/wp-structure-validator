@@ -10,10 +10,14 @@ const pixelmatch = require( 'pixelmatch' );
 /**
  * Internal dependencies
  */
-import { printMessage, meetsChangeThreshold, percentOpaque, getFocusableElements } from '../../utils';
+import {
+	printMessage,
+	meetsChangeThreshold,
+	percentOpaque,
+	getFocusableElements,
+} from '../../utils';
 
 describe( 'Accessibility: Required', () => {
- 
 	it( 'Must contain skip links', async () => {
 		await page.goto( createURL( '/' ) );
 		await page.keyboard.press( 'Tab' );
@@ -63,7 +67,7 @@ describe( 'Accessibility: Required', () => {
 			] );
 			throw Error();
 		}
-    } );
+	} );
 
 	it( 'Navigation submenus are not working properly', async () => {
 		await page.goto( createURL( '/' ) );
@@ -121,7 +125,7 @@ describe( 'Accessibility: Required', () => {
 			printMessage( 'setFailed', [
 				'[ Accessibility - Required Tests ]:',
 				'Running tests on "/".',
-				'Navigation is not following the rules',
+				'Navigation is not following the rules.',
 				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 			] );
 		}
@@ -158,7 +162,8 @@ describe( 'Accessibility: Required', () => {
 				// Set focus to the element
 				await element.focus();
 
-				await new Promise( ( resolve ) => setTimeout( resolve, 500 ) );
+				// We give it a few seconds in case there is an animation
+				await new Promise( ( resolve ) => setTimeout( resolve, 300 ) );
 
 				// Take a screenshot after focus
 				const afterSnap = await element.screenshot( {
@@ -181,11 +186,23 @@ describe( 'Accessibility: Required', () => {
 					diffMask: true,
 				} );
 
+				const path = `debug/${ idx }/`;
+
+				// Create a temporary directory
+				if ( ! fs.existsSync( path ) ) {
+					fs.mkdirSync( path );
+				}
+
 				// Save it so we can spot check during development
 				fs.writeFileSync(
-					`debug/debug-diff-${ idx }.png`,
-					PNG.sync.write( diff )
+					`${ path }before.png`,
+					PNG.sync.write( img1 )
 				);
+				fs.writeFileSync(
+					`${ path }after.png`,
+					PNG.sync.write( img2 )
+				);
+				fs.writeFileSync( `${ path }diff.png`, PNG.sync.write( diff ) );
 
 				// Check to see if the image data has an opaque pixel, meaning the threshold was met
 				return meetsChangeThreshold( percentOpaque( diff.data ) );
@@ -194,12 +211,15 @@ describe( 'Accessibility: Required', () => {
 			}
 		};
 
-		// TO DO: Filter out disabled elements
-        const focusableElements = await getFocusableElements();
+		// We'll test the first 30 elements.
+		const focusableElements = await getFocusableElements().splice( 0, 30 );
 
 		try {
 			for ( let i = 0; i < focusableElements.length; i++ ) {
-				const result = await hasAcceptableFocusState( focusableElements[ i ], i );
+				const result = await hasAcceptableFocusState(
+					focusableElements[ i ],
+					i
+				);
 
 				if ( ! result ) {
 					const domElement = await (
