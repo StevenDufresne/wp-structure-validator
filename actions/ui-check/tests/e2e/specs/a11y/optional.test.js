@@ -10,7 +10,7 @@ import urls from './pages';
 import { cleanErrorMessage, getDefaultUrl, printMessage } from '../../utils';
 
 describe( 'Accessibility: Best Practices', () => {
-	const fn = process.env.TEST_ACCESSIBILITY ? test.skip : test;
+	const fn = ! process.env.TEST_ACCESSIBILITY ? test.skip : test;
 
 	fn.each( urls )(
 		'Should pass Best Practice Axe tests on %s',
