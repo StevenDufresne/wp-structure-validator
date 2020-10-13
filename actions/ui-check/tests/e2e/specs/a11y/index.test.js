@@ -37,7 +37,7 @@ describe( 'Accessibility: Required', () => {
 		} catch ( e ) {
 			printMessage( 'setFailed', [
 				'[ Accessibility - Required Tests ]:',
-				'Running tests on "/"',
+				'Running tests on "/".',
 				'Unable to find a legitimate skip link.',
 				'See https://make.wordpress.org/themes/handbook/review/required/#skip-links for more information.',
 			] );
@@ -52,7 +52,7 @@ describe( 'Accessibility: Required', () => {
 		} catch ( e ) {
 			printMessage( 'setFailed', [
 				'[ Accessibility - Required Tests ]:',
-				'Running tests on "/"',
+				'Running tests on "/".',
 				"The skip link doesn't have a matching element on the page.",
 				`Expecting to find an element with an id matching: "${ activeElement.hash.replace(
 					'#',
@@ -71,7 +71,7 @@ describe( 'Accessibility: Required', () => {
 		} catch ( e ) {
 			printMessage( 'warning', [
 				'[ Accessibility - Required Tests ]:',
-				'Running tests on "/"',
+				'Running tests on "/".',
 				'Skip link should contain the word "Skip".',
 				'See https://make.wordpress.org/themes/handbook/review/required/#skip-links for more information.',
 			] );
@@ -135,7 +135,7 @@ describe( 'Accessibility: Required', () => {
 		} catch ( ex ) {
 			printMessage( 'setFailed', [
 				'[ Accessibility - Required Tests ]:',
-				'Running tests on "/"',
+				'Running tests on "/".',
 				'Navigation is not following the rules',
 				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 			] );
@@ -236,7 +236,7 @@ describe( 'Accessibility: Required', () => {
 		} catch ( ex ) {
 			printMessage( 'setFailed', [
 				'[ Accessibility - Required Tests ]:',
-				'Running tests on "/"',
+				'Running tests on "/".',
 				ex.message,
 				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 			] );
