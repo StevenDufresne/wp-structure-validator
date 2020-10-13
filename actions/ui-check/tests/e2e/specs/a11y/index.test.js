@@ -81,14 +81,22 @@ describe( 'Accessibility: Required', () => {
 
 		const error = await page.evaluate( () => {
 			let error;
-			const navItems = document.querySelectorAll( 'ul li' );
+			const navItems = document.querySelectorAll( 'nav ul li' );
 
+			/**
+			 *
+			 * @param {HTMLElement} element Reference to a dom node
+			 */
 			function menuUsesDisplayNone( element ) {
 				return (
 					getComputedStyle( element ).display.toLowerCase() === 'none'
 				);
 			}
 
+			/**
+			 *
+			 * @param {HTMLElement} element Reference to a dom node
+			 */
 			function elementIsVisible( element ) {
 				const rect = element.getBoundingClientRect();
 				return ! ( rect.x < 0 || rect.y - window.innerHeight >= 0 );
@@ -208,7 +216,7 @@ describe( 'Accessibility: Required', () => {
 				const result = await hasAcceptableFocusState( els[ i ], i );
 
 				if ( ! result ) {
-					const domElement = await await (
+					const domElement = await (
 						await els[ i ].getProperty( 'outerHTML' )
 					 ).jsonValue();
 
