@@ -35,7 +35,13 @@ runs:
       shell: bash
 
       ## Run checks using e2e
-    - name: Run JS Check
+    - name: Run Basic JS Checks
+      if: ${{ ! inputs.accessible-ready }}
       run: cd ${{ github.action_path }} && npm run check:ui:basic
+
+      ## Run checks using e2e
+    - name: Run Full JS Checks
+      if: ${{ inputs.accessible-ready }}
+      run: cd ${{ github.action_path }} && npm run check:ui:full
       shell: bash
       
