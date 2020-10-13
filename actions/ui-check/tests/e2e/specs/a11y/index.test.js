@@ -13,6 +13,7 @@ const pixelmatch = require( 'pixelmatch' );
 import { printMessage, meetsChangeThreshold, percentOpaque } from '../../utils';
 
 describe( 'Accessibility: Required', () => {
+    console.log( process.env );
 	it( 'Must contain skip links', async () => {
 		await page.goto( createURL( '/' ) );
 		await page.keyboard.press( 'Tab' );

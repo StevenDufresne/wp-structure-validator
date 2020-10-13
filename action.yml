@@ -36,12 +36,5 @@ runs:
 
       ## Run checks using e2e
     - name: Run Basic JS Checks
-      if: ${{ ! inputs.accessible-ready }}
-      run: cd ${{ github.action_path }} && npm run check:ui:basic
-
-      ## Run checks using e2e
-    - name: Run Full JS Checks
-      if: ${{ inputs.accessible-ready }}
-      run: cd ${{ github.action_path }} && npm run check:ui:full
+      run: cd ${{ github.action_path }} && TEST_ACCESSIBILITY=${{ inputs.accessible-ready }} npm run check:ui
       shell: bash
-      
