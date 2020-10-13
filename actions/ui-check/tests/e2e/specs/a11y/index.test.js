@@ -39,7 +39,7 @@ describe( 'Accessibility: Required', () => {
 				'[ Accessibility - Required Tests ]:',
 				'Running tests on Home (/)',
 				'Unable to find a legitimate skip link.',
-				'See https://make.wordpress.org/accessibility/handbook/markup/skip-links for more information.',
+				'See https://make.wordpress.org/themes/handbook/review/required/#skip-links for more information.',
 			] );
 			throw Error();
 		}
@@ -58,6 +58,7 @@ describe( 'Accessibility: Required', () => {
 					'#',
 					''
 				) }".`,
+				'See https://make.wordpress.org/themes/handbook/review/required/#skip-links for more information.',
 			] );
 			throw Error();
 		}
@@ -72,6 +73,7 @@ describe( 'Accessibility: Required', () => {
 				'[ Accessibility - Required Tests ]:',
 				'Running tests on Home (/)',
 				'Skip link should contain the word "Skip".',
+				'See https://make.wordpress.org/themes/handbook/review/required/#skip-links for more information.',
 			] );
 		}
 	} );
@@ -135,6 +137,7 @@ describe( 'Accessibility: Required', () => {
 				'[ Accessibility - Required Tests ]:',
 				'Running tests on Home (/)',
 				'Navigation is not following the rules',
+				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 			] );
 		}
 	} );
@@ -220,7 +223,6 @@ describe( 'Accessibility: Required', () => {
 						await els[ i ].getProperty( 'outerHTML' )
 					 ).jsonValue();
 
-
 					const openingTag = domElement.substring(
 						0,
 						domElement.indexOf( '>' ) + 1
@@ -236,6 +238,7 @@ describe( 'Accessibility: Required', () => {
 				'[ Accessibility - Required Tests ]:',
 				'Running tests on Home (/)',
 				ex.message,
+				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 			] );
 		}
 	} );
