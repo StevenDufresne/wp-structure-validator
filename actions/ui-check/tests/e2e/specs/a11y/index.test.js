@@ -220,8 +220,14 @@ describe( 'Accessibility: Required', () => {
 						await els[ i ].getProperty( 'outerHTML' )
 					 ).jsonValue();
 
+
+					const openingTag = domElement.substring(
+						0,
+						domElement.indexOf( '>' ) + 1
+					);
+
 					throw Error(
-						`The element "${ domElement }" does not have enough visible difference when focused.`
+						`The element "${ openingTag }" does not have enough visible difference when focused.`
 					);
 				}
 			}
