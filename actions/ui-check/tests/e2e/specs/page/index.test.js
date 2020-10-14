@@ -87,9 +87,7 @@ describe.each( urls )
 
 			await page.goto( createURL( '/' ) );
 
-			if ( jsError ) {
-				core.setFailed( `Found a JS error: \n\n${ jsError }` );
-			}
+			expect( jsError ).toBeFalsy();
 		});
 
 	}
