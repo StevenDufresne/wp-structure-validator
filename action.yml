@@ -41,3 +41,10 @@ runs:
     - name: Run Basic JS Checks
       run: cd ${{ github.action_path }} && TEST_ACCESSIBILITY=${{ inputs.accessible-ready }} npm run check:ui
       shell: bash
+
+    - name: Upload screenshots to GitHub
+      uses: actions/upload-artifact@v2
+      shell: bash
+      with:
+        name: Screenshots
+        path: actions/ui-check/debug
