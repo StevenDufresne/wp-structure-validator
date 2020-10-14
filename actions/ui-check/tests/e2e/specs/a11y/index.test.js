@@ -15,8 +15,8 @@ import {
 	meetsChangeThreshold,
 	percentOpaque,
 	getFocusableElements,
+	createArtifact,
 } from '../../utils';
-
 
 describe( 'Accessibility: Required', () => {
 	it( 'Must contain skip links', async () => {
@@ -212,8 +212,8 @@ describe( 'Accessibility: Required', () => {
 			}
 		};
 
-        const focusableElements = await getFocusableElements();
-        
+		const focusableElements = await getFocusableElements();
+
 		try {
 			for ( let i = 0; i < focusableElements.length; i++ ) {
 				const result = await hasAcceptableFocusState(
@@ -237,9 +237,8 @@ describe( 'Accessibility: Required', () => {
 				}
 			}
 		} catch ( ex ) {
+			await createArtifact();
 
-            await createArtifact();
-            
 			printMessage( 'setFailed', [
 				'[ Accessibility - Required Tests ]:',
 				'Running tests on "/".',

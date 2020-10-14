@@ -11,8 +11,8 @@ import urls from './pages';
 import { cleanErrorMessage, getDefaultUrl, printMessage } from '../../utils';
 
 describe( 'Accessible: Tag Ready', () => {
-    const fn = !! process.env.TEST_ACCESSIBILITY ? test.skip : test;
-    
+	const fn = !! process.env.TEST_ACCESSIBILITY ? test.skip : test;
+
 	fn.each( urls )(
 		'Must pass Axe tests on %s',
 		async ( name, path, query ) => {
