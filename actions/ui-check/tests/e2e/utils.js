@@ -1,4 +1,5 @@
 const core = require( '@actions/core' );
+const artifact = require( '@actions/artifact' );
 
 /**
  * Removes some noise that exists in the testing framework error messages.
@@ -78,23 +79,41 @@ export const getFocusableElements = async () => {
 	const final = [];
 
 	for ( let i = 0; i < elements.length; i++ ) {
-
 		// Check if it disabled
 		const disabled = await (
 			await elements[ i ].getProperty( 'disabled' )
 		 ).jsonValue();
 
 		// If this is null, it's not visible
-        const boundingBox = await elements[ i ].boundingBox();
+		const boundingBox = await elements[ i ].boundingBox();
 
-        const innerText = await (
+		const innerText = await (
 			await elements[ i ].getProperty( 'innerText' )
 		 ).jsonValue();
 
 		if ( ! disabled && boundingBox !== null ) {
-			final.push( elements[i] );
+			final.push( elements[ i ] );
 		}
 	}
 
 	return final;
+};
+
+export const createArtifact = async () => {
+	const artifactClient = artifact.create();
+
+	const artifactName = 'my-artifact';
+	const files = [ '*' ];
+
+	const rootDirectory = '../debug'; // Also possible to use __dirname
+	const options = {
+		continueOnError: false,
+	};
+
+	await artifactClient.uploadArtifact(
+		artifactName,
+		files,
+		rootDirectory,
+		options
+	);
 };

@@ -17,6 +17,7 @@ import {
 	getFocusableElements,
 } from '../../utils';
 
+
 describe( 'Accessibility: Required', () => {
 	it( 'Must contain skip links', async () => {
 		await page.goto( createURL( '/' ) );
@@ -236,6 +237,9 @@ describe( 'Accessibility: Required', () => {
 				}
 			}
 		} catch ( ex ) {
+
+            await createArtifact();
+            
 			printMessage( 'setFailed', [
 				'[ Accessibility - Required Tests ]:',
 				'Running tests on "/".',
