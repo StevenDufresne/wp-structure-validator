@@ -237,7 +237,7 @@ describe( 'Accessibility: Required', () => {
 				}
 			}
 		} catch ( ex ) {
-            await createArtifact( 'debug' );
+           // await createArtifact( 'debug' );
 
 			printMessage( 'setFailed', [
 				'[ Accessibility - Required Tests ]:',
@@ -245,6 +245,6 @@ describe( 'Accessibility: Required', () => {
 				ex.message,
 				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 			] );
-		}
+		}   
 	} );
 } );
