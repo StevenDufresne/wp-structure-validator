@@ -73,7 +73,6 @@ describe.each( urls )
 		it( 'Page should return 200 status', async() => {
 			let response = await page.goto( createURL( url, queryString ) );
 
-			//console.log( await response.text() );
 			expect( await response.status() ).toBe( 200 );
 
 		});
