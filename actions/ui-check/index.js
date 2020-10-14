@@ -2,6 +2,8 @@ const artifact = require( '@actions/artifact' );
 const artifactClient = artifact.create();
 const path = 'debug';
 
+console.log( process.env );
+
 const uploadArtifact = async () => {
     try {
     	const artifactName = 'my-artifact';
