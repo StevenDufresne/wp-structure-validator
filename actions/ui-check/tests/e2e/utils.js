@@ -102,12 +102,23 @@ export const getFocusableElements = async () => {
 export const createArtifact = async ( path ) => {
 	const artifactClient = artifact.create();
 
-	const artifactName = 'my-artifact';
-	const files = [ '*' ];
+	console.log( 'Creating Artifact' );
+	try {
+		const artifactName = 'my-artifact';
+		const files = [ '*' ];
 
-	const options = {
-		continueOnError: false,
-	};
+		const options = {
+			continueOnError: false,
+		};
 
-	await artifactClient.uploadArtifact( artifactName, files, path, options );
+		await artifactClient.uploadArtifact(
+			artifactName,
+			files,
+			path,
+			options
+		);
+	} catch ( e ) {
+		console.log( 'Exception creating artifact' );
+		console.log( e );
+	}
 };
