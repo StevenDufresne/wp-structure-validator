@@ -187,12 +187,12 @@ describe( 'Accessibility: Required', () => {
 					diffMask: true,
 				} );
 
-				const path = `debug/${ idx }/`;
+                const path = `debug/${ idx }/`;
 
 				// Create a temporary directory
 				if ( ! fs.existsSync( path ) ) {
 					fs.mkdirSync( path );
-				}
+                }
 
 				// Save it so we can spot check during development
 				fs.writeFileSync(
@@ -203,8 +203,8 @@ describe( 'Accessibility: Required', () => {
 					`${ path }after.png`,
 					PNG.sync.write( img2 )
 				);
-				fs.writeFileSync( `${ path }diff.png`, PNG.sync.write( diff ) );
-
+                fs.writeFileSync( `${ path }diff.png`, PNG.sync.write( diff ) );
+                
 				// Check to see if the image data has an opaque pixel, meaning the threshold was met
 				return meetsChangeThreshold( percentOpaque( diff.data ) );
 			} catch ( ex ) {
@@ -237,7 +237,7 @@ describe( 'Accessibility: Required', () => {
 				}
 			}
 		} catch ( ex ) {
-			await createArtifact( 'debug' );
+            await createArtifact( 'debug' );
 
 			printMessage( 'setFailed', [
 				'[ Accessibility - Required Tests ]:',

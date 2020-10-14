@@ -109,10 +109,5 @@ export const createArtifact = async ( path ) => {
 		continueOnError: false,
 	};
 
-	await artifactClient.uploadArtifact(
-		artifactName,
-		files,
-		path,
-		options
-	);
+	await artifactClient.uploadArtifact( artifactName, files, path, options );
 };
