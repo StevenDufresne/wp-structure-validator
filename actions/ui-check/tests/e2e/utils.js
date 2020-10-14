@@ -105,7 +105,7 @@ export const createArtifact = async () => {
 	const artifactName = 'my-artifact';
 	const files = [ '*' ];
 
-	const rootDirectory = '../debug'; // Also possible to use __dirname
+	const rootDirectory = '../../debug'; 
 	const options = {
 		continueOnError: false,
 	};
