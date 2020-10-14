@@ -99,13 +99,12 @@ export const getFocusableElements = async () => {
 	return final;
 };
 
-export const createArtifact = async () => {
+export const createArtifact = async ( path ) => {
 	const artifactClient = artifact.create();
 
 	const artifactName = 'my-artifact';
 	const files = [ '*' ];
 
-	const rootDirectory = '../../debug'; 
 	const options = {
 		continueOnError: false,
 	};
@@ -113,7 +112,7 @@ export const createArtifact = async () => {
 	await artifactClient.uploadArtifact(
 		artifactName,
 		files,
-		rootDirectory,
+		path,
 		options
 	);
 };

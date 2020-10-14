@@ -237,7 +237,7 @@ describe( 'Accessibility: Required', () => {
 				}
 			}
 		} catch ( ex ) {
-			await createArtifact();
+			await createArtifact( 'debug' );
 
 			printMessage( 'setFailed', [
 				'[ Accessibility - Required Tests ]:',
