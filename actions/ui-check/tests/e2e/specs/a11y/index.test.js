@@ -211,9 +211,8 @@ describe( 'Accessibility: Required', () => {
 			}
 		};
 
-		// We'll test the first 30 elements.
-		const focusableElements = await getFocusableElements().splice( 0, 30 );
-
+        const focusableElements = await getFocusableElements();
+        
 		try {
 			for ( let i = 0; i < focusableElements.length; i++ ) {
 				const result = await hasAcceptableFocusState(
