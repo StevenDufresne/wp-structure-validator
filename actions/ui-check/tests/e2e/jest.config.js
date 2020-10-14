@@ -1,6 +1,6 @@
 module.exports = {
 	...require( '@wordpress/scripts/config/jest-e2e.config' ),
-	testTimeout: 10000,
+	testTimeout: 1000000,
 	setupFilesAfterEnv: [
 		'@wordpress/jest-console',
 		'@wordpress/jest-puppeteer-axe',

@@ -1,5 +1,4 @@
 const core = require( '@actions/core' );
-const artifact = require( '@actions/artifact' );
 
 /**
  * Removes some noise that exists in the testing framework error messages.
@@ -97,28 +96,4 @@ export const getFocusableElements = async () => {
 	}
 
 	return final;
-};
-
-export const createArtifact = async ( path ) => {
-	const artifactClient = artifact.create();
-
-	console.log( 'Creating Artifact' );
-	try {
-		const artifactName = 'my-artifact';
-		const files = [ '*' ];
-
-		const options = {
-			continueOnError: false,
-		};
-
-		await artifactClient.uploadArtifact(
-			artifactName,
-			files,
-			path,
-			options
-		);
-	} catch ( e ) {
-		console.log( 'Exception creating artifact' );
-		console.log( e );
-	}
 };
