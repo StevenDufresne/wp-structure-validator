@@ -13,7 +13,7 @@
     "install:environment": "npm install && npm run wp-env start && npm run activate-theme && npm run install:accessibility && npm run install:menu",
     "check:theme-check": "npm run wp-env run cli eval-file ./actions/theme-check/CheckTheme.php",
     "check:structure": "cd ./actions/structure-check && npm run start",
-    "check:ui": "cd ./actions/ui-check && mkdir debug && npm run start && ls && npm run upload:artifact"
+    "check:ui": "cd ./actions/ui-check && mkdir debug && cd debug && ls && cd .. && npm run start && ls && npm run upload:artifact"
   },
   "author": "The WordPress Contributors",
   "license": "GPL-2.0-or-later",
