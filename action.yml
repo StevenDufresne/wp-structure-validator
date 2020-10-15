@@ -8,6 +8,10 @@ inputs:
   accessible-ready:
     description: 'Whether to run the full accessibility tests'
     default: false
+outputs:
+  screenshots: 
+    description: "Path to screenshots"
+    value: ${{ github.action_path }}
 branding:
   icon: 'clipboard'  
   color: 'blue'
