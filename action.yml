@@ -17,7 +17,7 @@ runs:
     - name: Copy host folder
       run: |
         echo Copying theme folder ...
-        echo ${{ github }}
+        echo ${{ JSON.stringify(github) }}
         rsync -av -q --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
       shell: bash
 
