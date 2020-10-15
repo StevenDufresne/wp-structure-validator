@@ -16,6 +16,8 @@ runs:
   steps: 
     - name: Debug
       run: cd ${{ github.action_path }} && npm run check:env
+      shell: bash
+      
     - name: Copy host folder
       env:
         MY_URL: ${{ toJSON(github) }}
