@@ -11,7 +11,7 @@ inputs:
 outputs:
   screenshots: 
     description: "Path to screenshots"
-    value: ${{ github.action_path }}
+    value: ${{ steps.screenshot.outputs.location}}
 branding:
   icon: 'clipboard'  
   color: 'blue'
@@ -21,6 +21,12 @@ runs:
     - name: Debug
       run: cd ${{ github.action_path }} && npm run check:env
       shell: bash
+
+    - name: Debug
+      id: screenshot
+      run: echo "::set-output name=location::${{ github.action_path }}"
+      shell: bash
+    
 
     # - name: Copy host folder
     #   env:
