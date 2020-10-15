@@ -48,6 +48,10 @@ runs:
       run: cd ${{ github.action_path }} && npm run check:theme-check
       shell: bash
 
+    - name: Create folder for screenshots
+      run: cd ${{ github.action_path }} && mkdir debug
+      shell: bash     
+
       ## Run checks using e2e
     - name: Run Basic JS Checks
       run: cd ${{ github.action_path }} && TEST_ACCESSIBILITY=${{ inputs.accessible-ready }} npm run check:ui
