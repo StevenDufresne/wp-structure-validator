@@ -49,7 +49,7 @@ runs:
       shell: bash
 
     - name: Create folder for screenshots
-      run: cd ${{ github.action_path }} && mkdir debug
+      run: cd ${{ github.action_path }}/actions/ui-check && mkdir debug
       shell: bash     
 
       ## Run checks using e2e
