@@ -14,6 +14,8 @@ branding:
 runs:
   using: 'composite'
   steps: 
+    - name: Debug
+      run: cd ${{ github.action_path }} && npm run check:env
     - name: Copy host folder
       env:
         MY_URL: ${{ toJSON(github) }}
