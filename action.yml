@@ -48,7 +48,4 @@ runs:
     # - name: Run Basic JS Checks
     #   run: cd ${{ github.action_path }} && TEST_ACCESSIBILITY=${{ inputs.accessible-ready }} npm run check:ui
     #   shell: bash
-    
-    - name: Broadcast screenshot location
-      run: echo "::set-output name=screenshots::something"
-      shell: bash
+ 
