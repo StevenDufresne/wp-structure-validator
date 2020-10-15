@@ -8,7 +8,6 @@ inputs:
   accessible-ready:
     description: 'Whether to run the full accessibility tests'
     default: false
-branding:
   icon: 'clipboard'  
   color: 'blue'
 runs:
@@ -17,34 +16,38 @@ runs:
     - name: Debug
       run: cd ${{ github.action_path }} && npm run check:env
       shell: bash
-      
-    - name: Copy host folder
-      env:
-        MY_URL: ${{ toJSON(github) }}
-      run: |
-        echo Copying theme folder ...
-        echo $MY_URL
-        rsync -av -q --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
-      shell: bash
 
-      ## Run unit tests to test that the correct files exist.
-      ## If these files don't exist, the environment won't start up
-    - name: Run Theme Structure Test
-      run: cd ${{ github.action_path }} && npm run check:structure
-      shell: bash
+    # - name: Copy host folder
+    #   env:
+    #     MY_URL: ${{ toJSON(github) }}
+    #   run: |
+    #     echo Copying theme folder ...
+    #     echo $MY_URL
+    #     rsync -av -q --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
+    #   shell: bash
 
-      ## The following tests require an environment
-      ## Start the environment
-    - name: Install
-      run: cd ${{ github.action_path }} && npm run install:environment
-      shell: bash
+    #   ## Run unit tests to test that the correct files exist.
+    #   ## If these files don't exist, the environment won't start up
+    # - name: Run Theme Structure Test
+    #   run: cd ${{ github.action_path }} && npm run check:structure
+    #   shell: bash
 
-      ## Run checks using theme-check plugin
-    - name: Run Theme Check
-      run: cd ${{ github.action_path }} && npm run check:theme-check
-      shell: bash
+    #   ## The following tests require an environment
+    #   ## Start the environment
+    # - name: Install
+    #   run: cd ${{ github.action_path }} && npm run install:environment
+    #   shell: bash
 
-      ## Run checks using e2e
-    - name: Run Basic JS Checks
-      run: cd ${{ github.action_path }} && TEST_ACCESSIBILITY=${{ inputs.accessible-ready }} npm run check:ui
+    #   ## Run checks using theme-check plugin
+    # - name: Run Theme Check
+    #   run: cd ${{ github.action_path }} && npm run check:theme-check
+    #   shell: bash
+
+    #   ## Run checks using e2e
+    # - name: Run Basic JS Checks
+    #   run: cd ${{ github.action_path }} && TEST_ACCESSIBILITY=${{ inputs.accessible-ready }} npm run check:ui
+    #   shell: bash
+    
+    - name: Broadcast screenshot location
+      run: echo "::set-output name=screenshots::${{ github.action_path }}/actions/ui-check/debug"
       shell: bash
