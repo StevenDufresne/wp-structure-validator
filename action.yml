@@ -8,6 +8,7 @@ inputs:
   accessible-ready:
     description: 'Whether to run the full accessibility tests'
     default: false
+branding:
   icon: 'clipboard'  
   color: 'blue'
 runs:
