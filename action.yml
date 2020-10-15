@@ -50,5 +50,5 @@ runs:
     #   shell: bash
     
     - name: Broadcast screenshot location
-      run: echo "::set-output name=screenshots::${{ github.action_path }}/actions/ui-check/debug"
+      run: echo "::set-output name=screenshots::something"
       shell: bash
