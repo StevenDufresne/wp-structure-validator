@@ -58,8 +58,8 @@ const testSkipLinks = async () => {
 		throw new FailedTestException( [
 			'[ Accessibility - Required Tests ]:',
 			'Running tests on "/".',
-			'Unable to find a legitimate skip link.',
-			'See https://make.wordpress.org/themes/handbook/review/required/#skip-links for more information.',
+			'Unable to find a legitimate skip link. Make sure your theme includes skip links where necessary.',
+			'You can read more about our expectations at https://make.wordpress.org/themes/handbook/review/required/#skip-links .',
 		] );
 	}
 
@@ -231,7 +231,7 @@ const hasAcceptableFocusState = async ( element, idx ) => {
 			getPercentOfOpaqueness( diff.data )
 		);
 
-        // Save the images if the element doesn't pass
+		// Save the images if the element doesn't pass
 		if ( ! passes ) {
 			if ( ! fs.existsSync( SCREENSHOT_FOLDER_PATH ) ) {
 				fs.mkdirSync( SCREENSHOT_FOLDER_PATH );
@@ -272,25 +272,22 @@ const hasAcceptableFocusState = async ( element, idx ) => {
 const testElementFocusState = async () => {
 	await page.goto( createURL( '/' ) );
 
-	const focusableElements = await getFocusableElements();
+	const elements = await getFocusableElements();
 
 	try {
-		for ( let i = 0; i < focusableElements.length; i++ ) {
-			const result = await hasAcceptableFocusState(
-				focusableElements[ i ],
-				i
-			);
+		for ( let i = 0; i < elements.length; i++ ) {
+			const result = await hasAcceptableFocusState( elements[ i ], i );
 
 			if ( ! result ) {
 				const domElement = await (
-					await focusableElements[ i ].getProperty( 'outerHTML' )
+					await elements[ i ].getProperty( 'outerHTML' )
 				 ).jsonValue();
-
-				const openingTag = truncateElementHTML( domElement );
 
 				// Break out of the loop forcefully
 				throw Error(
-					`The element "${ openingTag }" does not have enough visible difference when focused.`
+					`The element "${ truncateElementHTML(
+						domElement
+					) }" does not have enough visible difference when focused.`
 				);
 			}
 		}
