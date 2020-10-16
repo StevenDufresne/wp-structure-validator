@@ -310,8 +310,8 @@ describe( 'Accessibility: Required', () => {
 	 */
 	it( 'Should pass the following tests:', async () => {
 		try {
-		//	await testSkipLinks();
-		//	await testSubMenus();
+			await testSkipLinks();
+			await testSubMenus();
 			await testElementFocusState();
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
