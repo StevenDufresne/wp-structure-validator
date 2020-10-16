@@ -49,6 +49,7 @@ describe.each( urls )
 	( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 
 		it( 'Page should contain body class ' + bodyClass, async () => {
+			// Make sure the page content appears to be appropriate for the URL.
 			await page.goto( createURL( url, queryString ) );
 			const body = await page.$( 'body' );
 			const bodyClassName = await(
@@ -65,6 +66,7 @@ describe.each( urls )
 		});
 
 		it( 'Page should have complete output', async() => {
+			// This should catch anything that kills output before the end of the page, or outputs trailing garbage.
 			let response = await page.goto( createURL( url, queryString ) );
 
 			expect( await response.text() ).toMatch( /<\/(html|rss)>\s*$/ );
