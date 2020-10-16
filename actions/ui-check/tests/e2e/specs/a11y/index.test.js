@@ -2,282 +2,323 @@
  * External dependencies
  */
 import { createURL } from '@wordpress/e2e-test-utils';
-const core = require( '@actions/core' );
-const fs = require( 'fs' );
-const PNG = require( 'pngjs' ).PNG;
-const pixelmatch = require( 'pixelmatch' );
 
 /**
  * Internal dependencies
  */
+const fs = require( 'fs' );
+const PNG = require( 'pngjs' ).PNG;
+const pixelmatch = require( 'pixelmatch' );
+
 import {
 	printMessage,
 	meetsChangeThreshold,
-	percentOpaque,
+	getPercentOfOpaqueness,
 	getFocusableElements,
 	truncateElementHTML,
 } from '../../utils';
 
-describe( 'Accessibility: Required', () => {
-	it( 'Must contain skip links', async () => {
-		await page.goto( createURL( '/' ) );
-		await page.keyboard.press( 'Tab' );
+/**
+ * Custom Error type to be throw in tests
+ *
+ * @param {array|string} messages
+ */
+function FailedTestException( messages ) {
+	this.messages = messages;
+}
 
-		const activeElement = await page.evaluate( () => {
-			const el = document.activeElement;
+/**
+ * Tests whether the theme has legitimate skip links
+ *
+ * See https://make.wordpress.org/themes/handbook/review/required/#skip-links
+ */
+const testSkipLinks = async () => {
+	await page.goto( createURL( '/' ) );
+	await page.keyboard.press( 'Tab' );
 
-			return {
-				tag: el.tagName,
-				text: el.innerText,
-				hash: el.hash,
-				isVisible: el.offsetHeight > 0 && el.offsetWidth > 0,
-			};
-		} );
+	const activeElement = await page.evaluate( () => {
+		const el = document.activeElement;
 
-		try {
-			// Expect it to be a link
-			expect( activeElement.tag.toLowerCase() ).toEqual( 'a' );
-			expect(
-				activeElement.hash.toLowerCase().indexOf( '#' ) >= 0
-			).toBeTruthy();
-		} catch ( e ) {
-			printMessage( 'setFailed', [
-				'[ Accessibility - Required Tests ]:',
-				'Running tests on "/".',
-				'Unable to find a legitimate skip link.',
-				'See https://make.wordpress.org/themes/handbook/review/required/#skip-links for more information.',
-			] );
-			throw Error();
-		}
-
-		try {
-			// Expect the anchor tag to have a matching element
-			const el = await page.$( activeElement.hash );
-
-			expect( el ).not.toBeNull();
-		} catch ( e ) {
-			printMessage( 'setFailed', [
-				'[ Accessibility - Required Tests ]:',
-				'Running tests on "/".',
-				"The skip link doesn't have a matching element on the page.",
-				`Expecting to find an element with an id matching: "${ activeElement.hash.replace(
-					'#',
-					''
-				) }".`,
-				'See https://make.wordpress.org/themes/handbook/review/required/#skip-links for more information.',
-			] );
-			throw Error();
-		}
+		return {
+			tag: el.tagName,
+			text: el.innerText,
+			hash: el.hash,
+			isVisible: el.offsetHeight > 0 && el.offsetWidth > 0,
+		};
 	} );
 
-	it( 'Navigation submenus are not working properly', async () => {
-		await page.goto( createURL( '/' ) );
+	try {
+		// Expect it to be a link
+		expect( activeElement.tag.toLowerCase() ).toEqual( 'a' );
+		expect(
+			activeElement.hash.toLowerCase().indexOf( '#' ) >= 0
+		).toBeTruthy();
+	} catch ( e ) {
+		throw new FailedTestException( [
+			'[ Accessibility - Required Tests ]:',
+			'Running tests on "/".',
+			'Unable to find a legitimate skip link.',
+			'See https://make.wordpress.org/themes/handbook/review/required/#skip-links for more information.',
+		] );
+	}
 
-		const error = await page.evaluate( () => {
-			let error;
-			const navItems = document.querySelectorAll( 'nav ul li' );
+	try {
+		// Expect the anchor tag to have a matching element
+		const el = await page.$( activeElement.hash );
 
-			/**
-			 *
-			 * @param {HTMLElement} element Reference to a dom node
-			 */
-			function menuUsesDisplayNone( element ) {
-				return (
-					getComputedStyle( element ).display.toLowerCase() === 'none'
-				);
-			}
+		expect( el ).not.toBeNull();
+	} catch ( e ) {
+		throw new FailedTestException( [
+			'[ Accessibility - Required Tests ]:',
+			'Running tests on "/".',
+			"The skip link doesn't have a matching element on the page.",
+			`Expecting to find an element with an id matching: "${ activeElement.hash.replace(
+				'#',
+				''
+			) }".`,
+			'See https://make.wordpress.org/themes/handbook/review/required/#skip-links for more information.',
+		] );
+	}
+};
 
-			/**
-			 *
-			 * @param {HTMLElement} element Reference to a dom node
-			 */
-			function elementIsVisible( element ) {
-				const rect = element.getBoundingClientRect();
-				return ! ( rect.x < 0 || rect.y - window.innerHeight >= 0 );
-			}
+/**
+ * Tests whether the theme has an acceptable navigation
+ *
+ * See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation
+ */
+const testSubMenus = async () => {
+	await page.goto( createURL( '/' ) );
 
-			for ( let i = 0; i < navItems.length; i++ ) {
-				const link = navItems[ i ].querySelector( 'a' );
-				const subMenu = navItems[ i ].querySelector( 'ul' );
+	const ErrorMessages = {
+		displayNone: 'USES_DISPLAY_NONE',
+		notVisible: 'MENU_NOT_VISIBLE',
+	};
 
-				if ( link && subMenu ) {
-					if ( menuUsesDisplayNone( subMenu ) ) {
-						error = 'USES_DISPLAY_NONE';
-						break;
-					}
+    /**
+     * We run these tests within the browser directly
+     */
+	const error = await page.evaluate( ( ErrorMessages ) => {
+		let error;
+		const mainNavItems = document.querySelectorAll( 'nav ul li' );
 
-					// Select the link
-					link.focus();
-
-					// Is the submenu visible?
-					if ( ! elementIsVisible( subMenu ) ) {
-						error = 'MENU_NOT_VISIBLE';
-						break;
-					}
-				}
-			}
-
-			return error;
-		} );
-
-		try {
-			expect( error ).toBeUndefined();
-		} catch ( ex ) {
-			const messages = [
-				'[ Accessibility - Required Tests ]:',
-				'Running tests on "/".',
-				"Your theme's navigation is not working as expected.",
-			];
-
-			if ( error === 'MENU_NOT_VISIBLE' ) {
-				messages.push(
-					'Submenus should be become visible when tabbing through the navigation.'
-				);
-			} else if ( error === 'MENU_NOT_VISIBLE' ) {
-				messages.push(
-					'Submenus cannot be hidden using `display: none`.'
-				);
-			}
-
-			printMessage( 'setFailed', [
-				...messages,
-				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
-			] );
+		/**
+		 * Return whether the submenu is hidding using display:none
+		 * @param {HTMLElement} element Reference to a dom node
+         * @returns {boolean}
+		 */
+		function menuUsesDisplayNone( element ) {
+			return getComputedStyle( element ).display.toLowerCase() === 'none';
 		}
-	} );
 
-	it( 'Focusable element must have identifiable :focus state', async () => {
-		await page.goto( createURL( '/' ) );
+		/**
+		 * Returns whether the element is visible on screen
+		 * @param {HTMLElement} element Reference to a dom node
+         * @returns {boolean}
+		 */
+		function elementIsVisible( element ) {
+			const rect = element.getBoundingClientRect();
+			return ! ( rect.x < 0 || rect.y - window.innerHeight >= 0 );
+		}
 
-		const hasAcceptableFocusState = async ( element, idx ) => {
-			try {
-				// Grab the element dimension
-				const dimensions = await element.boundingBox();
+		for ( let i = 0; i < mainNavItems.length; i++ ) {
+			const link = mainNavItems[ i ].querySelector( 'a' );
+			const subMenu = mainNavItems[ i ].querySelector( 'ul' );
 
-				// It's a hidden element
-				if ( ! dimensions || dimensions.x < 0 || dimensions.y < 0 ) {
-					return true;
+			if ( link && subMenu ) {
+				if ( menuUsesDisplayNone( subMenu ) ) {
+					error = ErrorMessages.displayNone;
+					break;
 				}
 
-				// Pad the element to catch outlines
-				const padding = 2;
-				const clip = {
-					x: dimensions.x - padding,
-					y: dimensions.y - padding,
-					width: dimensions.width + padding * 2,
-					height: dimensions.height + padding * 2,
-				};
+				// Select the link
+				link.focus();
 
-				// Move the browser down before we take a screenshot
-				await page.evaluate( ( yPos ) => {
-					window.scrollBy( 0, yPos );
-				}, dimensions.y );
-
-				// Take a screenshot before focus
-				const beforeSnap = await element.screenshot( {
-					type: 'png',
-					clip,
-				} );
-
-				// Set focus to the element
-				await element.focus();
-
-				// We give it a few seconds in case there is an animation
-				await new Promise( ( resolve ) => setTimeout( resolve, 300 ) );
-
-				// Take a screenshot after focus
-				const afterSnap = await element.screenshot( {
-					type: 'png',
-					clip,
-				} );
-
-				// Compare images, create diff
-				const img1 = PNG.sync.read( beforeSnap );
-				const img2 = PNG.sync.read( afterSnap );
-
-				// Use the first image to determine size
-				const { width, height } = img1;
-				const diff = new PNG( { width, height } );
-
-				// Create a png with the diff overlayed on a transparent background
-				// The threshold controls how 'different' the new state should be. ( 0 Low/1 High )
-				pixelmatch( img1.data, img2.data, diff.data, width, height, {
-					threshold: 0.3,
-					diffMask: true,
-				} );
-
-				const passes = meetsChangeThreshold(
-					percentOpaque( diff.data )
-				);
-
-				if ( ! passes ) {
-					const path = `screenshots/${ idx }/`;
-
-					if ( ! fs.existsSync( path ) ) {
-						fs.mkdirSync( path );
-					}
-
-					const pageSnap = await page.screenshot( {
-						type: 'png',
-					} );
-					const pageImg = PNG.sync.read( pageSnap );
-
-					// Save it so we can spot check during development
-					fs.writeFileSync(
-						`${ path }page.png`,
-						PNG.sync.write( pageImg )
-					);
-
-					fs.writeFileSync(
-						`${ path }element-before.png`,
-						PNG.sync.write( img1 )
-					);
-
-					fs.writeFileSync(
-						`${ path }element-after.png`,
-						PNG.sync.write( img2 )
-					);
-
-					fs.writeFileSync(
-						`${ path }element-diff.png`,
-						PNG.sync.write( diff )
-					);
+				// Is the submenu visible?
+				if ( ! elementIsVisible( subMenu ) ) {
+					error = ErrorMessages.notVisible;
+					break;
 				}
-
-				return passes;
-			} catch ( ex ) {
-				return false;
 			}
+		}
+
+		return error;
+	}, ErrorMessages );
+
+	try {
+		expect( error ).toBeUndefined();
+	} catch ( ex ) {
+		const messages = [
+			'[ Accessibility - Required Tests ]:',
+			'Running tests on "/".',
+			"Your theme's navigation is not working as expected.",
+		];
+
+		if ( error === ErrorMessages.displayNone ) {
+			messages.push(
+				'Submenus should be become visible when tabbing through the main navigation.'
+			);
+		} else if ( error === ErrorMessages.notVisible ) {
+			messages.push( 'Submenus cannot be hidden using `display: none`.' );
+		}
+
+		throw new FailedTestException( [
+			...messages,
+			'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
+		] );
+	}
+};
+
+const hasAcceptableFocusState = async ( element, idx ) => {
+	try {
+		// Grab the element dimension
+		const dimensions = await element.boundingBox();
+
+		// It's a hidden element
+		if ( ! dimensions || dimensions.x < 0 || dimensions.y < 0 ) {
+			return true;
+		}
+
+		// Pad the element to catch outlines
+		const padding = 2;
+		const clip = {
+			x: dimensions.x - padding,
+			y: dimensions.y - padding,
+			width: dimensions.width + padding * 2,
+			height: dimensions.height + padding * 2,
 		};
 
-		const focusableElements = await getFocusableElements();
+		// Move the browser down before we take a screenshot
+		await page.evaluate( ( yPos ) => {
+			window.scrollBy( 0, yPos );
+		}, dimensions.y );
 
-		try {
-			for ( let i = 0; i < focusableElements.length; i++ ) {
-				const result = await hasAcceptableFocusState(
-					focusableElements[ i ],
-					i
-				);
+		// Take a screenshot before focus
+		const beforeSnap = await element.screenshot( {
+			type: 'png',
+			clip,
+		} );
 
-				if ( ! result ) {
-					const domElement = await (
-						await focusableElements[ i ].getProperty( 'outerHTML' )
-					 ).jsonValue();
+		// Set focus to the element
+		await element.focus();
 
-					const openingTag = truncateElementHTML( domElement );
+		// We give it a few seconds in case there is an animation
+		await new Promise( ( resolve ) => setTimeout( resolve, 300 ) );
 
-					throw Error(
-						`The element "${ openingTag }" does not have enough visible difference when focused.`
-					);
-				}
+		// Take a screenshot after focus
+		const afterSnap = await element.screenshot( {
+			type: 'png',
+			clip,
+		} );
+
+		// Compare images, create diff
+		const img1 = PNG.sync.read( beforeSnap );
+		const img2 = PNG.sync.read( afterSnap );
+
+		// Use the first image to determine size
+		const { width, height } = img1;
+		const diff = new PNG( { width, height } );
+
+		// Create a png with the diff overlayed on a transparent background
+		// The threshold controls how 'different' the new state should be. ( 0 Low/1 High )
+		pixelmatch( img1.data, img2.data, diff.data, width, height, {
+			threshold: 0.3,
+			diffMask: true,
+		} );
+
+        // Check to see that there is an acceptable level of change from before & after element focus
+		const passes = meetsChangeThreshold(
+			getPercentOfOpaqueness( diff.data )
+		);
+
+		if ( ! passes ) {
+			const path = `screenshots/${ idx }/`;
+
+			if ( ! fs.existsSync( path ) ) {
+				fs.mkdirSync( path );
 			}
+
+			const pageSnap = await page.screenshot( {
+				type: 'png',
+			} );
+
+			// Save it so we can spot check during development
+			fs.writeFileSync(
+				`${ path }page.png`,
+				PNG.sync.write( PNG.sync.read( pageSnap ) )
+			);
+
+			fs.writeFileSync(
+				`${ path }element-before.png`,
+				PNG.sync.write( img1 )
+			);
+
+			fs.writeFileSync(
+				`${ path }element-after.png`,
+				PNG.sync.write( img2 )
+			);
+
+			fs.writeFileSync(
+				`${ path }element-diff.png`,
+				PNG.sync.write( diff )
+			);
+		}
+
+		return passes;
+	} catch ( ex ) {
+		return false;
+	}
+};
+
+const testElementFocusState = async () => {
+	await page.goto( createURL( '/' ) );
+
+	const focusableElements = await getFocusableElements();
+
+	try {
+		for ( let i = 0; i < focusableElements.length; i++ ) {
+			const result = await hasAcceptableFocusState(
+				focusableElements[ i ],
+				i
+			);
+
+			if ( ! result ) {
+				const domElement = await (
+					await focusableElements[ i ].getProperty( 'outerHTML' )
+				 ).jsonValue();
+
+				const openingTag = truncateElementHTML( domElement );
+
+				// Break out of the loop forcefully
+				throw Error(
+					`The element "${ openingTag }" does not have enough visible difference when focused.`
+				);
+			}
+		}
+	} catch ( ex ) {
+		throw new FailedTestException( [
+			'[ Accessibility - Required Tests ]:',
+			'Running tests on "/".',
+			ex.message,
+			'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
+		] );
+	}
+};
+
+describe( 'Accessibility: Required', () => {
+	/**
+	 * We run all the test synchronously to control how many errors get outputted to reduce noise
+	 */
+	it( 'Should pass the following tests:', async () => {
+		try {
+			await testSkipLinks();
+			await testSubMenus();
+			await testElementFocusState();
 		} catch ( ex ) {
-			printMessage( 'setFailed', [
-				'[ Accessibility - Required Tests ]:',
-				'Running tests on "/".',
-				ex.message,
-				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
-			] );
+			if ( ex instanceof FailedTestException ) {
+				printMessage( 'setFailed', ex.messages );
+			} else {
+				console.log( ex );
+			}
 		}
 	} );
 } );
