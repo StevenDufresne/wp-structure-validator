@@ -232,7 +232,6 @@ describe( 'Accessibility: Required', () => {
 
 				return passes;
 			} catch ( ex ) {
-				console.log( ex );
 				return false;
 			}
 		};
@@ -259,7 +258,6 @@ describe( 'Accessibility: Required', () => {
 				}
 			}
 		} catch ( ex ) {
-			console.log( ex );
 			printMessage( 'setFailed', [
 				'[ Accessibility - Required Tests ]:',
 				'Running tests on "/".',
