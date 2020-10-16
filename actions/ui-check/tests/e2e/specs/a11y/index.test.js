@@ -128,7 +128,6 @@ describe( 'Accessibility: Required', () => {
 				'Running tests on "/".',
 				"Your theme's navigation is not working as expected.",
 			];
-\
 
 			if ( error === 'MENU_NOT_VISIBLE' ) {
 				messages.push(

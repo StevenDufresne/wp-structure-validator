@@ -5,24 +5,28 @@ const path = 'debug';
 console.log( process.env );
 
 const uploadArtifact = async () => {
-    try {
-    	const artifactName = 'my-artifact';
-    	const files = [  ];
+	try {
+		const artifactName = 'my-artifact';
+		const files = [];
 
-    	const options = {
-    		continueOnError: false,
-    	};
+		const options = {
+			continueOnError: false,
+		};
 
-    	await artifactClient.uploadArtifact( artifactName, files, path, options );
-    } catch ( e ) {
-    	console.log( 'Exception creating artifact' );
-    	console.log( e );
-    }
-}
+		await artifactClient.uploadArtifact(
+			artifactName,
+			files,
+			path,
+			options
+		);
+	} catch ( e ) {
+		console.log( 'Exception creating artifact' );
+		console.log( e );
+	}
+};
 
 const init = async () => {
-    await uploadArtifact();
-}
-
+	await uploadArtifact();
+};
 
 init();
