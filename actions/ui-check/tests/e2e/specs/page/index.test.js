@@ -90,6 +90,28 @@ describe.each( urls )
 			expect( jsError ).toBeFalsy();
 		});
 
+		it( 'Page should not have unexpected links', async () => {
+			// See https://make.wordpress.org/themes/handbook/review/required/#selling-credits-and-links
+
+			await page.goto( createURL( url, queryString ) );
+
+			const hrefs = await page.$$eval( 'a', anchors => [].map.call(anchors, a => a.href));
+
+			const allowed_hosts = [
+				'wordpress.org',
+				'gravatar.com',
+				new URL( page.url() ).hostname,
+				// needs to allow for Theme URL or Author URL
+			];
+
+			hrefs.forEach( href => {
+				let href_url = new URL( href, page.url() );
+
+				expect( allowed_hosts ).toContain( href_url.hostname );
+			} );
+
+		});
+
 	}
 	);
 
