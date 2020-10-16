@@ -48,7 +48,6 @@ const testSkipLinks = async () => {
 	} );
 
 	try {
-		// Expect it to be a link
 		expect( activeElement.tag.toLowerCase() ).toEqual( 'a' );
 		expect(
 			activeElement.hash.toLowerCase().indexOf( '#' ) >= 0
@@ -94,9 +93,9 @@ const testSubMenus = async () => {
 		notVisible: 'MENU_NOT_VISIBLE',
 	};
 
-    /**
-     * We run these tests within the browser directly
-     */
+	/**
+	 * We run these tests within the browser directly
+	 */
 	const error = await page.evaluate( ( ErrorMessages ) => {
 		let error;
 		const mainNavItems = document.querySelectorAll( 'nav ul li' );
@@ -104,21 +103,21 @@ const testSubMenus = async () => {
 		/**
 		 * Return whether the submenu is hidding using display:none
 		 * @param {HTMLElement} element Reference to a dom node
-         * @returns {boolean}
+		 * @returns {boolean}
 		 */
-		function menuUsesDisplayNone( element ) {
+		const menuUsesDisplayNone = ( element ) => {
 			return getComputedStyle( element ).display.toLowerCase() === 'none';
-		}
+		};
 
 		/**
 		 * Returns whether the element is visible on screen
 		 * @param {HTMLElement} element Reference to a dom node
-         * @returns {boolean}
+		 * @returns {boolean}
 		 */
-		function elementIsVisible( element ) {
+		const elementIsVisible = ( element ) => {
 			const rect = element.getBoundingClientRect();
 			return ! ( rect.x < 0 || rect.y - window.innerHeight >= 0 );
-		}
+		};
 
 		for ( let i = 0; i < mainNavItems.length; i++ ) {
 			const link = mainNavItems[ i ].querySelector( 'a' );
@@ -225,7 +224,7 @@ const hasAcceptableFocusState = async ( element, idx ) => {
 			diffMask: true,
 		} );
 
-        // Check to see that there is an acceptable level of change from before & after element focus
+		// Check to see that there is an acceptable level of change from before & after element focus
 		const passes = meetsChangeThreshold(
 			getPercentOfOpaqueness( diff.data )
 		);
