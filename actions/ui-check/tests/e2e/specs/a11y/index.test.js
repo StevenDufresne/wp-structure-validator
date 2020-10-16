@@ -123,10 +123,25 @@ describe( 'Accessibility: Required', () => {
 		try {
 			expect( error ).toBeUndefined();
 		} catch ( ex ) {
-			printMessage( 'setFailed', [
+			const messages = [
 				'[ Accessibility - Required Tests ]:',
 				'Running tests on "/".',
-				'Navigation is not following the rules.',
+				"Your theme's navigation is not working as expected.",
+			];
+\
+
+			if ( error === 'MENU_NOT_VISIBLE' ) {
+				messages.push(
+					'Submenus should be become visible when tabbing through the navigation.'
+				);
+			} else if ( error === 'MENU_NOT_VISIBLE' ) {
+				messages.push(
+					'Submenus cannot be hidden using `display: none`.'
+				);
+			}
+
+			printMessage( 'setFailed', [
+				...messages,
 				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 			] );
 		}
@@ -152,9 +167,9 @@ describe( 'Accessibility: Required', () => {
 					y: dimensions.y - padding,
 					width: dimensions.width + padding * 2,
 					height: dimensions.height + padding * 2,
-                };
-                
-                // Move the browser down before we take a screenshot
+				};
+
+				// Move the browser down before we take a screenshot
 				await page.evaluate( ( yPos ) => {
 					window.scrollBy( 0, yPos );
 				}, dimensions.y );
@@ -197,8 +212,8 @@ describe( 'Accessibility: Required', () => {
 				);
 
 				if ( ! passes ) {
-                    const path = `screenshots/${ idx }/`;
-                    
+					const path = `screenshots/${ idx }/`;
+
 					if ( ! fs.existsSync( path ) ) {
 						fs.mkdirSync( path );
 					}
