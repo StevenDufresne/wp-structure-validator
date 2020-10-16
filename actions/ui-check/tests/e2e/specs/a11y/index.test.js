@@ -231,6 +231,7 @@ const hasAcceptableFocusState = async ( element, idx ) => {
 			getPercentOfOpaqueness( diff.data )
 		);
 
+        // Save the images if the element doesn't pass
 		if ( ! passes ) {
 			if ( ! fs.existsSync( SCREENSHOT_FOLDER_PATH ) ) {
 				fs.mkdirSync( SCREENSHOT_FOLDER_PATH );
