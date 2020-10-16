@@ -15,7 +15,7 @@ import {
 	meetsChangeThreshold,
 	percentOpaque,
 	getFocusableElements,
-	createArtifact,
+	truncateElementHTML,
 } from '../../utils';
 
 describe( 'Accessibility: Required', () => {
@@ -146,13 +146,18 @@ describe( 'Accessibility: Required', () => {
 				}
 
 				// Pad the element to catch outlines
-				const padding = 5;
+				const padding = 2;
 				const clip = {
 					x: dimensions.x - padding,
 					y: dimensions.y - padding,
 					width: dimensions.width + padding * 2,
 					height: dimensions.height + padding * 2,
-				};
+                };
+                
+                // Move the browser down before we take a screenshot
+				await page.evaluate( ( yPos ) => {
+					window.scrollBy( 0, yPos );
+				}, dimensions.y );
 
 				// Take a screenshot before focus
 				const beforeSnap = await element.screenshot( {
@@ -187,27 +192,47 @@ describe( 'Accessibility: Required', () => {
 					diffMask: true,
 				} );
 
-                const path = `debug/${ idx }/`;
-
-				// Create a temporary directory
-				if ( ! fs.existsSync( path ) ) {
-					fs.mkdirSync( path );
-                }
-
-				// Save it so we can spot check during development
-				fs.writeFileSync(
-					`${ path }before.png`,
-					PNG.sync.write( img1 )
+				const passes = meetsChangeThreshold(
+					percentOpaque( diff.data )
 				);
-				fs.writeFileSync(
-					`${ path }after.png`,
-					PNG.sync.write( img2 )
-				);
-                fs.writeFileSync( `${ path }diff.png`, PNG.sync.write( diff ) );
-                
-				// Check to see if the image data has an opaque pixel, meaning the threshold was met
-				return meetsChangeThreshold( percentOpaque( diff.data ) );
+
+				if ( ! passes ) {
+                    const path = `screenshots/${ idx }/`;
+                    
+					if ( ! fs.existsSync( path ) ) {
+						fs.mkdirSync( path );
+					}
+
+					const pageSnap = await page.screenshot( {
+						type: 'png',
+					} );
+					const pageImg = PNG.sync.read( pageSnap );
+
+					// Save it so we can spot check during development
+					fs.writeFileSync(
+						`${ path }page.png`,
+						PNG.sync.write( pageImg )
+					);
+
+					fs.writeFileSync(
+						`${ path }element-before.png`,
+						PNG.sync.write( img1 )
+					);
+
+					fs.writeFileSync(
+						`${ path }element-after.png`,
+						PNG.sync.write( img2 )
+					);
+
+					fs.writeFileSync(
+						`${ path }element-diff.png`,
+						PNG.sync.write( diff )
+					);
+				}
+
+				return passes;
 			} catch ( ex ) {
+				console.log( ex );
 				return false;
 			}
 		};
@@ -226,10 +251,7 @@ describe( 'Accessibility: Required', () => {
 						await focusableElements[ i ].getProperty( 'outerHTML' )
 					 ).jsonValue();
 
-					const openingTag = domElement.substring(
-						0,
-						domElement.indexOf( '>' ) + 1
-					);
+					const openingTag = truncateElementHTML( domElement );
 
 					throw Error(
 						`The element "${ openingTag }" does not have enough visible difference when focused.`
@@ -237,12 +259,13 @@ describe( 'Accessibility: Required', () => {
 				}
 			}
 		} catch ( ex ) {
+			console.log( ex );
 			printMessage( 'setFailed', [
 				'[ Accessibility - Required Tests ]:',
 				'Running tests on "/".',
 				ex.message,
 				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 			] );
-		}   
+		}
 	} );
 } );

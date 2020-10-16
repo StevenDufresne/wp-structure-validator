@@ -97,3 +97,11 @@ export const getFocusableElements = async () => {
 
 	return final;
 };
+
+export const truncateElementHTML = ( outerHtml ) => {
+	if ( outerHtml.length > 100 ) {
+		return outerHtml.substring( 0, outerHtml.indexOf( '>' ) + 1 );
+	}
+
+	return outerHtml;
+};

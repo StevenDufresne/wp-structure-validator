@@ -48,17 +48,19 @@ runs:
       run: cd ${{ github.action_path }} && npm run check:theme-check
       shell: bash
 
+      ## Create the folder for our screenshots
     - name: Create folder for screenshots
-      run: cd ${{ github.action_path }}/actions/ui-check && mkdir debug
+      run: cd ${{ github.action_path }}/actions/ui-check && mkdir screenshots
       shell: bash     
 
       ## Run checks using e2e
     - name: Run Basic JS Checks
       run: cd ${{ github.action_path }} && TEST_ACCESSIBILITY=${{ inputs.accessible-ready }} npm run check:ui
       shell: bash
- 
+    
+      ## Ouput where the screenshots can be found
     - name: Expose screenshot location
       id: screenshot
-      run: echo "::set-output name=location::${{ github.action_path }}/actions/ui-check/debug"
+      run: echo "::set-output name=location::${{ github.action_path }}/actions/ui-check/screenshots"
       shell: bash
     
