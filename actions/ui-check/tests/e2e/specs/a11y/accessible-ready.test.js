@@ -30,7 +30,7 @@ describe( 'Accessible: Tag Ready', () => {
 				} );
 			} catch ( e ) {
 				printMessage( 'setFailed', [
-					'[ Accessibility - Required Tests ]:',
+					'[ Accessibility - WCAG2A Tests ]:',
 					`Running tests on ${ name } ${ getDefaultUrl(
 						path,
 						query

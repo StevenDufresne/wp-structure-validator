@@ -47,7 +47,7 @@ describe( 'Accessibility: Best Practices', () => {
 			expect( Object.keys( mismatch ).length > 0 ).toBeFalsy();
 		} catch ( ex ) {
 			printMessage( 'warning', [
-				'[ Accessibility - Best Practice Tests ]:',
+				'[ Accessibility - Tabbing Test ]:',
 				'Running test on "/".',
 				`Expected to be focused on with innerText of \`${ mismatch[ 'currentElement' ] }\`  but focused on element with innerText of \`${ mismatch[ 'currentFocus' ] }\``,
 				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',

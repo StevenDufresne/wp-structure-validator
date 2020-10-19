@@ -56,7 +56,7 @@ const testSkipLinks = async () => {
 		).toBeTruthy();
 	} catch ( e ) {
 		throw new FailedTestException( [
-			'[ Accessibility - Required Tests ]:',
+			'[ Accessibility - Skip Link Test ]:',
 			'Running tests on "/".',
 			'Unable to find a legitimate skip link. Make sure your theme includes skip links where necessary.',
 			'You can read more about our expectations at https://make.wordpress.org/themes/handbook/review/required/#skip-links .',
@@ -151,7 +151,7 @@ const testSubMenus = async () => {
 		expect( error ).toBeUndefined();
 	} catch ( ex ) {
 		const messages = [
-			'[ Accessibility - Required Tests ]:',
+			'[ Accessibility - Submenu Test ]:',
 			'Running tests on "/".',
 			"Your theme's navigation is not working as expected.",
 		];
@@ -295,7 +295,7 @@ const testElementFocusState = async () => {
 		}
 	} catch ( ex ) {
 		throw new FailedTestException( [
-			'[ Accessibility - Required Tests ]:',
+			'[ Accessibility - Element Focus Test ]:',
 			'Running tests on "/".',
 			ex.message,
 			'Download the screenshots to see the offending element.',
