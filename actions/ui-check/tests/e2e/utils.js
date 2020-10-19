@@ -87,10 +87,6 @@ export const getFocusableElements = async () => {
 		// If this is null, it's not visible
 		const boundingBox = await elements[ i ].boundingBox();
 
-		const innerText = await (
-			await elements[ i ].getProperty( 'innerText' )
-		 ).jsonValue();
-
 		if ( ! disabled && boundingBox !== null ) {
 			final.push( elements[ i ] );
 		}
