@@ -17,11 +17,7 @@ branding:
   color: 'blue'
 runs:
   using: 'composite'
-  steps: 
-    - name: Debug
-      run: cd ${{ github.action_path }} && npm run check:env
-      shell: bash
-
+  steps:
     - name: Copy host folder
       run: |
         echo Copying theme folder ...
