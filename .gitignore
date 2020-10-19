@@ -1,4 +1,4 @@
 node_modules
 .DS_Store
 test-theme/*
-actions/ui-check/screenshot
+actions/ui-check/screenshots
