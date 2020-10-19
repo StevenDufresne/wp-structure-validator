@@ -289,7 +289,7 @@ const testElementFocusState = async () => {
 				throw Error(
 					`The element "${ truncateElementHTML(
 						domElement
-					) }" does not have enough visible difference when focused. Download the screenshots to see the offending element.`
+					) }" does not have enough visible difference when focused. `
 				);
 			}
 		}
@@ -298,6 +298,7 @@ const testElementFocusState = async () => {
 			'[ Accessibility - Required Tests ]:',
 			'Running tests on "/".',
 			ex.message,
+			'Download the screenshots to see the offending element.',
 			'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 		] );
 	}
