@@ -102,6 +102,9 @@ describe.each( urls )
 			const allowed_hosts = [
 				'wordpress.org',
 				'gravatar.com',
+				'example.com',
+				'example.org',
+				'example.net',
 				new URL( page.url() ).hostname,
 				// needs to allow for Theme URL or Author URL
 			];
