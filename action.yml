@@ -23,11 +23,8 @@ runs:
       shell: bash
 
     - name: Copy host folder
-      env:
-        MY_URL: ${{ toJSON(github) }}
       run: |
         echo Copying theme folder ...
-        echo $MY_URL
         rsync -av -q --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
       shell: bash
 
