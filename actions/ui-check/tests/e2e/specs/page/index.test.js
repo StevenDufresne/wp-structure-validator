@@ -5,8 +5,6 @@ import { createURL } from '@wordpress/e2e-test-utils';
 import { getPageError } from '@wordpress/e2e-test-utils';
 const core = require( '@actions/core' );
 
-jest.setTimeout( 1000000 );
-
 // TODO: either dynamically fetch a list of URLs to check (REST API or site maps?)
 // or import the theme test content dataset and hard-code a list of URLs based on that.
 let urls = [
