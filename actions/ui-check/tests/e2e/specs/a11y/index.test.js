@@ -287,7 +287,7 @@ const testElementFocusState = async () => {
 				throw Error(
 					`The element "${ truncateElementHTML(
 						domElement
-					) }" does not have enough visible difference when focused.`
+					) }" does not have enough visible difference when focused. Download the screenshots to see the offending element.`
 				);
 			}
 		}
