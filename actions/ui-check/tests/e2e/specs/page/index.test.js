@@ -77,6 +77,7 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 		const allowed_hosts = [
 			'wordpress.org',
 			'gravatar.com',
+			'en.support.wordpress.com',
 			'example.com',
 			'example.org',
 			'example.net',
