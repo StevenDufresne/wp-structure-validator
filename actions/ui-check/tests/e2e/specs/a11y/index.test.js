@@ -314,7 +314,7 @@ describe( 'Accessibility: Required', () => {
 			await testElementFocusState();
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
-				printMessage( 'setWarning', ex.messages );
+				printMessage( 'warning', ex.messages );
 			} else {
 				console.log( ex );
 			}
