@@ -14,11 +14,6 @@ final class StructureTest extends TestCase
         $this->assertFileExists( self::REL_THEME_LOCATION . '/index.php', '::error::We require you have a index.php file.' );
     }
 
-    public function testsThatCommentsIsPresent(): void
-    {
-        $this->assertFileExists( self::REL_THEME_LOCATION . '/comments.php', '::error::We require you have a comments.php file.' );
-    }
-
     public function testsThatScreenshotIsPresent(): void
     {
         $hasPNG = file_exists( self::REL_THEME_LOCATION . '/screenshot.png' );
