@@ -5,12 +5,19 @@ inputs:
   root-folder:
     description: 'The location of your theme'
     default: .
+  accessible-ready:
+    description: 'Whether to run the full accessibility tests'
+    default: false
+outputs:
+  screenshots: 
+    description: "Path to screenshots"
+    value: ${{ steps.screenshot.outputs.location}}
 branding:
   icon: 'clipboard'  
   color: 'blue'
 runs:
   using: 'composite'
-  steps: 
+  steps:
     - name: Copy host folder
       run: |
         echo Copying theme folder ...
@@ -35,7 +42,13 @@ runs:
       shell: bash
 
       ## Run checks using e2e
-    - name: Run JS Check
-      run: cd ${{ github.action_path }} && npm run check:ui
+    - name: Run Basic JS Checks
+      run: cd ${{ github.action_path }} && TEST_ACCESSIBILITY=${{ inputs.accessible-ready }} npm run check:ui
       shell: bash
-      
+    
+      ## Ouput where the screenshots can be found
+    - name: Expose screenshot location
+      id: screenshot
+      run: echo "::set-output name=location::${{ github.action_path }}/actions/ui-check/screenshots"
+      shell: bash
+    
