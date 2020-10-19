@@ -98,7 +98,7 @@ const testSubMenus = async () => {
 	/**
 	 * We run these tests within the browser directly
 	 */
-	const error = await page.evaluate( ( ErrorMessages ) => {
+	const error = await page.evaluate( async ( ErrorMessages ) => {
 		let error;
 		const mainNavItems = document.querySelectorAll( 'nav ul li' );
 
@@ -140,6 +140,8 @@ const testSubMenus = async () => {
 					break;
 				}
 			}
+
+			await new Promise( ( resolve ) => setTimeout( resolve, 3000 ) );
 		}
 
 		return error;
