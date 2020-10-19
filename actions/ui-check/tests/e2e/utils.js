@@ -6,7 +6,9 @@ const core = require( '@actions/core' );
  * @returns {string}
  */
 export const cleanErrorMessage = ( msg ) => {
-	return msg.replace( 'expect(received).toPassAxeTests(expected)', '' );
+	return msg
+		.replace( 'expect(received).toPassAxeTests(expected)', '' )
+        .replace( 'Expected page to pass Axe accessibility tests.', '' )
 };
 
 /**
