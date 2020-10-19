@@ -19,7 +19,7 @@ describe( 'Accessibility: Best Practices', () => {
 		await page.goto( createURL( '/' ) );
 		const focusableElements = await getFocusableElements();
 
-		let hasMismatch = false;
+		let mismatch = {};
 
 		for ( let i = 0; i < focusableElements.length; i++ ) {
 			await page.keyboard.press( 'Tab' );
@@ -32,20 +32,24 @@ describe( 'Accessibility: Best Practices', () => {
 				() => document.activeElement.innerText
 			);
 
-			// If the innerText don't match, we assume the tabbing order is not obvious
+			// If the innerText don't match, we assume the tabbing order is not proper
 			if ( currentFocus !== currentElement ) {
-				hasMismatch = true;
+				mismatch[ 'currentFocus' ] = currentFocus;
+				mismatch[ 'currentElement' ] = currentElement;
 				break;
 			}
+
+			// If we dont wait at least 50ms, the test can get out of sync
+			await new Promise( ( resolve ) => setTimeout( resolve, 50 ) );
 		}
 
 		try {
-			expect( hasMismatch ).toBeFalsy();
+			expect( Object.keys( mismatch ).length > 0 ).toBeFalsy();
 		} catch ( ex ) {
 			printMessage( 'warning', [
 				'[ Accessibility - Best Practice Tests ]:',
 				'Running test on "/".',
-				'Tabbing is not working as expected.',
+				`Expected to be focused on with innerText of \`${ mismatch[ 'currentElement' ] }\`  but focused on element with innerText of \`${ mismatch[ 'currentFocus' ] }\``,
 				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 			] );
 		}
