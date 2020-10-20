@@ -8,7 +8,7 @@ const core = require( '@actions/core' );
 export const cleanErrorMessage = ( msg ) => {
 	return msg
 		.replace( 'expect(received).toPassAxeTests(expected)', '' )
-        .replace( 'Expected page to pass Axe accessibility tests.', '' )
+		.replace( 'Expected page to pass Axe accessibility tests.', '' );
 };
 
 /**
@@ -71,6 +71,7 @@ export const meetsChangeThreshold = ( changePercent ) => {
 
 /**
  * Retrieves list elements that are focusable by keyboard from the DOM excluding hidden & disabled elements.
+ * @param {boolean} includeHidden Whether to include hidden elements
  * @return {array} List of focusable element
  */
 export const getFocusableElements = async () => {
@@ -87,11 +88,55 @@ export const getFocusableElements = async () => {
 		 ).jsonValue();
 
 		// If this is null, it's not visible
-		const boundingBox = await elements[ i ].boundingBox();
+		const isVisible = await elements[ i ].boundingBox() !== null ;
 
-		if ( ! disabled && boundingBox !== null ) {
+		if ( ! disabled && isVisible ) {
 			final.push( elements[ i ] );
 		}
+	}
+
+	return final;
+};
+
+/**
+ * Retrieves list elements that are tabbing by keyboard.
+ * @return {array} List of tabbable element
+ */
+export const getTabbableElements = async () => {
+	const elements = await page.$$(
+		'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
+	);
+
+	const final = [];
+
+	for ( let i = 0; i < elements.length; i++ ) {
+		const element = await page.evaluate( ( el ) => {
+			return {
+				tagName: el.tagName,
+				disabled: el.disabled,
+				href: el.href,
+				isLikelyNavItem: el.closest( 'ul' ) !== null,
+			};
+		}, elements[ i ] );
+
+		const isVisible = ( await elements[ i ].boundingBox() ) !== null;
+
+		// Disabled elements will not get tabbing focus
+		if ( element.disabled ) {
+			continue;
+		}
+
+		// Links without hrefs will not get tabbing focus
+		if ( element.tagName.toLowerCase() === 'a' && ! element.href ) {
+			continue;
+		}
+
+		// Only include hidden elements if they are most likely part of navigation
+		if ( ! isVisible && ! element.isLikelyNavItem ) {
+			continue;
+		}
+
+		final.push( elements[ i ] );
 	}
 
 	return final;

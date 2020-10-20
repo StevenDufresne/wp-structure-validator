@@ -11,36 +11,52 @@ import {
 	cleanErrorMessage,
 	getDefaultUrl,
 	printMessage,
-	getFocusableElements,
+	getTabbableElements,
 } from '../../utils';
 
 describe( 'Accessibility: Best Practices', () => {
 	it( 'Should have logical tabbing', async () => {
 		await page.goto( createURL( '/' ) );
-		const focusableElements = await getFocusableElements();
+
+		const tabElements = await getTabbableElements( true );
 
 		let mismatch = {};
 
-		for ( let i = 0; i < focusableElements.length; i++ ) {
+		for ( let i = 0; i < tabElements.length; i++ ) {
 			await page.keyboard.press( 'Tab' );
 
-			const currentElement = await (
-				await focusableElements[ i ].getProperty( 'innerText' )
-			 ).jsonValue();
-
-			const currentFocus = await page.evaluate(
-				() => document.activeElement.innerText
+			const tagName = await page.evaluate( () =>
+				document.activeElement.tagName.toLowerCase()
 			);
 
-			// If the innerText don't match, we assume the tabbing order is not proper
-			if ( currentFocus !== currentElement ) {
+			// Skip these elements
+			if ( [ 'audio', 'video', 'iframe' ].includes( tagName ) ) {
+				i--;
+				continue;
+			}
+
+			const focusMatches = await page.evaluate(
+				( el ) => el === document.activeElement,
+				tabElements[ i ]
+			);
+
+			// // If the innerText don't match, we assume the tabbing order is not proper
+			if ( ! focusMatches ) {
+				const expectedElement = await (
+					await tabElements[ i ].getProperty( 'innerText' )
+				 ).jsonValue();
+
+				const currentFocus = await page.evaluate(
+					() => document.activeElement.innerText
+				);
+
 				mismatch[ 'currentFocus' ] = currentFocus;
-				mismatch[ 'currentElement' ] = currentElement;
+				mismatch[ 'expectedElement' ] = expectedElement;
 				break;
 			}
 
-			// If we dont wait at least 50ms, the test can get out of sync
-			await new Promise( ( resolve ) => setTimeout( resolve, 50 ) );
+			// If we don't wait at least 100ms, the test can get out of sync
+			await new Promise( ( resolve ) => setTimeout( resolve, 100 ) );
 		}
 
 		try {
@@ -49,7 +65,7 @@ describe( 'Accessibility: Best Practices', () => {
 			printMessage( 'warning', [
 				'[ Accessibility - Tabbing Test ]:',
 				'Running test on "/".',
-				`Expected to be focused on with innerText of \`${ mismatch[ 'currentElement' ] }\`  but focused on element with innerText of \`${ mismatch[ 'currentFocus' ] }\``,
+				`Expected to be focused on with innerText of \`${ mismatch[ 'expectedElement' ] }\`  but focused on element with innerText of \`${ mismatch[ 'currentFocus' ] }\``,
 				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 			] );
 		}
