@@ -188,3 +188,21 @@ export const truncateElementHTML = ( outerHtml ) => {
 
 	return outerHtml;
 };
+
+const expectWithMessage = ( type, message, testToRun ) => {
+	const output = Array.isArray( message ) ? message : [ message ];
+
+	try {
+		testToRun();
+	} catch ( e ) {
+		printMessage( type, output );
+	}
+};
+
+export const errorWithMessageOnFail = ( message, test ) => {
+	return expectWithMessage( 'setFailed', message, test );
+};
+
+export const warnWithMessageOnFail = ( message, test ) => {
+	return expectWithMessage( 'warning', message, test );
+};

@@ -10,7 +10,7 @@ import urls from './pages';
 import {
 	cleanErrorMessage,
 	getDefaultUrl,
-	printMessage,
+	warnWithMessageOnFail,
 	getTabbableElements,
 } from '../../utils';
 
@@ -59,16 +59,17 @@ describe( 'Accessibility: Best Practices', () => {
 			await new Promise( ( resolve ) => setTimeout( resolve, 50 ) );
 		}
 
-		try {
-			expect( Object.keys( mismatch ).length > 0 ).toBeFalsy();
-		} catch ( ex ) {
-			printMessage( 'warning', [
+		warnWithMessageOnFail(
+			[
 				'[ Accessibility - Tabbing Test ]:',
 				'Running test on "/".',
 				`Expected to be focused on with innerText of \`${ mismatch[ 'expectedElement' ] }\`  but focused on element with innerText of \`${ mismatch[ 'currentFocus' ] }\``,
 				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
-			] );
-		}
+			],
+			() => {
+				expect( Object.keys( mismatch ).length > 0 ).toBeFalsy();
+			}
+		);
 	} );
 
 	test.skip.each( urls )(
