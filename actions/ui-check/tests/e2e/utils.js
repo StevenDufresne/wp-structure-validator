@@ -66,7 +66,7 @@ export const getPercentOfOpaqueness = ( imageData ) => {
  * @param {number} changePercent
  */
 export const meetsChangeThreshold = ( changePercent ) => {
-	return changePercent > 1;
+	return changePercent > 0;
 };
 
 /**

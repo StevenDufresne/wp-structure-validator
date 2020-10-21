@@ -141,7 +141,7 @@ const testSubMenus = async () => {
 				}
 			}
 
-			await new Promise( ( resolve ) => setTimeout( resolve, 3000 ) );
+			await new Promise( ( resolve ) => setTimeout( resolve, 100 ) );
 		}
 
 		return error;
@@ -181,37 +181,22 @@ const hasAcceptableFocusState = async ( element, idx ) => {
 			return true;
 		}
 
-		// Pad the element to catch outlines
-		const padding = 2;
-		const clip = {
-			x: dimensions.x - padding,
-			y: dimensions.y - padding,
-			width: dimensions.width + padding * 2,
-			height: dimensions.height + padding * 2,
-		};
-
 		// Move the browser down before we take a screenshot
 		await page.evaluate( ( yPos ) => {
 			window.scrollBy( 0, yPos );
 		}, dimensions.y );
 
 		// Take a screenshot before focus
-		const beforeSnap = await element.screenshot( {
-			type: 'png',
-			clip,
-		} );
+		const beforeSnap = await page.screenshot();
 
 		// Set focus to the element
 		await element.focus();
 
-		// We give it a few seconds in case there is an animation
+		// We give it a few ms in case there is an animation
 		await new Promise( ( resolve ) => setTimeout( resolve, 300 ) );
 
 		// Take a screenshot after focus
-		const afterSnap = await element.screenshot( {
-			type: 'png',
-			clip,
-		} );
+		const afterSnap = await page.screenshot();
 
 		// Compare images, create diff
 		const img1 = PNG.sync.read( beforeSnap );
@@ -239,28 +224,18 @@ const hasAcceptableFocusState = async ( element, idx ) => {
 				fs.mkdirSync( SCREENSHOT_FOLDER_PATH );
 			}
 
-			const pageSnap = await page.screenshot( {
-				type: 'png',
-			} );
-
-			// Save it so we can spot check during development
 			fs.writeFileSync(
-				`${ SCREENSHOT_FOLDER_PATH }/page.png`,
-				PNG.sync.write( PNG.sync.read( pageSnap ) )
-			);
-
-			fs.writeFileSync(
-				`${ SCREENSHOT_FOLDER_PATH }/element-before.png`,
+				`${ SCREENSHOT_FOLDER_PATH }/before.png`,
 				PNG.sync.write( img1 )
 			);
 
 			fs.writeFileSync(
-				`${ SCREENSHOT_FOLDER_PATH }/element-after.png`,
+				`${ SCREENSHOT_FOLDER_PATH }/after.png`,
 				PNG.sync.write( img2 )
 			);
 
 			fs.writeFileSync(
-				`${ SCREENSHOT_FOLDER_PATH }/element-diff.png`,
+				`${ SCREENSHOT_FOLDER_PATH }/diff.png`,
 				PNG.sync.write( diff )
 			);
 		}
