@@ -7,7 +7,7 @@ import { getPageError } from '@wordpress/e2e-test-utils';
 /**
  * Internal dependencies
  */
-import { errorWithMessageOnFail } from '../../utils';
+import { getDefaultUrl, errorWithMessageOnFail } from '../../utils';
 
 // TODO: either dynamically fetch a list of URLs to check (REST API or site maps?)
 // or import the theme test content dataset and hard-code a list of URLs based on that.
@@ -127,7 +127,10 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 		hrefs.forEach( ( href ) => {
 			let href_url = new URL( href, page.url() );
 			errorWithMessageOnFail(
-				`${ href_url.hostname } is not an approved link.`,
+				`${ href_url.hostname } found on ${ getDefaultUrl(
+					url,
+					queryString.replace( '?', '' )
+				) } is not an approved link.`,
 				() => {
 					expect( allowed_hosts ).toContain( href_url.hostname );
 				}
