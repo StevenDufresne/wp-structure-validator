@@ -117,14 +117,14 @@ const testSubMenus = async () => {
 				const submenu = await listItems[ j ].$( 'ul' );
 
 				if ( link !== null && submenu !== null ) {
-					await link.focus();
-
 					var usesDisplayNone = await page.evaluate(
 						( e ) =>
 							getComputedStyle( e ).display.toLowerCase() ===
 							'none',
 						submenu
 					);
+
+					await link.focus();
 
 					if ( usesDisplayNone ) {
 						throw Error( ErrorMessages.displayNone );
