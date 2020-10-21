@@ -119,6 +119,7 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 			'example.org',
 			'example.net',
 			'wpthemetestdata.wordpress.com',
+			'codex.wordpress.org',
 			new URL( page.url() ).hostname,
 			// needs to allow for Theme URL or Author URL
 		];
