@@ -128,7 +128,6 @@ const testSubMenus = async () => {
 
 					if ( usesDisplayNone ) {
 						throw Error( ErrorMessages.displayNone );
-						break;
 					}
 
 					const isVisible = ( await submenu.boundingBox() ) !== null;
