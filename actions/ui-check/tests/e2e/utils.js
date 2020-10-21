@@ -88,7 +88,7 @@ export const getFocusableElements = async () => {
 		 ).jsonValue();
 
 		// If this is null, it's not visible
-		const isVisible = await elements[ i ].boundingBox() !== null ;
+		const isVisible = ( await elements[ i ].boundingBox() ) !== null;
 
 		if ( ! disabled && isVisible ) {
 			final.push( elements[ i ] );
@@ -111,11 +111,44 @@ export const getTabbableElements = async () => {
 
 	for ( let i = 0; i < elements.length; i++ ) {
 		const element = await page.evaluate( ( el ) => {
+			/**
+			 * Returns whether element is visible
+			 * @param {HTMLelement} element
+			 * @returns {Boolean}
+			 */
+			const elementIsVisible = ( element ) => {
+				const rect = element.getBoundingClientRect();
+				return ! (
+					rect.x <= 0 ||
+					rect.y - window.innerHeight >= 0 ||
+					( rect.width === 0 && rect.height === 0 )
+				);
+			};
+
+			/**
+			 * Crawls upward looking for the outermost <ul> element
+			 * @param {HTMLElement} element
+			 * @returns {HTMLElement}
+			 */
+			const getOutermostUl = ( element ) => {
+				var parent = element.parentElement.closest( 'ul' );
+
+				if ( parent === null ) {
+					return element;
+				}
+
+				return getOutermostUl( parent );
+			};
+
+			// Is it most likely a nav item?
+			let parent = getOutermostUl( el );
+
 			return {
 				tagName: el.tagName,
 				disabled: el.disabled,
 				href: el.href,
-				isLikelyNavItem: el.closest( 'ul' ) !== null,
+				innerText: el.innerText,
+				isLikelyNavItem: parent !== el && elementIsVisible( parent ),
 			};
 		}, elements[ i ] );
 

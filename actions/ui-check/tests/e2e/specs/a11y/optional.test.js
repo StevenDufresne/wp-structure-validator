@@ -18,7 +18,7 @@ describe( 'Accessibility: Best Practices', () => {
 	it( 'Should have logical tabbing', async () => {
 		await page.goto( createURL( '/' ) );
 
-		const tabElements = await getTabbableElements( true );
+		const tabElements = await getTabbableElements();
 
 		let mismatch = {};
 
@@ -56,7 +56,7 @@ describe( 'Accessibility: Best Practices', () => {
 			}
 
 			// If we don't wait at least 100ms, the test can get out of sync
-			await new Promise( ( resolve ) => setTimeout( resolve, 100 ) );
+			await new Promise( ( resolve ) => setTimeout( resolve, 50 ) );
 		}
 
 		try {
