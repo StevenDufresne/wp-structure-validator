@@ -95,60 +95,50 @@ const testSubMenus = async () => {
 		notVisible: 'MENU_NOT_VISIBLE',
 	};
 
-	/**
-	 * We run these tests within the browser directly
-	 */
-	const error = await page.evaluate( async ( ErrorMessages ) => {
-		let error;
-		const mainNavItems = document.querySelectorAll( 'nav ul li' );
+	try {
+		// Get the all the lists, looking for navigations
+		const ulElements = await page.$$( 'ul' );
+		for ( let i = 0; i < ulElements.length; i++ ) {
+			// We are only interested in sub navs
+			const hasSubNavs = ( await ulElements[ i ].$( 'ul' ) ) !== null;
 
-		/**
-		 * Return whether the submenu is hidding using display:none
-		 * @param {HTMLElement} element Reference to a dom node
-		 * @returns {boolean}
-		 */
-		const menuUsesDisplayNone = ( element ) => {
-			return getComputedStyle( element ).display.toLowerCase() === 'none';
-		};
-
-		/**
-		 * Returns whether the element is visible on screen
-		 * @param {HTMLElement} element Reference to a dom node
-		 * @returns {boolean}
-		 */
-		const elementIsVisible = ( element ) => {
-			const rect = element.getBoundingClientRect();
-			return ! ( rect.x < 0 || rect.y - window.innerHeight >= 0 );
-		};
-
-		for ( let i = 0; i < mainNavItems.length; i++ ) {
-			const link = mainNavItems[ i ].querySelector( 'a' );
-			const subMenu = mainNavItems[ i ].querySelector( 'ul' );
-
-			if ( link && subMenu ) {
-				if ( menuUsesDisplayNone( subMenu ) ) {
-					error = ErrorMessages.displayNone;
-					break;
-				}
-
-				// Select the link
-				link.focus();
-
-				// Is the submenu visible?
-				if ( ! elementIsVisible( subMenu ) ) {
-					error = ErrorMessages.notVisible;
-					break;
-				}
+			// We don't have any sub menus, try another ul
+			if ( ! hasSubNavs ) {
+				continue;
 			}
 
-			await new Promise( ( resolve ) => setTimeout( resolve, 100 ) );
+			// Set focus back to body to clear the screenshot
+			await ulElements[ i ].focus();
+
+			const listItems = await ulElements[ i ].$$( 'li' );
+
+			for ( let j = 0; j < listItems.length; j++ ) {
+				const link = await listItems[ j ].$( 'a' );
+				const submenu = await listItems[ j ].$( 'ul' );
+
+				if ( link !== null && submenu !== null ) {
+					await link.focus();
+
+					var usesDisplayNone = await page.evaluate(
+						( e ) =>
+							getComputedStyle( e ).display.toLowerCase() ===
+							'none',
+						submenu
+					);
+
+					if ( usesDisplayNone ) {
+						throw Error( ErrorMessages.displayNone );
+						break;
+					}
+
+					const isVisible = ( await submenu.boundingBox() ) !== null;
+
+					if ( ! isVisible ) {
+						throw Error( ErrorMessages.notVisible );
+					}
+				}
+			}
 		}
-
-		return error;
-	}, ErrorMessages );
-
-	try {
-		expect( error ).toBeUndefined();
 	} catch ( ex ) {
 		const messages = [
 			'[ Accessibility - Submenu Test ]:',
@@ -156,12 +146,17 @@ const testSubMenus = async () => {
 			"Your theme's navigation is not working as expected.",
 		];
 
-		if ( error === ErrorMessages.displayNone ) {
-			messages.push(
-				'Submenus should be become visible when tabbing through the main navigation.'
-			);
-		} else if ( error === ErrorMessages.notVisible ) {
-			messages.push( 'Submenus cannot be hidden using `display: none`.' );
+		switch ( ex.message ) {
+			case ErrorMessages.notVisible:
+				messages.push(
+					'Submenus should be become visible when tabbing through the main navigation.'
+				);
+				break;
+			case ErrorMessages.displayNone:
+				messages.push(
+					'Submenus cannot be hidden using `display: none`.'
+				);
+				break;
 		}
 
 		throw new FailedTestException( [
@@ -285,9 +280,9 @@ describe( 'Accessibility: Required', () => {
 	 */
 	it( 'Should pass the following tests:', async () => {
 		try {
-			await testSkipLinks();
+			//await testSkipLinks();
 			await testSubMenus();
-			await testElementFocusState();
+			//await testElementFocusState();
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
 				printMessage( 'warning', ex.messages );
