@@ -61,7 +61,7 @@ describe( 'Accessibility: Best Practices', () => {
 			}
 
 			// If we don't wait at least 100ms, the test can get out of sync
-			await new Promise( ( resolve ) => setTimeout( resolve, 50 ) );
+			await new Promise( ( resolve ) => setTimeout( resolve, 100 ) );
 		}
 
 		warnWithMessageOnFail(
