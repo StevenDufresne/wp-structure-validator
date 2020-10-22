@@ -17,7 +17,6 @@ import {
 	getFocusableElements,
 	truncateElementHTML,
 	elementIsVisible,
-	warnWithMessageOnFail,
 	getTabbableElements,
 	getElementPropertyAsync,
 } from '../../utils';
