@@ -7,7 +7,11 @@ import { getPageError } from '@wordpress/e2e-test-utils';
 /**
  * Internal dependencies
  */
-import { getDefaultUrl, errorWithMessageOnFail } from '../../utils';
+import {
+	getDefaultUrl,
+	errorWithMessageOnFail,
+	getElementPropertyAsync,
+} from '../../utils';
 
 // TODO: either dynamically fetch a list of URLs to check (REST API or site maps?)
 // or import the theme test content dataset and hard-code a list of URLs based on that.
@@ -31,9 +35,10 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 		// Make sure the page content appears to be appropriate for the URL.
 		await page.goto( createURL( url, queryString ) );
 		const body = await page.$( 'body' );
-		const bodyClassName = await (
-			await body.getProperty( 'className' )
-		 ).jsonValue();
+		const bodyClassName = await getElementPropertyAsync(
+			body,
+			'className'
+		);
 
 		errorWithMessageOnFail(
 			`${ url } does not contain a body class`,

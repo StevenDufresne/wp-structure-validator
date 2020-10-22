@@ -19,6 +19,15 @@ export const elementIsVisible = async ( element ) => {
 };
 
 /**
+ * Return property for element
+ * @param {Puppeteer|ElementHandle} element
+ * @param {string} property name of the html property
+ */
+export const getElementPropertyAsync = async ( element, property ) => {
+	return await ( await element.getProperty( property ) ).jsonValue();
+};
+
+/**
  * Retrieves list elements that are focusable by keyboard from the DOM excluding hidden & disabled elements.
  * @return {Puppeteer|ElementHandle[]} List of focusable element
  */

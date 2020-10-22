@@ -19,6 +19,7 @@ import {
 	elementIsVisible,
 	warnWithMessageOnFail,
 	getTabbableElements,
+	getElementPropertyAsync,
 } from '../../utils';
 
 const SCREENSHOT_FOLDER_PATH = 'screenshots';
@@ -240,12 +241,12 @@ const testElementFocusState = async () => {
 		const passes = await hasAcceptableFocusState( elements[ i ] );
 
 		if ( ! passes ) {
-			const domElement = await (
-				await elements[ i ].getProperty( 'outerHTML' )
-			 ).jsonValue();
+			const domElement = await getElementPropertyAsync(
+				elements[ i ],
+				'outerHTML'
+			);
 
 			// Break out of the loop forcefully
-
 			throw new FailedTestException( [
 				'[ Accessibility - Element Focus Test ]:',
 				'Running tests on "/".',
@@ -287,9 +288,10 @@ const testForLogicalTabbing = async () => {
 		);
 
 		if ( ! focusMatches ) {
-			const expectedElementInnerText = await (
-				await tabElements[ i ].getProperty( 'innerText' )
-			 ).jsonValue();
+			const expectedElementInnerText = await getElementPropertyAsync(
+				tabElements[ i ],
+				'innerText'
+			);
 
 			const currentFocusInnerText = await page.evaluate(
 				() => document.activeElement.innerText
