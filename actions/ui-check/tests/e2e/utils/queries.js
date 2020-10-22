@@ -2,7 +2,7 @@
  * Retrieves list elements that are focusable by keyboard from the DOM
  * @return {array} List of focusable element
  */
-const queryForFocusableElements = async () => {
+const queryForFocusableElementsAsync = async () => {
 	return await page.$$(
 		'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
 	);
@@ -13,7 +13,7 @@ const queryForFocusableElements = async () => {
  * @param {Puppeteer|ElementHandle} element
  * @return {boolean} List of focusable element
  */
-export const elementIsVisible = async ( element ) => {
+export const elementIsVisibleAsync = async ( element ) => {
 	// If the bounding box is null, it's not visible
 	return ( await element.boundingBox() ) !== null;
 };
@@ -31,8 +31,8 @@ export const getElementPropertyAsync = async ( element, property ) => {
  * Retrieves list elements that are focusable by keyboard from the DOM excluding hidden & disabled elements.
  * @return {Puppeteer|ElementHandle[]} List of focusable element
  */
-export const getFocusableElements = async () => {
-	const elements = await queryForFocusableElements();
+export const getFocusableElementsAsync = async () => {
+	const elements = await queryForFocusableElementsAsync();
 	const final = [];
 
 	for ( let i = 0; i < elements.length; i++ ) {
@@ -41,7 +41,7 @@ export const getFocusableElements = async () => {
 			await elements[ i ].getProperty( 'disabled' )
 		 ).jsonValue();
 
-		if ( ! disabled && ( await elementIsVisible( elements[ i ] ) ) ) {
+		if ( ! disabled && ( await elementIsVisibleAsync( elements[ i ] ) ) ) {
 			final.push( elements[ i ] );
 		}
 	}
@@ -53,8 +53,8 @@ export const getFocusableElements = async () => {
  * Retrieves list elements that are tabbing by keyboard.
  * @return {Puppeteer|ElementHandle[]} List of tabbable element
  */
-export const getTabbableElements = async () => {
-	const elements = await queryForFocusableElements();
+export const getTabbableElementsAsync = async () => {
+	const elements = await queryForFocusableElementsAsync();
 	const final = [];
 
 	for ( let i = 0; i < elements.length; i++ ) {
@@ -112,7 +112,7 @@ export const getTabbableElements = async () => {
 
 		// Only include hidden elements if they are most likely part of navigation
 		if (
-			! ( await elementIsVisible( elements[ i ] ) ) &&
+			! ( await elementIsVisibleAsync( elements[ i ] ) ) &&
 			! element.isLikelyNavItem
 		) {
 			continue;

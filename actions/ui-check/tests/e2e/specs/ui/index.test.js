@@ -14,10 +14,10 @@ import {
 	printMessage,
 	meetsChangeThreshold,
 	getPercentOfOpaqueness,
-	getFocusableElements,
+	getFocusableElementsAsync,
 	truncateElementHTML,
-	elementIsVisible,
-	getTabbableElements,
+	elementIsVisibleAsync,
+	getTabbableElementsAsync,
 	getElementPropertyAsync,
 } from '../../utils';
 
@@ -117,7 +117,7 @@ const testLiSubMenu = async ( listItem ) => {
 
 		await link.focus();
 
-		if ( ! ( await elementIsVisible( submenu ) ) ) {
+		if ( ! ( await elementIsVisibleAsync( submenu ) ) ) {
 			throw new FailedTestException(
 				getFailureMessage(
 					'Submenus should be become visible when tabbing through the main navigation.'
@@ -234,7 +234,7 @@ const hasAcceptableFocusState = async ( element ) => {
 const testElementFocusState = async () => {
 	await page.goto( createURL( '/' ) );
 
-	const elements = await getFocusableElements();
+	const elements = await getFocusableElementsAsync();
 
 	for ( let i = 0; i < elements.length; i++ ) {
 		const passes = await hasAcceptableFocusState( elements[ i ] );
@@ -265,7 +265,7 @@ const testElementFocusState = async () => {
 const testForLogicalTabbing = async () => {
 	await page.goto( createURL( '/' ) );
 
-	const tabElements = await getTabbableElements();
+	const tabElements = await getTabbableElementsAsync();
 
 	for ( let i = 0; i < tabElements.length; i++ ) {
 		await page.keyboard.press( 'Tab' );
