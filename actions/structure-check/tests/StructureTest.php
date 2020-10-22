@@ -11,7 +11,7 @@ final class StructureTest extends TestCase
 
     public function testsThatIndexIsPresent(): void
     {
-        $this->assertFileExists( self::REL_THEME_LOCATION . '/index.php', '::error::We require you have a index.php file.' );
+        $this->assertFileExists( self::REL_THEME_LOCATION . '/index.php', '::error::We require you have an index.php file.' );
     }
 
     public function testsThatScreenshotIsPresent(): void
