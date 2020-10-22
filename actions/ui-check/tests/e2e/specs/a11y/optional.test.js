@@ -58,7 +58,6 @@ describe( 'Accessibility: Best Practices', () => {
 				mismatch.expectedElement = truncateElementHTML(
 					expectedElementInnerText
 				);
-				break;
 			}
 
 			// If we don't wait at least 100ms, the test can get out of sync
