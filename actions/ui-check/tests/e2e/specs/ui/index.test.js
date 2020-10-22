@@ -237,9 +237,9 @@ const testElementFocusState = async () => {
 	const elements = await getFocusableElements();
 
 	for ( let i = 0; i < elements.length; i++ ) {
-		const result = await hasAcceptableFocusState( elements[ i ] );
+		const passes = await hasAcceptableFocusState( elements[ i ] );
 
-		if ( ! result ) {
+		if ( ! passes ) {
 			const domElement = await (
 				await elements[ i ].getProperty( 'outerHTML' )
 			 ).jsonValue();
