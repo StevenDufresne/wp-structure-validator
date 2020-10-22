@@ -17,6 +17,7 @@ import {
 	getFocusableElements,
 	truncateElementHTML,
 	elementIsVisible,
+	getElementComputedStyle,
 } from '../../utils';
 
 const SCREENSHOT_FOLDER_PATH = 'screenshots';
@@ -84,13 +85,10 @@ const testSkipLinks = async () => {
 };
 
 /**
- * Tests whether the theme has an acceptable navigation
- *
- * See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation
+ * Checks the <li> for a <ul> and runs tests on it
+ * @param {Puppeteer|ElementHandle} listItem
  */
-const testSubMenus = async () => {
-	await page.goto( createURL( '/' ) );
-
+const testLiSubMenu = async ( listItem ) => {
 	const getFailureMessage = ( message ) => [
 		'[ Accessibility - Submenu Test ]:',
 		'Running tests on "/".',
@@ -98,6 +96,43 @@ const testSubMenus = async () => {
 		message,
 		'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 	];
+
+	const link = await listItem.$( 'a' );
+	const submenu = await listItem.$( 'ul' );
+
+	if ( link !== null && submenu !== null ) {
+		var usesDisplayNone = await page.evaluate(
+			( e ) => getComputedStyle( e ).display.toLowerCase() === 'none',
+			submenu
+		);
+
+		if ( usesDisplayNone ) {
+			throw new FailedTestException(
+				getFailureMessage(
+					'Submenus cannot be hidden using `display: none`.'
+				)
+			);
+		}
+
+		await link.focus();
+
+		if ( ! ( await elementIsVisible( submenu ) ) ) {
+			throw new FailedTestException(
+				getFailureMessage(
+					'Submenus should be become visible when tabbing through the main navigation.'
+				)
+			);
+		}
+	}
+};
+
+/**
+ * Tests whether the theme has an acceptable navigation
+ *
+ * See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation
+ */
+const testSubMenus = async () => {
+	await page.goto( createURL( '/' ) );
 
 	// Get the all the lists, looking for navigations
 	const ulElements = await page.$$( 'ul' );
@@ -113,34 +148,7 @@ const testSubMenus = async () => {
 		const listItems = await ulElements[ i ].$$( 'li' );
 
 		for ( let j = 0; j < listItems.length; j++ ) {
-			const link = await listItems[ j ].$( 'a' );
-			const submenu = await listItems[ j ].$( 'ul' );
-
-			if ( link !== null && submenu !== null ) {
-				var usesDisplayNone = await page.evaluate(
-					( e ) =>
-						getComputedStyle( e ).display.toLowerCase() === 'none',
-					submenu
-				);
-
-				if ( usesDisplayNone ) {
-					throw new FailedTestException(
-						getFailureMessage(
-							'Submenus cannot be hidden using `display: none`.'
-						)
-					);
-				}
-
-				await link.focus();
-
-				if ( ! ( await elementIsVisible( submenu ) ) ) {
-					throw new FailedTestException(
-						getFailureMessage(
-							'Submenus should be become visible when tabbing through the main navigation.'
-						)
-					);
-				}
-			}
+			await testLiSubMenu( listItems[ j ] );
 		}
 	}
 };
@@ -256,9 +264,9 @@ describe( 'Accessibility: Required', () => {
 	 */
 	it( 'Should pass the following tests:', async () => {
 		try {
-			await testSkipLinks();
+			//await testSkipLinks();
 			await testSubMenus();
-			await testElementFocusState();
+			//await testElementFocusState();
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
 				printMessage( 'warning', ex.messages );
