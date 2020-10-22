@@ -91,73 +91,57 @@ const testSkipLinks = async () => {
 const testSubMenus = async () => {
 	await page.goto( createURL( '/' ) );
 
-	const ErrorMessages = {
-		displayNone: 'USES_DISPLAY_NONE',
-		notVisible: 'MENU_NOT_VISIBLE',
-	};
+	const getFailureMessage = ( message ) => [
+		'[ Accessibility - Submenu Test ]:',
+		'Running tests on "/".',
+		"Your theme's navigation is not working as expected.",
+		message,
+		'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
+	];
 
-	try {
-		// Get the all the lists, looking for navigations
-		const ulElements = await page.$$( 'ul' );
-		for ( let i = 0; i < ulElements.length; i++ ) {
-			// We are only interested in sub navs
-			const hasSubNavs = ( await ulElements[ i ].$( 'ul' ) ) !== null;
+	// Get the all the lists, looking for navigations
+	const ulElements = await page.$$( 'ul' );
+	for ( let i = 0; i < ulElements.length; i++ ) {
+		// We are only interested in sub navs
+		const hasSubNavs = ( await ulElements[ i ].$( 'ul' ) ) !== null;
 
-			// We don't have any sub menus, try another ul
-			if ( ! hasSubNavs ) {
-				continue;
-			}
+		// We don't have any sub menus, try another ul
+		if ( ! hasSubNavs ) {
+			continue;
+		}
 
-			const listItems = await ulElements[ i ].$$( 'li' );
+		const listItems = await ulElements[ i ].$$( 'li' );
 
-			for ( let j = 0; j < listItems.length; j++ ) {
-				const link = await listItems[ j ].$( 'a' );
-				const submenu = await listItems[ j ].$( 'ul' );
+		for ( let j = 0; j < listItems.length; j++ ) {
+			const link = await listItems[ j ].$( 'a' );
+			const submenu = await listItems[ j ].$( 'ul' );
 
-				if ( link !== null && submenu !== null ) {
-					var usesDisplayNone = await page.evaluate(
-						( e ) =>
-							getComputedStyle( e ).display.toLowerCase() ===
-							'none',
-						submenu
+			if ( link !== null && submenu !== null ) {
+				var usesDisplayNone = await page.evaluate(
+					( e ) =>
+						getComputedStyle( e ).display.toLowerCase() === 'none',
+					submenu
+				);
+
+				if ( usesDisplayNone ) {
+					throw new FailedTestException(
+						getFailureMessage(
+							'Submenus cannot be hidden using `display: none`.'
+						)
 					);
+				}
 
-					if ( usesDisplayNone ) {
-						throw Error( ErrorMessages.displayNone );
-					}
+				await link.focus();
 
-					await link.focus();
-
-					if ( ! ( await elementIsVisible( submenu ) ) ) {
-						throw Error( ErrorMessages.notVisible );
-					}
+				if ( ! ( await elementIsVisible( submenu ) ) ) {
+					throw new FailedTestException(
+						getFailureMessage(
+							'Submenus should be become visible when tabbing through the main navigation.'
+						)
+					);
 				}
 			}
 		}
-	} catch ( ex ) {
-		const messages = [
-			'[ Accessibility - Submenu Test ]:',
-			'Running tests on "/".',
-			"Your theme's navigation is not working as expected.",
-		];
-
-		switch ( ex.message ) {
-			case ErrorMessages.notVisible:
-				messages.push(
-					'Submenus should be become visible when tabbing through the main navigation.'
-				);
-				break;
-			case ErrorMessages.displayNone:
-				messages.push(
-					'Submenus cannot be hidden using `display: none`.'
-				);
-				break;
-		}
-
-		throw new FailedTestException( [
-			...messages,
-			'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
-		] );
 	}
 };
 
@@ -269,9 +253,9 @@ describe( 'Accessibility: Required', () => {
 	 */
 	it( 'Should pass the following tests:', async () => {
 		try {
-			await testSkipLinks();
+			//await testSkipLinks();
 			await testSubMenus();
-			await testElementFocusState();
+			//await testElementFocusState();
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
 				printMessage( 'warning', ex.messages );
