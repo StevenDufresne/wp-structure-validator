@@ -12,6 +12,7 @@ import {
 	getDefaultUrl,
 	warnWithMessageOnFail,
 	getTabbableElements,
+	truncateElementHTML,
 } from '../../utils';
 
 describe( 'Accessibility: Best Practices', () => {
@@ -35,23 +36,28 @@ describe( 'Accessibility: Best Practices', () => {
 				continue;
 			}
 
+			// If the elements don't match, we assume the tabbing order is not proper
 			const focusMatches = await page.evaluate(
 				( el ) => el === document.activeElement,
 				tabElements[ i ]
 			);
 
-			// // If the innerText don't match, we assume the tabbing order is not proper
 			if ( ! focusMatches ) {
-				const expectedElement = await (
+				const expectedElementInnerText = await (
 					await tabElements[ i ].getProperty( 'innerText' )
 				 ).jsonValue();
 
-				const currentFocus = await page.evaluate(
+				const currentFocusInnerText = await page.evaluate(
 					() => document.activeElement.innerText
 				);
 
-				mismatch[ 'currentFocus' ] = currentFocus;
-				mismatch[ 'expectedElement' ] = expectedElement;
+				mismatch.currentFocus = truncateElementHTML(
+					currentFocusInnerText
+				);
+
+				mismatch.expectedElement = truncateElementHTML(
+					expectedElementInnerText
+				);
 				break;
 			}
 
