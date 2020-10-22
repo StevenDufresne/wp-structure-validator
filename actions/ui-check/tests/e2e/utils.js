@@ -182,7 +182,7 @@ export const getTabbableElements = async () => {
  * @returns {string}
  */
 export const truncateElementHTML = ( outerHtml ) => {
-	if ( outerHtml.length > 100 ) {
+	if ( outerHtml.length > 200 ) {
 		return outerHtml.substring( 0, outerHtml.indexOf( '>' ) + 1 );
 	}
 
