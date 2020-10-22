@@ -32,7 +32,7 @@ export const getFocusableElements = async () => {
 			await elements[ i ].getProperty( 'disabled' )
 		 ).jsonValue();
 
-		if ( ! disabled && ( await elementIsVisible( element[ i ] ) ) ) {
+		if ( ! disabled && ( await elementIsVisible( elements[ i ] ) ) ) {
 			final.push( elements[ i ] );
 		}
 	}

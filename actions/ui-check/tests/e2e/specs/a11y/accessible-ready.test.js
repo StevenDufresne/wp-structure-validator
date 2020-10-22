@@ -11,7 +11,7 @@ import urls from './pages';
 import { cleanErrorMessage, getDefaultUrl, printMessage } from '../../utils';
 
 describe( 'Accessible: Tag Ready', () => {
-    // Potentially skip these tests.
+	// Potentially skip these tests.
 	const fn = !! process.env.TEST_ACCESSIBILITY ? test.skip : test;
 
 	fn.each( urls )(

@@ -24,7 +24,7 @@ const SCREENSHOT_FOLDER_PATH = 'screenshots';
 /**
  * Custom Error type to be throw in tests
  *
- * @param {array|string} messages
+ * @param {string[]} messages
  */
 function FailedTestException( messages ) {
 	this.messages = messages;
@@ -161,79 +161,78 @@ const testSubMenus = async () => {
 	}
 };
 
-const hasAcceptableFocusState = async ( element, idx ) => {
-	try {
-		// Grab the element dimension
-		const dimensions = await element.boundingBox();
+/**
+ * Determines whether the element has an acceptable focus state
+ * @param {Puppeteer|ElementHandle} element
+ * @returns {boolean}
+ */
+const hasAcceptableFocusState = async ( element ) => {
+	// Grab the element dimension
+	const dimensions = await element.boundingBox();
 
-		// It's a hidden element
-		if ( ! dimensions || dimensions.x < 0 || dimensions.y < 0 ) {
-			return true;
+	// It's a hidden element
+	if ( dimensions === null || dimensions.x < 0 || dimensions.y < 0 ) {
+		return true;
+	}
+
+	// Move the browser down before we take a screenshot
+	await page.evaluate( ( yPos ) => {
+		window.scrollBy( 0, yPos );
+	}, dimensions.y );
+
+	// Take a screenshot before focus
+	const beforeSnap = await page.screenshot();
+
+	// Set focus to the element
+	await element.focus();
+
+	// We give it a few ms in case there is an animation
+	await new Promise( ( resolve ) => setTimeout( resolve, 300 ) );
+
+	// Take a screenshot after focus
+	const afterSnap = await page.screenshot();
+
+	// Compare images, create diff
+	const img1 = PNG.sync.read( beforeSnap );
+	const img2 = PNG.sync.read( afterSnap );
+
+	// Use the first image to determine size
+	const { width, height } = img1;
+	const diff = new PNG( { width, height } );
+
+	// Create a png with the diff overlayed on a transparent background
+	// The threshold controls how 'different' the new state should be. ( 0 Low/1 High )
+	pixelmatch( img1.data, img2.data, diff.data, width, height, {
+		threshold: 0.3,
+		diffMask: true,
+	} );
+
+	// Check to see that there is an acceptable level of change from before & after element focus
+	const passes = meetsChangeThreshold( getPercentOfOpaqueness( diff.data ) );
+
+	// Save the images if the element doesn't pass
+	if ( ! passes ) {
+		if ( ! fs.existsSync( SCREENSHOT_FOLDER_PATH ) ) {
+			fs.mkdirSync( SCREENSHOT_FOLDER_PATH );
 		}
 
-		// Move the browser down before we take a screenshot
-		await page.evaluate( ( yPos ) => {
-			window.scrollBy( 0, yPos );
-		}, dimensions.y );
-
-		// Take a screenshot before focus
-		const beforeSnap = await page.screenshot();
-
-		// Set focus to the element
-		await element.focus();
-
-		// We give it a few ms in case there is an animation
-		await new Promise( ( resolve ) => setTimeout( resolve, 300 ) );
-
-		// Take a screenshot after focus
-		const afterSnap = await page.screenshot();
-
-		// Compare images, create diff
-		const img1 = PNG.sync.read( beforeSnap );
-		const img2 = PNG.sync.read( afterSnap );
-
-		// Use the first image to determine size
-		const { width, height } = img1;
-		const diff = new PNG( { width, height } );
-
-		// Create a png with the diff overlayed on a transparent background
-		// The threshold controls how 'different' the new state should be. ( 0 Low/1 High )
-		pixelmatch( img1.data, img2.data, diff.data, width, height, {
-			threshold: 0.3,
-			diffMask: true,
-		} );
-
-		// Check to see that there is an acceptable level of change from before & after element focus
-		const passes = meetsChangeThreshold(
-			getPercentOfOpaqueness( diff.data )
+		fs.writeFileSync(
+			`${ SCREENSHOT_FOLDER_PATH }/before.png`,
+			PNG.sync.write( img1 )
 		);
 
-		// Save the images if the element doesn't pass
-		if ( ! passes ) {
-			if ( ! fs.existsSync( SCREENSHOT_FOLDER_PATH ) ) {
-				fs.mkdirSync( SCREENSHOT_FOLDER_PATH );
-			}
+		fs.writeFileSync(
+			`${ SCREENSHOT_FOLDER_PATH }/after.png`,
+			PNG.sync.write( img2 )
+		);
 
-			fs.writeFileSync(
-				`${ SCREENSHOT_FOLDER_PATH }/before.png`,
-				PNG.sync.write( img1 )
-			);
-
-			fs.writeFileSync(
-				`${ SCREENSHOT_FOLDER_PATH }/after.png`,
-				PNG.sync.write( img2 )
-			);
-
-			fs.writeFileSync(
-				`${ SCREENSHOT_FOLDER_PATH }/diff.png`,
-				PNG.sync.write( diff )
-			);
-		}
-
-		return passes;
-	} catch ( ex ) {
-		return false;
+		fs.writeFileSync(
+			`${ SCREENSHOT_FOLDER_PATH }/diff.png`,
+			PNG.sync.write( diff )
+		);
 	}
+
+	return passes;
 };
 
 const testElementFocusState = async () => {
@@ -241,31 +240,26 @@ const testElementFocusState = async () => {
 
 	const elements = await getFocusableElements();
 
-	try {
-		for ( let i = 0; i < elements.length; i++ ) {
-			const result = await hasAcceptableFocusState( elements[ i ], i );
+	for ( let i = 0; i < elements.length; i++ ) {
+		const result = await hasAcceptableFocusState( elements[ i ] );
 
-			if ( ! result ) {
-				const domElement = await (
-					await elements[ i ].getProperty( 'outerHTML' )
-				 ).jsonValue();
+		if ( ! result ) {
+			const domElement = await (
+				await elements[ i ].getProperty( 'outerHTML' )
+			 ).jsonValue();
 
-				// Break out of the loop forcefully
-				throw Error(
-					`The element "${ truncateElementHTML(
-						domElement
-					) }" does not have enough visible difference when focused. `
-				);
-			}
+			// Break out of the loop forcefully
+
+			throw new FailedTestException( [
+				'[ Accessibility - Element Focus Test ]:',
+				'Running tests on "/".',
+				`The element "${ truncateElementHTML(
+					domElement
+				) }" does not have enough visible difference when focused. `,
+				'Download the screenshots to see the offending element.',
+				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
+			] );
 		}
-	} catch ( ex ) {
-		throw new FailedTestException( [
-			'[ Accessibility - Element Focus Test ]:',
-			'Running tests on "/".',
-			ex.message,
-			'Download the screenshots to see the offending element.',
-			'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
-		] );
 	}
 };
 
