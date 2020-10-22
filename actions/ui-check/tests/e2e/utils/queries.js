@@ -1,14 +1,4 @@
 /**
- * Returns whether the element is visible
- * @param {Puppeteer|ElementHandle} element
- * @return {boolean} List of focusable element
- */
-const elementIsVisible = async ( element ) => {
-	// If the bounding box is null, it's not visible
-	return ( await element.boundingBox() ) !== null;
-};
-
-/**
  * Retrieves list elements that are focusable by keyboard from the DOM
  * @return {array} List of focusable element
  */
@@ -16,6 +6,16 @@ const queryForFocusableElements = async () => {
 	return await page.$$(
 		'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
 	);
+};
+
+/**
+ * Returns whether the element is visible
+ * @param {Puppeteer|ElementHandle} element
+ * @return {boolean} List of focusable element
+ */
+export const elementIsVisible = async ( element ) => {
+	// If the bounding box is null, it's not visible
+	return ( await element.boundingBox() ) !== null;
 };
 
 /**

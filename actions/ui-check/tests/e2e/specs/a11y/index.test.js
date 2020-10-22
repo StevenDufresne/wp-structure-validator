@@ -16,6 +16,7 @@ import {
 	getPercentOfOpaqueness,
 	getFocusableElements,
 	truncateElementHTML,
+	elementIsVisible,
 } from '../../utils';
 
 const SCREENSHOT_FOLDER_PATH = 'screenshots';
@@ -121,15 +122,13 @@ const testSubMenus = async () => {
 						submenu
 					);
 
-					await link.focus();
-
 					if ( usesDisplayNone ) {
 						throw Error( ErrorMessages.displayNone );
 					}
 
-					const isVisible = ( await submenu.boundingBox() ) !== null;
+					await link.focus();
 
-					if ( ! isVisible ) {
+					if ( ! ( await elementIsVisible( submenu ) ) ) {
 						throw Error( ErrorMessages.notVisible );
 					}
 				}
