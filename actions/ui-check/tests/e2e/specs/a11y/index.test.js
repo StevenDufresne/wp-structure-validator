@@ -259,6 +259,9 @@ const testElementFocusState = async () => {
 	}
 };
 
+/**
+ * Loops through tabbable elements and test whether the active element in the dom matches our list.
+ */
 const testForLogicalTabbing = async () => {
 	await page.goto( createURL( '/' ) );
 
