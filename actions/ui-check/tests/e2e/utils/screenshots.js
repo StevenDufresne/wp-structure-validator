@@ -1,4 +1,3 @@
-
 /**
  * Returns the percentage of pixels that are opaque in a png with transparency
  * @param {array} imageData Representation of the png

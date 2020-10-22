@@ -107,9 +107,6 @@ const testSubMenus = async () => {
 				continue;
 			}
 
-			// Set focus back to body to clear the screenshot
-			await ulElements[ i ].focus();
-
 			const listItems = await ulElements[ i ].$$( 'li' );
 
 			for ( let j = 0; j < listItems.length; j++ ) {

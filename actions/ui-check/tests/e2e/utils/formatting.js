@@ -1,5 +1,3 @@
-
-
 /**
  * Returns a portion of html if outerHtml is too large
  *
