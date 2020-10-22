@@ -17,7 +17,8 @@ import {
 	getFocusableElements,
 	truncateElementHTML,
 	elementIsVisible,
-	getElementComputedStyle,
+	warnWithMessageOnFail,
+	getTabbableElements,
 } from '../../utils';
 
 const SCREENSHOT_FOLDER_PATH = 'screenshots';
@@ -258,6 +259,56 @@ const testElementFocusState = async () => {
 	}
 };
 
+const testForLogicalTabbing = async () => {
+	await page.goto( createURL( '/' ) );
+
+	const tabElements = await getTabbableElements();
+
+	for ( let i = 0; i < tabElements.length; i++ ) {
+		await page.keyboard.press( 'Tab' );
+
+		const tagName = await page.evaluate( () =>
+			document.activeElement.tagName.toLowerCase()
+		);
+
+		// Skip these elements
+		if ( [ 'audio', 'video', 'iframe' ].includes( tagName ) ) {
+			i--;
+			continue;
+		}
+
+		// If the elements don't match, we assume the tabbing order is not proper
+		const focusMatches = await page.evaluate(
+			( el ) => el === document.activeElement,
+			tabElements[ i ]
+		);
+
+		if ( ! focusMatches ) {
+			const expectedElementInnerText = await (
+				await tabElements[ i ].getProperty( 'innerText' )
+			 ).jsonValue();
+
+			const currentFocusInnerText = await page.evaluate(
+				() => document.activeElement.innerText
+			);
+
+			throw new FailedTestException( [
+				'[ Accessibility - Tabbing Test ]:',
+				'Running test on "/".',
+				`Expected to be focused on with innerText of \`${ truncateElementHTML(
+					expectedElementInnerText
+				) }\`  but focused on element with innerText of \`${ truncateElementHTML(
+					currentFocusInnerText
+				) }\``,
+				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
+			] );
+		}
+
+		// If we don't wait at least 100ms, the test can get out of sync
+		await new Promise( ( resolve ) => setTimeout( resolve, 100 ) );
+	}
+};
+
 describe( 'Accessibility: Required', () => {
 	/**
 	 * We run all the test synchronously to control how many errors get outputted to reduce noise
@@ -267,6 +318,7 @@ describe( 'Accessibility: Required', () => {
 			await testSkipLinks();
 			await testSubMenus();
 			await testElementFocusState();
+			await testForLogicalTabbing();
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
 				printMessage( 'warning', ex.messages );
