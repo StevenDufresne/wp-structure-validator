@@ -29,8 +29,8 @@ export const getDefaultUrl = ( path, query ) => {
 
 /**
  * Prints a message
- * @param {command} command The name of the command that matches the `core` library messaging commands.
- * @param {array} lines The content to print.
+ * @param {string} command The name of the command that matches the `core` library messaging commands.
+ * @param {string[]} lines The content to print.
  */
 export const printMessage = ( command, lines ) => {
 	// Github actions should automatically set CI
@@ -44,13 +44,15 @@ export const printMessage = ( command, lines ) => {
 
 /**
  * Returns the percentage of pixels that are opaque in a png with transparency
- * @param {imageData} imageData Representation of the png
+ * @param {array} imageData Representation of the png
  * @return {number} Number between 0 - 100 representing the percentage of opaque pixels within the transparent png
  */
 export const getPercentOfOpaqueness = ( imageData ) => {
 	let i;
 	let opaquePixels = 0;
 
+	// Pixels are represented in groups of four. Ie: rgba(255,0,0,0)
+	// We check the 4th item for transparency
 	for ( i = 3; i < imageData.length; i += 4 ) {
 		if ( imageData[ i ] === 255 ) {
 			opaquePixels++;
@@ -62,7 +64,7 @@ export const getPercentOfOpaqueness = ( imageData ) => {
 };
 
 /**
- *
+ *  Returns whether the percentage of change is great enough
  * @param {number} changePercent
  */
 export const meetsChangeThreshold = ( changePercent ) => {
@@ -70,15 +72,31 @@ export const meetsChangeThreshold = ( changePercent ) => {
 };
 
 /**
- * Retrieves list elements that are focusable by keyboard from the DOM excluding hidden & disabled elements.
- * @param {boolean} includeHidden Whether to include hidden elements
+ * Returns whether the element is visible
+ * @param {Puppeteer|ElementHandle} element
+ * @return {boolean} List of focusable element
+ */
+const elementIsVisible = async ( element ) => {
+	// If the bounding box is null, it's not visible
+	return ( await element.boundingBox() ) !== null;
+};
+
+/**
+ * Retrieves list elements that are focusable by keyboard from the DOM
  * @return {array} List of focusable element
  */
-export const getFocusableElements = async () => {
-	const elements = await page.$$(
+const queryForFocusableElements = async () => {
+	return await page.$$(
 		'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
 	);
+};
 
+/**
+ * Retrieves list elements that are focusable by keyboard from the DOM excluding hidden & disabled elements.
+ * @return {Puppeteer|ElementHandle[]} List of focusable element
+ */
+export const getFocusableElements = async () => {
+	const elements = await queryForFocusableElements();
 	const final = [];
 
 	for ( let i = 0; i < elements.length; i++ ) {
@@ -87,10 +105,7 @@ export const getFocusableElements = async () => {
 			await elements[ i ].getProperty( 'disabled' )
 		 ).jsonValue();
 
-		// If this is null, it's not visible
-		const isVisible = ( await elements[ i ].boundingBox() ) !== null;
-
-		if ( ! disabled && isVisible ) {
+		if ( ! disabled && ( await elementIsVisible( element[ i ] ) ) ) {
 			final.push( elements[ i ] );
 		}
 	}
@@ -100,13 +115,10 @@ export const getFocusableElements = async () => {
 
 /**
  * Retrieves list elements that are tabbing by keyboard.
- * @return {array} List of tabbable element
+ * @return {Puppeteer|ElementHandle[]} List of tabbable element
  */
 export const getTabbableElements = async () => {
-	const elements = await page.$$(
-		'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
-	);
-
+	const elements = await queryForFocusableElements();
 	const final = [];
 
 	for ( let i = 0; i < elements.length; i++ ) {
@@ -114,9 +126,9 @@ export const getTabbableElements = async () => {
 			/**
 			 * Returns whether element is visible
 			 * @param {HTMLelement} element
-			 * @returns {Boolean}
+			 * @returns {boolean}
 			 */
-			const elementIsVisible = ( element ) => {
+			const isVisible = ( element ) => {
 				const rect = element.getBoundingClientRect();
 				return ! (
 					rect.x <= 0 ||
@@ -148,11 +160,9 @@ export const getTabbableElements = async () => {
 				disabled: el.disabled,
 				href: el.href,
 				innerText: el.innerText,
-				isLikelyNavItem: parent !== el && elementIsVisible( parent ),
+				isLikelyNavItem: parent !== el && isVisible( parent ),
 			};
 		}, elements[ i ] );
-
-		const isVisible = ( await elements[ i ].boundingBox() ) !== null;
 
 		// Disabled elements will not get tabbing focus
 		if ( element.disabled ) {
@@ -165,7 +175,10 @@ export const getTabbableElements = async () => {
 		}
 
 		// Only include hidden elements if they are most likely part of navigation
-		if ( ! isVisible && ! element.isLikelyNavItem ) {
+		if (
+			! ( await elementIsVisible( elements[ i ] ) ) &&
+			! element.isLikelyNavItem
+		) {
 			continue;
 		}
 
@@ -189,6 +202,12 @@ export const truncateElementHTML = ( outerHtml ) => {
 	return outerHtml;
 };
 
+/**
+ *
+ * @param {string} type @github/core message type. Ie: setFailed, warning, info
+ * @param {string|string[]} message Messages to display
+ * @param {function} testToRun The test that will be executed
+ */
 const expectWithMessage = ( type, message, testToRun ) => {
 	const output = Array.isArray( message ) ? message : [ message ];
 
@@ -199,10 +218,20 @@ const expectWithMessage = ( type, message, testToRun ) => {
 	}
 };
 
+/**
+ * Outputs messages as error
+ * @param {string|string[]} message Messages to output
+ * @param {function} test Function to run
+ */
 export const errorWithMessageOnFail = ( message, test ) => {
 	return expectWithMessage( 'setFailed', message, test );
 };
 
+/**
+ * Outputs messages as warning
+ * @param {string|string[]} message Messages to output
+ * @param {function} test Function to run
+ */
 export const warnWithMessageOnFail = ( message, test ) => {
 	return expectWithMessage( 'warning', message, test );
 };
