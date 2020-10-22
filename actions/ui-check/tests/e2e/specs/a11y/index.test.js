@@ -219,6 +219,9 @@ const hasAcceptableFocusState = async ( element ) => {
 	return passes;
 };
 
+/**
+ * Loops through focusable elements and compares if focus state to its default state.
+ */
 const testElementFocusState = async () => {
 	await page.goto( createURL( '/' ) );
 
