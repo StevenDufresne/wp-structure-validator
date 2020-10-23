@@ -22,7 +22,7 @@ export const elementIsVisibleAsync = async ( element ) => {
 	}
 
 	// If it's true, let's check to make sure the parent is not hidden.
-	const hasHiddenParent =  await page.evaluate( ( e ) => {
+	const hasHiddenParent = await page.evaluate( ( e ) => {
 		function elementIsHidden( currentElement ) {
 			const computedStyle = getComputedStyle( currentElement );
 			if (
@@ -43,9 +43,9 @@ export const elementIsVisibleAsync = async ( element ) => {
 		}
 
 		return elementIsHidden( e );
-    }, element );
-    
-    return ! hasHiddenParent;
+	}, element );
+
+	return ! hasHiddenParent;
 };
 
 /**

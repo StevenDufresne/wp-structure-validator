@@ -260,20 +260,16 @@ const testElementFocusState = async () => {
 const testForLogicalTabbing = async () => {
 	await page.goto( createURL( '/' ) );
 
+	// We turn off these elements because tabbing goes into the control and we don't want to test that
+	// `display:none` takes them out of the flow
+	await page.addStyleTag( {
+		content: 'audio, video, iframe { display: none !important; }',
+	} );
+
 	const tabElements = await getTabbableElementsAsync();
 
 	for ( let i = 0; i < tabElements.length; i++ ) {
 		await page.keyboard.press( 'Tab' );
-
-		const tagName = await page.evaluate( () =>
-			document.activeElement.tagName.toLowerCase()
-		);
-
-		// Skip these elements
-		if ( [ 'audio', 'video', 'iframe' ].includes( tagName ) ) {
-			i--;
-			continue;
-		}
 
 		// If the elements don't match, we assume the tabbing order is not proper
 		const focusMatches = await page.evaluate(
