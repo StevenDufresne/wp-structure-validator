@@ -7,8 +7,9 @@ const core = require( '@actions/core' );
  */
 export const cleanErrorMessage = ( msg ) => {
 	return msg
-		.replace( 'expect(received).toPassAxeTests(expected)', '' )
-		.replace( 'Expected page to pass Axe accessibility tests.', '' );
+		.replace( /expect(received).toPassAxeTests(expected)/gi, '' )
+		.replace( 'Expected page to pass Axe accessibility tests.', '' )
+		.replace( /^\s*$(?:\r\n?|\n)/, '\n' );
 };
 
 /**
