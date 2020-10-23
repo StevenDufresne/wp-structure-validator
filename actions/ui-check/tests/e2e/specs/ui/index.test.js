@@ -196,7 +196,7 @@ const hasAcceptableFocusState = async ( element ) => {
 	// Create a png with the diff overlayed on a transparent background
 	// The threshold controls how 'different' the new state should be. ( 0 Low/1 High )
 	pixelmatch( img1.data, img2.data, diff.data, width, height, {
-		threshold: 0.3,
+		threshold: 0.1,
 		diffMask: true,
 	} );
 
@@ -217,11 +217,6 @@ const hasAcceptableFocusState = async ( element ) => {
 		fs.writeFileSync(
 			`${ SCREENSHOT_FOLDER_PATH }/after.png`,
 			PNG.sync.write( img2 )
-		);
-
-		fs.writeFileSync(
-			`${ SCREENSHOT_FOLDER_PATH }/diff.png`,
-			PNG.sync.write( diff )
 		);
 	}
 

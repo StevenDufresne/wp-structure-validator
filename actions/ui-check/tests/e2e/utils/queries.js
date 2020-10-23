@@ -14,8 +14,38 @@ const queryForFocusableElementsAsync = async () => {
  * @return {boolean} List of focusable element
  */
 export const elementIsVisibleAsync = async ( element ) => {
-	// If the bounding box is null, it's not visible
-	return ( await element.boundingBox() ) !== null;
+	// If the bounding box is null,
+	// Caveat: This will not work for children on a hidden element
+	let isVisible = ( await element.boundingBox() ) !== null;
+	if ( ! isVisible ) {
+		return false;
+	}
+
+	// If it's true, let's check to make sure the parent is not hidden.
+	const hasHiddenParent =  await page.evaluate( ( e ) => {
+		function elementIsHidden( currentElement ) {
+			const computedStyle = getComputedStyle( currentElement );
+			if (
+				computedStyle.display.toLowerCase() === 'none' ||
+				computedStyle.visibility.toLowerCase() === 'hidden'
+			) {
+				return true;
+			}
+
+			if (
+				currentElement.offsetParent !== null &&
+				currentElement.tagName.toLowerCase() !== 'body'
+			) {
+				elementIsHidden( currentElement.offsetParent );
+			}
+
+			return false;
+		}
+
+		return elementIsHidden( e );
+    }, element );
+    
+    return ! hasHiddenParent;
 };
 
 /**
