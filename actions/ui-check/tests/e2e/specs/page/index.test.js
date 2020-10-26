@@ -3,6 +3,7 @@
  */
 import { createURL } from '@wordpress/e2e-test-utils';
 import { getPageError } from '@wordpress/e2e-test-utils';
+const fetch = require('node-fetch');
 
 /**
  * Internal dependencies
@@ -28,6 +29,15 @@ let urls = [
 	[ '/', '?feed=rss2', '' ], // Feeds should probably be handled by separate tests.
 	// ...more pages
 ];
+
+var site_info;
+// I've done this crudely, there's doubtless a Right Way.
+fetch( createURL( '/', '?rest_route=/theme-test-helper/v1/info' ) ).then(function (response) {
+	// The API call was successful!
+	return response.json();
+}).then(function (data) {
+	site_info = data;
+});
 
 // Some basic tests that apply to every page
 describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
@@ -126,10 +136,15 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 			'wpthemetestdata.wordpress.com',
 			'wpthemetestdata.files.wordpress.com',
 			'codex.wordpress.org',
+			'facebook.com',
+			'www.facebook.com',
+			'twitter.com',
+			'', // mailto
 			new URL( page.url() ).hostname,
-			// needs to allow for Theme URL or Author URL
-		];
+		].concat( site_info.theme_urls.map( link => new URL ( link ).hostname ) ); // Allow for theme/author URLs.
 
+		// TODO: improve this so that instead of including a blanket exception for facebook.com and the theme/author hostnames,
+		// we have a separate whitelist containing URLs like https://facebook.com/sharing.php etc.
 		hrefs.forEach( ( href ) => {
 			let href_url = new URL( href, page.url() );
 			errorWithMessageOnFail(
