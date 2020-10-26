@@ -60,11 +60,9 @@ const testSkipLinks = async () => {
 	} catch ( e ) {
 		throw new FailedTestException( [
 			'[ Accessibility - Skip Link Test ]:',
-			'Running tests on "/".',
 			"This tests whether the first 'tabbable' element on the page is a skip link",
-			'',
-			'',
-			'----- [ Result ] --------------------------------------------------------------',
+			'[ Result ] --------------------------------------------------------------',
+			'Page: "/"',
 			'Unable to find a legitimate skip link. Make sure your theme includes skip links where necessary.',
 			'You can read more about our expectations at https://make.wordpress.org/themes/handbook/review/required/#skip-links.',
 		] );
@@ -82,7 +80,7 @@ const testSkipLinks = async () => {
 			"This tests whether the first 'tabbable' element on the page is a skip link",
 			'',
 			'',
-			'----- [ Result ] --------------------------------------------------------------',
+			'[ Result ] --------------------------------------------------------------',
 			"The skip link doesn't have a matching element on the page.",
 			`Expecting to find an element with an id matching: "${ activeElement.hash.replace(
 				'#',
@@ -100,10 +98,8 @@ const testSkipLinks = async () => {
 const testLiSubMenu = async ( listItem ) => {
 	const getFailureMessage = ( message ) => [
 		'[ Accessibility - Submenu Test ]:',
-		'Running tests on "/".',
-		'',
-		'',
-		'----- [ Result ] --------------------------------------------------------------',
+		'[ Result ] --------------------------------------------------------------',
+		'Page: "/"',
 		"Your theme's navigation is not working as expected.",
 		message,
 		'This test assumes your menu structure follows these guidelines: https://www.w3.org/WAI/tutorials/menus/structure.',
@@ -273,9 +269,9 @@ const testElementFocusState = async () => {
 			// Break out of the loop forcefully
 			throw new FailedTestException( [
 				'[ Accessibility - Element Focus Test ]:',
-				'Running tests on "/".',
 				"This tests that all 'focusable' elements have a visible :focus state.",
-				'----- [ Result ] --------------------------------------------------------------',
+				'[ Result ] --------------------------------------------------------------',
+				'Page: "/"',
 				`The element "${ truncateElementHTML(
 					domElement,
 					300
@@ -322,9 +318,9 @@ const testForLogicalTabbing = async () => {
 
 			throw new FailedTestException( [
 				'[ Accessibility - Tabbing Test ]:',
-				'Running test on "/".',
-				"This tests that all 'focusable' elements on the page are tabbable in the expected order",
-				'----- [ Result ] --------------------------------------------------------------',
+				"This tests that all 'focusable' elements on the page are tabbable in the expected order.",
+				'[ Result ] --------------------------------------------------------------',
+				'Page: "/"',
 				`Expected: ${ truncateElementHTML( expectedElement, 300 ) }`,
 				`Current: ${ truncateElementHTML( currentFocus, 300 ) }`,
 				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
