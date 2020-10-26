@@ -212,16 +212,16 @@ const hasAcceptableFocusState = async ( element ) => {
 	const afterSnap = await page.screenshot();
 
 	// Compare images, create diff
-	const img1 = PNG.sync.read( beforeSnap );
-	const img2 = PNG.sync.read( afterSnap );
+	const beforeImg = PNG.sync.read( beforeSnap );
+	const afterImg = PNG.sync.read( afterSnap );
 
 	// Use the first image to determine size
-	const { width, height } = img1;
+	const { width, height } = beforeImg;
 	const diff = new PNG( { width, height } );
 
 	// Create a png with the diff overlayed on a transparent background
 	// The threshold controls how 'different' the new state should be. ( 0 Low/1 High )
-	pixelmatch( img1.data, img2.data, diff.data, width, height, {
+	pixelmatch( beforeImg.data, afterImg.data, diff.data, width, height, {
 		threshold: 0.1,
 		diffMask: true,
 	} );
@@ -235,14 +235,15 @@ const hasAcceptableFocusState = async ( element ) => {
 			fs.mkdirSync( SCREENSHOT_FOLDER_PATH );
 		}
 
-		fs.writeFileSync(
-			`${ SCREENSHOT_FOLDER_PATH }/before.png`,
-			PNG.sync.write( img1 )
-		);
+		//Save an image of the element
+		await element.screenshot( {
+			path: `${ SCREENSHOT_FOLDER_PATH }/element.png`,
+		} );
 
+		// Save after screenshot
 		fs.writeFileSync(
-			`${ SCREENSHOT_FOLDER_PATH }/after.png`,
-			PNG.sync.write( img2 )
+			`${ SCREENSHOT_FOLDER_PATH }/page.png`,
+			PNG.sync.write( afterImg )
 		);
 	}
 
