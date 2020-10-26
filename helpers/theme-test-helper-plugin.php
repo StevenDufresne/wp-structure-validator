@@ -40,6 +40,27 @@ function tw_get_test_info() {
 	if ( $theme->get( 'AuthorURI' ) )
 		$out[ 'theme_urls' ][] = $theme->get( 'AuthorURI' );
 
-	
+	// Fun with Sitemaps
+	$sitemaps = new WP_Sitemaps();
+	$sitemaps->register_sitemaps();
+
+	$urls = [];
+	foreach( $sitemaps->registry->get_providers() as $provider ) {
+		foreach( array_keys( $provider->get_object_subtypes() ) as $subtype ) {
+			// No need to get multiple pages of results here, the first page of each subtype should have plenty of content.
+			foreach( $provider->get_url_list( 1, $subtype ) as $url ) {
+				$parts = wp_parse_url( $url['loc'] );
+				$urls[] = [ 
+					$parts['path'],
+					$parts['query'] ? '?' . $parts['query'] : '',
+					$subtype
+				];
+			}
+		}
+	}
+
+	// A list of all (most) of the public pages on the site.
+	$out[ 'site_urls' ] = $urls;
+
 	return $out;
 }

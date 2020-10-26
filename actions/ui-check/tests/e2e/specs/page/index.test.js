@@ -14,30 +14,23 @@ import {
 	getElementPropertyAsync,
 } from '../../utils';
 
-// TODO: either dynamically fetch a list of URLs to check (REST API or site maps?)
-// or import the theme test content dataset and hard-code a list of URLs based on that.
+// Some URLs like feeds aren't included in the site map.
+// TODO: should we test those separately? Not all of these tests are appropriate.
 let urls = [
-	[
-		'/', // URL
-		'', // Query string starting with '?'
-		'home', // Body class to expect
-	],
-	[ '/', '?p=1', 'postid-1' ],
-	[ '/', '?page_id=2', 'page-id-2' ],
-	[ '/', '?author=1', 'author-1' ],
-	[ '/', '?cat=1', 'category-1' ],
-	[ '/', '?feed=rss2', '' ], // Feeds should probably be handled by separate tests.
-	// ...more pages
+	[ '/', '?feed=rss2', '' ],
 ];
 
-var site_info;
-// I've done this crudely, there's doubtless a Right Way.
+let site_info;
+// This doesn't work yet. It probably needs to be done in beforeAll(), but that 
+// leaves the question of how to populate the urls list for the main describe loop.
 fetch( createURL( '/', '?rest_route=/theme-test-helper/v1/info' ) ).then(function (response) {
 	// The API call was successful!
 	return response.json();
 }).then(function (data) {
 	site_info = data;
+	urls.concat( site_info.site_urls );
 });
+
 
 // Some basic tests that apply to every page
 describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
