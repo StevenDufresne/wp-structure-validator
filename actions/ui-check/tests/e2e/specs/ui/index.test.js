@@ -60,7 +60,7 @@ const testSkipLinks = async () => {
 	} catch ( e ) {
 		throw new FailedTestException( [
 			'[ Accessibility - Skip Link Test ]:',
-			"This tests whether the first 'tabbable' element on the page is a skip link",
+			"This tests whether the first 'tabbable' element on the page is a skip link with an '#' symbole.",
 			'[ Result ] --------------------------------------------------------------',
 			'Page: "/"',
 			'Unable to find a legitimate skip link. Make sure your theme includes skip links where necessary.',
@@ -77,9 +77,7 @@ const testSkipLinks = async () => {
 		throw new FailedTestException( [
 			'[ Accessibility - Required Tests ]:',
 			'Running tests on "/".',
-			"This tests whether the first 'tabbable' element on the page is a skip link",
-			'',
-			'',
+			"This tests whether the first 'tabbable' element on the page is a skip link that has a matching element to navigate to.",
 			'[ Result ] --------------------------------------------------------------',
 			"The skip link doesn't have a matching element on the page.",
 			`Expecting to find an element with an id matching: "${ activeElement.hash.replace(
@@ -98,6 +96,7 @@ const testSkipLinks = async () => {
 const testLiSubMenu = async ( listItem ) => {
 	const getFailureMessage = ( message ) => [
 		'[ Accessibility - Submenu Test ]:',
+		'This tests whether your navigational menus are accessible and working as expected.',
 		'[ Result ] --------------------------------------------------------------',
 		'Page: "/"',
 		"Your theme's navigation is not working as expected.",
