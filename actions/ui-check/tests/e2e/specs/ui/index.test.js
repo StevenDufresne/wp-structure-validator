@@ -322,15 +322,45 @@ const testForLogicalTabbing = async () => {
 	}
 };
 
-describe( 'Accessibility: Required', () => {
-	/**
-	 * We run all the test synchronously to control how many errors get outputted to reduce noise
-	 */
-	it( 'Should pass the following tests:', async () => {
+describe( 'Accessibility: UI', () => {
+	it( 'Should have skip links:', async () => {
 		try {
 			await testSkipLinks();
+		} catch ( ex ) {
+			if ( ex instanceof FailedTestException ) {
+				printMessage( 'warning', ex.messages );
+			} else {
+				console.log( ex );
+			}
+		}
+	} );
+
+	it( 'Should have appropriate submenus', async () => {
+		try {
 			await testSubMenus();
+		} catch ( ex ) {
+			if ( ex instanceof FailedTestException ) {
+				printMessage( 'warning', ex.messages );
+			} else {
+				console.log( ex );
+			}
+		}
+	} );
+
+	it( 'Should have element focus state', async () => {
+		try {
 			await testElementFocusState();
+		} catch ( ex ) {
+			if ( ex instanceof FailedTestException ) {
+				printMessage( 'warning', ex.messages );
+			} else {
+				console.log( ex );
+			}
+		}
+	} );
+
+	it( 'Should have logical tabbing', async () => {
+		try {
 			await testForLogicalTabbing();
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
