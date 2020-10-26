@@ -61,6 +61,9 @@ const testSkipLinks = async () => {
 		throw new FailedTestException( [
 			'[ Accessibility - Skip Link Test ]:',
 			'Running tests on "/".',
+			"This tests whether the first 'tabbable' element on the page is a skip link",
+			'',
+			'Result:',
 			'Unable to find a legitimate skip link. Make sure your theme includes skip links where necessary.',
 			'You can read more about our expectations at https://make.wordpress.org/themes/handbook/review/required/#skip-links.',
 		] );
@@ -75,6 +78,9 @@ const testSkipLinks = async () => {
 		throw new FailedTestException( [
 			'[ Accessibility - Required Tests ]:',
 			'Running tests on "/".',
+			"This tests whether the first 'tabbable' element on the page is a skip link",
+			'',
+			'Result:',
 			"The skip link doesn't have a matching element on the page.",
 			`Expecting to find an element with an id matching: "${ activeElement.hash.replace(
 				'#',
@@ -93,8 +99,11 @@ const testLiSubMenu = async ( listItem ) => {
 	const getFailureMessage = ( message ) => [
 		'[ Accessibility - Submenu Test ]:',
 		'Running tests on "/".',
+		'',
+		'Result:',
 		"Your theme's navigation is not working as expected.",
 		message,
+		'This test assumes your menu structure follows these guidelines: https://www.w3.org/WAI/tutorials/menus/structure.',
 		'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 	];
 
@@ -262,6 +271,9 @@ const testElementFocusState = async () => {
 			throw new FailedTestException( [
 				'[ Accessibility - Element Focus Test ]:',
 				'Running tests on "/".',
+				"This tests that all 'focusable' elements have a visible :focus state.",
+				'',
+				'Result:',
 				`The element "${ truncateElementHTML(
 					domElement
 				) }" does not have enough visible difference when focused. `,
@@ -296,23 +308,25 @@ const testForLogicalTabbing = async () => {
 		);
 
 		if ( ! focusMatches ) {
-			const expectedElementInnerText = await getElementPropertyAsync(
+			const expectedElement = await getElementPropertyAsync(
 				tabElements[ i ],
-				'innerText'
+				'outerHTML'
 			);
 
-			const currentFocusInnerText = await page.evaluate(
-				() => document.activeElement.innerText
+			const currentFocus = await page.evaluate(
+				() => document.activeElement.outerHTML
 			);
 
 			throw new FailedTestException( [
 				'[ Accessibility - Tabbing Test ]:',
 				'Running test on "/".',
-				`Expected to be focused on with innerText of \`${ truncateElementHTML(
-					expectedElementInnerText
-				) }\`  but focused on element with innerText of \`${ truncateElementHTML(
-					currentFocusInnerText
-				) }\``,
+				"This tests that all 'focusable' elements on the page are tabbable in the expected order",
+				'',
+				'Result:',
+				`Expected focus: \`${ truncateElementHTML(
+					expectedElement
+				) }\`,
+                Current focus: \`${ truncateElementHTML( currentFocus ) }\``,
 				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 			] );
 		}
