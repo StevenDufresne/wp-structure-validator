@@ -62,7 +62,7 @@ const testSkipLinks = async () => {
 			'[ Accessibility - Skip Link Test ]:',
 			'Running tests on "/".',
 			'Unable to find a legitimate skip link. Make sure your theme includes skip links where necessary.',
-			'You can read more about our expectations at https://make.wordpress.org/themes/handbook/review/required/#skip-links .',
+			'You can read more about our expectations at https://make.wordpress.org/themes/handbook/review/required/#skip-links.',
 		] );
 	}
 
