@@ -115,12 +115,30 @@ const testLiSubMenu = async ( listItem ) => {
 			);
 		}
 
+		// Test that hovering works
+		await link.hover();
+
+		if ( ! ( await elementIsVisibleAsync( submenu ) ) ) {
+			throw new FailedTestException(
+				getFailureMessage(
+					'Submenus should be become visible when :hover on the navigational menu.'
+				)
+			);
+		}
+
+		// Remove the focus to make the menu disappear
+		await page.mouse.move( 0, 0 );
+
+		// Allow some time for the menu to disappear
+		await new Promise( ( resolve ) => setTimeout( resolve, 300 ) );
+
+		// Test that focus works
 		await link.focus();
 
 		if ( ! ( await elementIsVisibleAsync( submenu ) ) ) {
 			throw new FailedTestException(
 				getFailureMessage(
-					'Submenus should be become visible when tabbing through the main navigation.'
+					'Submenus should become visible when :focus is added to the link through the main navigation.'
 				)
 			);
 		}
