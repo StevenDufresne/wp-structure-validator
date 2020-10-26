@@ -4,8 +4,8 @@
  * @param {string} outerHtml
  * @returns {string}
  */
-export const truncateElementHTML = ( outerHtml ) => {
-	if ( outerHtml.length > 200 ) {
+export const truncateElementHTML = ( outerHtml, maxLength = 200 ) => {
+	if ( outerHtml.maxLength > 200 ) {
 		return outerHtml.substring( 0, outerHtml.indexOf( '>' ) + 1 );
 	}
 

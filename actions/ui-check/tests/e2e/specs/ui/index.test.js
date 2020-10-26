@@ -63,7 +63,8 @@ const testSkipLinks = async () => {
 			'Running tests on "/".',
 			"This tests whether the first 'tabbable' element on the page is a skip link",
 			'',
-			'Result:',
+			'',
+			'Result --------------------------------------------------------------',
 			'Unable to find a legitimate skip link. Make sure your theme includes skip links where necessary.',
 			'You can read more about our expectations at https://make.wordpress.org/themes/handbook/review/required/#skip-links.',
 		] );
@@ -80,7 +81,8 @@ const testSkipLinks = async () => {
 			'Running tests on "/".',
 			"This tests whether the first 'tabbable' element on the page is a skip link",
 			'',
-			'Result:',
+			'',
+			'Result --------------------------------------------------------------',
 			"The skip link doesn't have a matching element on the page.",
 			`Expecting to find an element with an id matching: "${ activeElement.hash.replace(
 				'#',
@@ -100,7 +102,8 @@ const testLiSubMenu = async ( listItem ) => {
 		'[ Accessibility - Submenu Test ]:',
 		'Running tests on "/".',
 		'',
-		'Result:',
+		'',
+		'Result --------------------------------------------------------------',
 		"Your theme's navigation is not working as expected.",
 		message,
 		'This test assumes your menu structure follows these guidelines: https://www.w3.org/WAI/tutorials/menus/structure.',
@@ -273,9 +276,10 @@ const testElementFocusState = async () => {
 				'Running tests on "/".',
 				"This tests that all 'focusable' elements have a visible :focus state.",
 				'',
-				'Result:',
+				'Result --------------------------------------------------------------',
 				`The element "${ truncateElementHTML(
-					domElement
+					domElement,
+					300
 				) }" does not have enough visible difference when focused. `,
 				'Download the screenshots to see the offending element.',
 				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
@@ -322,11 +326,9 @@ const testForLogicalTabbing = async () => {
 				'Running test on "/".',
 				"This tests that all 'focusable' elements on the page are tabbable in the expected order",
 				'',
-				'Result:',
-				`Expected focus: \`${ truncateElementHTML(
-					expectedElement
-				) }\`,
-                Current focus: \`${ truncateElementHTML( currentFocus ) }\``,
+				'Result --------------------------------------------------------------',
+				`Expected: ${ truncateElementHTML( expectedElement, 300 ) }`,
+				`Current: ${ truncateElementHTML( currentFocus, 300 ) }`,
 				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 			] );
 		}
