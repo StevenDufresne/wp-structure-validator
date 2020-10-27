@@ -125,15 +125,24 @@ const testLiSubMenu = async ( listItem ) => {
 		// Test that hovering works
 		await link.hover();
 
-		if ( ! ( await elementIsVisibleAsync( submenu ) ) ) {
+		let submenuIsVisible = await elementIsVisibleAsync( submenu );
+
+		// If it didn't work on the link, try it with the li
+		if ( ! submenuIsVisible ) {
+			await listItem.hover();
+
+			submenuIsVisible = await elementIsVisibleAsync( submenu );
+		}
+
+		if ( ! submenuIsVisible ) {
 			throw new FailedTestException(
 				getFailureMessage(
-					'Submenus should be become visible when :hover on the navigational menu.'
+					'Submenus should be become visible when :hover is added to the navigational menu.'
 				)
 			);
 		}
 
-		// Remove the focus to make the menu disappear
+		// Remove the hover to make the menu disappear
 		await page.mouse.move( 0, 0 );
 
 		// Allow some time for the menu to disappear
