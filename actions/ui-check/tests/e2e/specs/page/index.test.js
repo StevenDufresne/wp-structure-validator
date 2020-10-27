@@ -118,13 +118,16 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 			'example.net',
 			'wpthemetestdata.wordpress.com',
 			'wpthemetestdata.files.wordpress.com',
+			'tellyworth.wordpress.com', // in the theme test data as a comment
 			'codex.wordpress.org',
 			'facebook.com',
 			'www.facebook.com',
 			'twitter.com',
+			't.co',
 			'', // mailto
 			new URL( page.url() ).hostname,
-		].concat( site_info.theme_urls.map( link => new URL ( link ).hostname ) ); // Allow for theme/author URLs.
+		].concat( site_info.theme_urls.map( link => new URL ( link ).hostname ) )
+		.concat( site_info.content_urls.map( link => new URL ( link ).hostname ) );
 
 		// TODO: improve this so that instead of including a blanket exception for facebook.com and the theme/author hostnames,
 		// we have a separate whitelist containing URLs like https://facebook.com/sharing.php etc.

@@ -73,5 +73,19 @@ function tw_get_test_info() {
 	// A list of all (most) of the public pages on the site.
 	$out[ 'site_urls' ] = $urls;
 
+	// Get a list of all content links
+	$posts = get_posts( [ 'post_type' => 'any', 'posts_per_page' => -1, 'post_status' => 'publish' ] );
+	$content_links = [];
+	foreach ( $posts as $post ) {
+		$post_links = wp_extract_urls( $post->post_content );
+		$post_links = array_filter( $post_links, function( $link ) {
+			// Filter out local links
+			return false === strpos( $link, get_home_url() );
+
+		});
+		$content_links = array_merge( $content_links, $post_links );
+	}
+	$out[ 'content_urls' ] = array_values( array_unique( $content_links ) );
+
 	return $out;
 }
