@@ -21,6 +21,17 @@ add_action( 'rest_api_init', function () {
   ) );
 } );
 
+function tw_body_class_for_subtype( $subtype ) {
+	if ( 'post' === $subtype )
+		return 'single-post';
+	elseif ( 'post_format' === $subtype )
+		return 'tax-post_format';
+	elseif ( 'post_tag' === $subtype )
+		return 'tag';
+
+	return $subtype;
+}
+
 function tw_get_test_info() {
 	$out = array();
 
@@ -53,7 +64,7 @@ function tw_get_test_info() {
 				$urls[] = [ 
 					$parts['path'],
 					$parts['query'] ? '?' . $parts['query'] : '',
-					$subtype
+					$parts['query'] ? tw_body_class_for_subtype( $subtype ) : 'home'
 				];
 			}
 		}

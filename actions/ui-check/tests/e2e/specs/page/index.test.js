@@ -14,23 +14,13 @@ import {
 	getElementPropertyAsync,
 } from '../../utils';
 
+import site_info from '../../../../../../config/siteinfo.json';
+
 // Some URLs like feeds aren't included in the site map.
 // TODO: should we test those separately? Not all of these tests are appropriate.
-let urls = [
+let urls =  [
 	[ '/', '?feed=rss2', '' ],
-];
-
-let site_info;
-// This doesn't work yet. It probably needs to be done in beforeAll(), but that 
-// leaves the question of how to populate the urls list for the main describe loop.
-fetch( createURL( '/', '?rest_route=/theme-test-helper/v1/info' ) ).then(function (response) {
-	// The API call was successful!
-	return response.json();
-}).then(function (data) {
-	site_info = data;
-	urls.concat( site_info.site_urls );
-});
-
+].concat( site_info.site_urls );
 
 // Some basic tests that apply to every page
 describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
