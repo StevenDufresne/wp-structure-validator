@@ -11,10 +11,14 @@ import { cleanErrorMessage, getDefaultUrl, printMessage } from '../../utils';
 
 describe( 'Accessibility', () => {
 	// Potentially skip these tests.
-	const fn = !! process.env.TEST_ACCESSIBILITY ? test.skip : test;
+	const testAccessibility =
+		process.env.TEST_ACCESSIBILITY !== undefined &&
+		process.env.TEST_ACCESSIBILITY;
+	const accessibilityTest = testAccessibility ? 'wcag2a' : 'best-practice';
+	const noticeType = testAccessibility ? 'setFailed' : 'warning';
 
-	fn.each( urls )(
-		'Must pass Axe tests on %s',
+	test.each( urls )(
+		'Should pass Axe tests on %s',
 		async ( name, path, query ) => {
 			await page.goto( createURL( path, query ) );
 
@@ -23,14 +27,14 @@ describe( 'Accessibility', () => {
 					options: {
 						runOnly: {
 							type: 'tag',
-							values: [ 'wcag2a' ],
+							values: [ accessibilityTest ],
 						},
 					},
 					exclude: [ [ '.entry-content' ] ],
 				} );
 			} catch ( e ) {
-				printMessage( 'setFailed', [
-					'[ Accessibility - WCAG2A Tests ]:',
+				printMessage( noticeType, [
+					`[ Accessibility - ${ accessibilityTest } Tests ]:`,
 					`Running tests on ${ name } ${ getDefaultUrl(
 						path,
 						query
@@ -38,34 +42,6 @@ describe( 'Accessibility', () => {
 					cleanErrorMessage( e.message ),
 				] );
 				throw Error();
-			}
-		}
-	);
-
-	test.each( urls )(
-		'Should pass Best Practice Axe tests on %s',
-		async ( name, path, query ) => {
-			await page.goto( createURL( path, query ) );
-
-			try {
-				await expect( page ).toPassAxeTests( {
-					options: {
-						runOnly: {
-							type: 'tag',
-							values: [ 'best-practice' ],
-						},
-						exclude: [ [ '.entry-content' ] ],
-					},
-				} );
-			} catch ( e ) {
-				printMessage( 'warning', [
-					'[ Accessibility - Best Practice Tests ]:',
-					`Running tests on ${ name } ${ getDefaultUrl(
-						path,
-						query
-					) } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test`,
-					cleanErrorMessage( e.message ),
-				] );
 			}
 		}
 	);
