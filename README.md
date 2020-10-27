@@ -13,6 +13,7 @@ This action runs tests on a WordPress to determine if its ready for submission t
 | Input         | Description                          |
 | ------------- | ------------------------------------ |
 | `root-folder` | Location of your theme's root folder |
+| `accessible-ready` | Whether we should run the additional accessibility tests |
 
 ## Development
 
