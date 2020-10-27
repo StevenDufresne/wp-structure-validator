@@ -61,7 +61,7 @@ const testSkipLinks = async () => {
 		throw new FailedTestException( [
 			'[ Accessibility - Skip Link Test ]:',
 			"This tests whether the first 'tabbable' element on the page is a skip link with an '#' symbole.",
-			'[ Result ] --------------------------------------------------------------',
+			'[ Result ]',
 			'Page: "/"',
 			'Unable to find a legitimate skip link. Make sure your theme includes skip links where necessary.',
 			'You can read more about our expectations at https://make.wordpress.org/themes/handbook/review/required/#skip-links.',
@@ -78,7 +78,7 @@ const testSkipLinks = async () => {
 			'[ Accessibility - Required Tests ]:',
 			'Running tests on "/".',
 			"This tests whether the first 'tabbable' element on the page is a skip link that has a matching element to navigate to.",
-			'[ Result ] --------------------------------------------------------------',
+			'[ Result ]',
 			"The skip link doesn't have a matching element on the page.",
 			`Expecting to find an element with an id matching: "${ activeElement.hash.replace(
 				'#',
@@ -97,7 +97,7 @@ const testLiSubMenu = async ( listItem ) => {
 	const getFailureMessage = ( message ) => [
 		'[ Accessibility - Submenu Test ]:',
 		'This tests whether your navigational menus are accessible and working as expected.',
-		'[ Result ] --------------------------------------------------------------',
+		'[ Result ]',
 		'Page: "/"',
 		"Your theme's navigation is not working as expected.",
 		message,
@@ -270,7 +270,7 @@ const testElementFocusState = async () => {
 			throw new FailedTestException( [
 				'[ Accessibility - Element Focus Test ]:',
 				"This tests that all 'focusable' elements have a visible :focus state.",
-				'[ Result ] --------------------------------------------------------------',
+				'[ Result ]',
 				'Page: "/"',
 				`The element "${ truncateElementHTML(
 					domElement,
@@ -319,7 +319,7 @@ const testForLogicalTabbing = async () => {
 			throw new FailedTestException( [
 				'[ Accessibility - Tabbing Test ]:',
 				"This tests that all 'focusable' elements on the page are tabbable in the expected order.",
-				'[ Result ] --------------------------------------------------------------',
+				'[ Result ]',
 				'Page: "/"',
 				`Expected: ${ truncateElementHTML( expectedElement, 300 ) }`,
 				`Current: ${ truncateElementHTML( currentFocus, 300 ) }`,
