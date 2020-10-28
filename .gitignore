@@ -2,3 +2,4 @@ node_modules
 .DS_Store
 test-theme/*
 actions/ui-check/screenshots
+actions/ui-check/tests/e2e/specs/page/siteinfo.json
