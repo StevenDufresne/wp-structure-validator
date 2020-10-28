@@ -20,7 +20,8 @@ import site_info from './siteinfo.json';
 // TODO: should we test those separately? Not all of these tests are appropriate.
 let urls =  [
 	[ '/', '?feed=rss2', '' ],
-].concat( site_info.site_urls );
+	...site_info.site_urls
+];
 
 // Some basic tests that apply to every page
 describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
@@ -128,8 +129,9 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 			't.co', // in embedded content
 			'', // mailto
 			new URL( page.url() ).hostname,
-		].concat( site_info.theme_urls.map( link => new URL ( link ).hostname ) )
-		.concat( site_info.content_urls.map( link => new URL ( link ).hostname ) );
+			...site_info.theme_urls.map( link => new URL ( link ).hostname ),
+			...site_info.content_urls.map( link => new URL ( link ).hostname )
+		];
 
 		// TODO: improve this so that instead of including a blanket exception for facebook.com and the theme/author hostnames,
 		// we have a separate whitelist containing URLs like https://facebook.com/sharing.php etc.
