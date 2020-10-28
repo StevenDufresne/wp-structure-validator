@@ -11,6 +11,7 @@
     "install:accessibility": "npm run download:accessibility && npm run import:accessibility",
     "install:menu": "./bin/menu.sh",
     "install:environment": "npm install && npm run wp-env start && npm run activate-theme && npm run install:accessibility && npm run install:menu",
+    "uninstall": "npm run wp-env destroy",
     "check:theme-check": "npm run wp-env run cli eval-file ./actions/theme-check/CheckTheme.php",
     "check:structure": "cd ./actions/structure-check && npm run start",
     "check:ui": "cd ./actions/ui-check && npm run start",
