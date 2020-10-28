@@ -249,10 +249,10 @@ const hasAcceptableFocusState = async ( element,idx ) => {
 		} );
 
 		// Save after screenshot
-		fs.writeFileSync(
-			`${ SCREENSHOT_FOLDER_PATH }/page.png`,
-			PNG.sync.write( afterImg )
-		);
+		// fs.writeFileSync(
+		// 	`${ SCREENSHOT_FOLDER_PATH }/page.png`,
+		// 	PNG.sync.write( afterImg )
+		// );
 	}
 
 	fs.writeFileSync(
