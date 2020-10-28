@@ -255,10 +255,12 @@ const hasAcceptableFocusState = async ( element,idx ) => {
 		);
 	}
 
-	// fs.writeFileSync(
-	// 	`${ SCREENSHOT_FOLDER_PATH }/page-${idx}.png`,
-	// 	PNG.sync.write( afterImg )
-	// );
+    await page.screenshot({
+        path: `${ SCREENSHOT_FOLDER_PATH }/page-${idx}.jpeg`,
+        type: 'jpeg',
+        quality: 80
+
+    });
 
 	return passes;
 };
