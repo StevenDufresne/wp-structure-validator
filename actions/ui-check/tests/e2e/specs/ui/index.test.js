@@ -255,6 +255,11 @@ const hasAcceptableFocusState = async ( element ) => {
 		);
 	}
 
+	fs.writeFileSync(
+		`${ SCREENSHOT_FOLDER_PATH }/page.png`,
+		PNG.sync.write( afterImg )
+	);
+
 	return passes;
 };
 
@@ -342,7 +347,7 @@ const testForLogicalTabbing = async () => {
 };
 
 describe( 'Accessibility: UI', () => {
-	it( 'Should have skip links:', async () => {
+	it.skip( 'Should have skip links:', async () => {
 		try {
 			await testSkipLinks();
 		} catch ( ex ) {
@@ -354,7 +359,7 @@ describe( 'Accessibility: UI', () => {
 		}
 	} );
 
-	it( 'Should have appropriate submenus', async () => {
+	it.skip( 'Should have appropriate submenus', async () => {
 		try {
 			await testSubMenus();
 		} catch ( ex ) {
@@ -367,6 +372,7 @@ describe( 'Accessibility: UI', () => {
 	} );
 
 	it( 'Should have element focus state', async () => {
+		var start = new Date();
 		try {
 			await testElementFocusState();
 		} catch ( ex ) {
@@ -376,9 +382,11 @@ describe( 'Accessibility: UI', () => {
 				console.log( ex );
 			}
 		}
+		var end = new Date() - start;
+		console.info( 'Execution time: %dms', end );
 	} );
 
-	it( 'Should have logical tabbing', async () => {
+	it.skip( 'Should have logical tabbing', async () => {
 		try {
 			await testForLogicalTabbing();
 		} catch ( ex ) {
