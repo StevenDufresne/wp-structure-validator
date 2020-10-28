@@ -5,7 +5,7 @@
  * @returns {string}
  */
 export const truncateElementHTML = ( outerHtml, maxLength = 200 ) => {
-	if ( outerHtml.maxLength > 200 ) {
+	if ( outerHtml.length > maxLength ) {
 		return outerHtml.substring( 0, outerHtml.indexOf( '>' ) + 1 );
 	}
 
