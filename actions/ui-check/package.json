@@ -7,7 +7,7 @@
 		"format:js": "wp-scripts format-js",
 		"test:e2e:interactive": "PUPPETEER_HEADLESS=false wp-scripts test-e2e --config tests/e2e/jest.config.js",
 		"test:e2e": "wp-scripts test-e2e --config tests/e2e/jest.config.js",
-		"start": "npm install && npm run test:e2e tests/e2e/specs/ui/index.test.js",
+		"start": "npm install && mkdir screenshots && npm run test:e2e tests/e2e/specs/ui/index.test.js",
 		"start:full": "TEST_ACCESSIBILITY=false npm run test:e2e"
 	},
 	"author": "The WordPress Contributors",
