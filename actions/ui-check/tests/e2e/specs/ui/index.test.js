@@ -193,7 +193,7 @@ const testSubMenus = async () => {
  * @param {Puppeteer|ElementHandle} element
  * @returns {boolean}
  */
-const hasAcceptableFocusState = async ( element ) => {
+const hasAcceptableFocusState = async ( element,idx ) => {
 	// Grab the element dimension
 	const dimensions = await element.boundingBox();
 
@@ -256,7 +256,7 @@ const hasAcceptableFocusState = async ( element ) => {
 	}
 
 	fs.writeFileSync(
-		`${ SCREENSHOT_FOLDER_PATH }/page.png`,
+		`${ SCREENSHOT_FOLDER_PATH }/page-${idx}.png`,
 		PNG.sync.write( afterImg )
 	);
 
@@ -272,7 +272,7 @@ const testElementFocusState = async () => {
 	const elements = await getFocusableElementsAsync();
 
 	for ( let i = 0; i < elements.length; i++ ) {
-		const passes = await hasAcceptableFocusState( elements[ i ] );
+		const passes = await hasAcceptableFocusState( elements[ i ], i );
 
 		if ( ! passes ) {
 			const domElement = await getElementPropertyAsync(
@@ -383,7 +383,7 @@ describe( 'Accessibility: UI', () => {
 			}
 		}
 		var end = new Date() - start;
-		console.info( 'Execution time: %dms', end );
+		console.info( 'Execution time:', `${end / 1000}s` );
 	} );
 
 	it.skip( 'Should have logical tabbing', async () => {
