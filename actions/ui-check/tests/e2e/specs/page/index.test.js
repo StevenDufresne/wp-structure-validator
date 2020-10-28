@@ -121,9 +121,11 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 			'tellyworth.wordpress.com', // in the theme test data as a comment
 			'codex.wordpress.org',
 			'facebook.com',
-			'www.facebook.com',
 			'twitter.com',
-			't.co',
+			'pinterest.com',
+			'linkedin.com',
+			'google.com',
+			't.co', // in embedded content
 			'', // mailto
 			new URL( page.url() ).hostname,
 		].concat( site_info.theme_urls.map( link => new URL ( link ).hostname ) )
@@ -133,13 +135,14 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 		// we have a separate whitelist containing URLs like https://facebook.com/sharing.php etc.
 		hrefs.forEach( ( href ) => {
 			let href_url = new URL( href, page.url() );
+			let hostname = href_url.hostname.replace( /^(www[.])/, '' );
 			errorWithMessageOnFail(
-				`${ href_url.hostname } found on ${ getDefaultUrl(
+				`${ hostname } found on ${ getDefaultUrl(
 					url,
 					queryString.replace( '?', '' )
 				) } is not an approved link.`,
 				() => {
-					expect( allowed_hosts ).toContain( href_url.hostname );
+					expect( allowed_hosts ).toContain( hostname );
 				}
 			);
 		} );
