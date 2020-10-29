@@ -398,8 +398,10 @@ describe( 'Accessibility: UI', () => {
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
 				// We will make a gif to help understand what went wrong
-				await makeGif( 1280, 800, SCREENSHOT_TABBING_TEST, 100 );
-				printMessage( 'warning', ex.messages );
+				if ( process.env.UI_DEBUG ) {
+					await makeGif( 1280, 800, SCREENSHOT_TABBING_TEST, 100 );
+					printMessage( 'warning', ex.messages );
+				}
 			} else {
 				console.log( ex );
 			}

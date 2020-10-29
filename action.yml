@@ -8,6 +8,9 @@ inputs:
   accessible-ready:
     description: 'Whether to run the full accessibility tests'
     default: false
+  ui-debug:
+    description: 'More verbose logging; Creates a GIF'
+    default: false
 outputs:
   screenshots: 
     description: "Path to screenshots"
@@ -49,7 +52,7 @@ runs:
 
       ## Run checks using e2e
     - name: Run Basic JS Checks
-      run: cd ${{ github.action_path }} && TEST_ACCESSIBILITY=${{ inputs.accessible-ready }} npm run check:ui
+      run: cd ${{ github.action_path }} && TEST_ACCESSIBILITY=${{ inputs.accessible-ready }} UI_DEBUG=${{ inputs.ui-debug }} npm run check:ui
       shell: bash
     
 
