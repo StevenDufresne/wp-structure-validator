@@ -32,29 +32,36 @@ export const meetsChangeThreshold = ( changePercent ) => {
 	return changePercent > 0;
 };
 
-export const makeGif = async ( width, height, folder ) => {
+/**
+ *  Creates a gif out of jpegs
+ * @param {number} width
+ * @param {number} height
+ * @param {string} folder where the images are location
+ */
+export const makeGif = async ( width, height, folder, limitOverride ) => {
 	const gif = new GIFEncoder( width, height );
+	const limit = limitOverride || 20;
 
 	// // Collect output
 	var file = fs.createWriteStream( `${ folder }/flow.gif` );
 	gif.pipe( file );
-	gif.setQuality( 60 );
+	gif.setQuality( 40 );
 	gif.setFrameRate( 60 );
-	gif.setDelay( 200 );
+	gif.setDelay( 500 );
 
 	// // Write out the image into memory
 	gif.writeHeader();
 
-	const jpegs = fs
+	let jpegs = fs
 		.readdirSync( folder )
 		.sort( ( a, b ) => parseInt( a ) - parseInt( b ) );
 
 	if ( jpegs.length < 1 ) {
 		return;
-    }
-    
-    // let's limit the number of images for size purposes
-    const jpegsToAddToGif = jpegs.slice(Math.max(jpegs.length - 20, 1));
+	}
+
+	// let's limit the number of images to keep hte gif small
+	const jpegsToAddToGif = jpegs.slice( Math.max( jpegs.length - limit, 1 ) );
 
 	const getPixelsSync = util.promisify( getPixels );
 
