@@ -38,7 +38,6 @@ export const makeGif = async ( width, height, folder ) => {
 	// // Collect output
 	var file = fs.createWriteStream( `${ folder }/flow.gif` );
 	gif.pipe( file );
-	gif.setRepeat( 0 );
 	gif.setQuality( 60 );
 	gif.setFrameRate( 60 );
 	gif.setDelay( 200 );
@@ -55,8 +54,8 @@ export const makeGif = async ( width, height, folder ) => {
     }
     
     // let's limit the number of images for size purposes
-    const jpegsToAddToGif = jpegs.slice(Math.max(jpegs.length - 10, 1));
-    
+    const jpegsToAddToGif = jpegs.slice(Math.max(jpegs.length - 20, 1));
+
 	const getPixelsSync = util.promisify( getPixels );
 
 	const getPix = async ( file ) => {
