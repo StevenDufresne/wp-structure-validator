@@ -377,16 +377,16 @@ describe( 'Accessibility: UI', () => {
 		var start = new Date();
 		try {
 			await testElementFocusState();
-			console.log( 'Starting gif' );
-			await makeGif( 1280, 800, SCREENSHOT_FOLDER_PATH );
-			console.log( 'Ended Gif' );
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
 				printMessage( 'warning', ex.messages );
 			} else {
 				console.log( ex );
 			}
-		}
+        }
+
+        await makeGif( 1280, 800, SCREENSHOT_FOLDER_PATH );
+
 		var end = new Date() - start;
 		console.info( 'Execution time:', `${ end / 1000 }s` );
 	} );
