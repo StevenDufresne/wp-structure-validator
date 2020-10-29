@@ -187,12 +187,6 @@ const testSubMenus = async () => {
 
 		for ( let j = 0; j < listItems.length; j++ ) {
 			await testLiSubMenu( listItems[ j ] );
-
-			await page.screenshot( {
-				path: `${ SCREENSHOT_TABBING_TEST }/${ i }-${ j }.jpeg`,
-				type: 'jpeg',
-				quality: 50,
-			} );
 		}
 	}
 };
@@ -403,7 +397,7 @@ describe( 'Accessibility: UI', () => {
 			await testForLogicalTabbing();
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
-                // We will make a gif to help understand what went wrong
+				// We will make a gif to help understand what went wrong
 				await makeGif( 1280, 800, SCREENSHOT_TABBING_TEST, 100 );
 				printMessage( 'warning', ex.messages );
 			} else {
