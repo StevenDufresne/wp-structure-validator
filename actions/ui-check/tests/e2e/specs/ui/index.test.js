@@ -255,11 +255,11 @@ const hasAcceptableFocusState = async ( element, idx ) => {
 	// 		PNG.sync.write( afterImg )
 	// 	);
 	// }
-
+	console.log( 'Writing screenshot', idx );
 	await page.screenshot( {
 		path: `${ SCREENSHOT_FOLDER_PATH }/${ idx }.jpeg`,
 		type: 'jpeg',
-		quality: 80,
+		quality: 70,
 	} );
 
 	return passes;
@@ -376,8 +376,10 @@ describe( 'Accessibility: UI', () => {
 	it( 'Should have element focus state', async () => {
 		var start = new Date();
 		try {
-		    await testElementFocusState();
+			await testElementFocusState();
+			console.log( 'Starting gif' );
 			await makeGif( 1280, 800, SCREENSHOT_FOLDER_PATH );
+			console.log( 'Ended Gif' );
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
 				printMessage( 'warning', ex.messages );
