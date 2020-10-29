@@ -19,6 +19,7 @@ import {
 	elementIsVisibleAsync,
 	getTabbableElementsAsync,
 	getElementPropertyAsync,
+	makeGif,
 } from '../../utils';
 
 const SCREENSHOT_FOLDER_PATH = 'screenshots';
@@ -193,7 +194,7 @@ const testSubMenus = async () => {
  * @param {Puppeteer|ElementHandle} element
  * @returns {boolean}
  */
-const hasAcceptableFocusState = async ( element,idx ) => {
+const hasAcceptableFocusState = async ( element, idx ) => {
 	// Grab the element dimension
 	const dimensions = await element.boundingBox();
 
@@ -238,29 +239,28 @@ const hasAcceptableFocusState = async ( element,idx ) => {
 	const passes = meetsChangeThreshold( getPercentOfOpaqueness( diff.data ) );
 
 	// Save the images if the element doesn't pass
-	if ( ! passes ) {
-		if ( ! fs.existsSync( SCREENSHOT_FOLDER_PATH ) ) {
-			fs.mkdirSync( SCREENSHOT_FOLDER_PATH );
-		}
+	// if ( ! passes ) {
+	// 	if ( ! fs.existsSync( SCREENSHOT_FOLDER_PATH ) ) {
+	// 		fs.mkdirSync( SCREENSHOT_FOLDER_PATH );
+	// 	}
 
-		//Save an image of the element
-		await element.screenshot( {
-			path: `${ SCREENSHOT_FOLDER_PATH }/element.png`,
-		} );
+	// 	//Save an image of the element
+	// 	await element.screenshot( {
+	// 		path: `${ SCREENSHOT_FOLDER_PATH }/element.png`,
+	// 	} );
 
-		// Save after screenshot
-		fs.writeFileSync(
-			`${ SCREENSHOT_FOLDER_PATH }/page.png`,
-			PNG.sync.write( afterImg )
-		);
-	}
+	// 	// Save after screenshot
+	// 	fs.writeFileSync(
+	// 		`${ SCREENSHOT_FOLDER_PATH }/page.png`,
+	// 		PNG.sync.write( afterImg )
+	// 	);
+	// }
 
-    await page.screenshot({
-        path: `${ SCREENSHOT_FOLDER_PATH }/page-${idx}.jpeg`,
-        type: 'jpeg',
-        quality: 80
-
-    });
+	await page.screenshot( {
+		path: `${ SCREENSHOT_FOLDER_PATH }/${ idx }.jpeg`,
+		type: 'jpeg',
+		quality: 80,
+	} );
 
 	return passes;
 };
@@ -376,7 +376,8 @@ describe( 'Accessibility: UI', () => {
 	it( 'Should have element focus state', async () => {
 		var start = new Date();
 		try {
-			await testElementFocusState();
+		    await testElementFocusState();
+			await makeGif( 1280, 800, SCREENSHOT_FOLDER_PATH );
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
 				printMessage( 'warning', ex.messages );
@@ -385,7 +386,7 @@ describe( 'Accessibility: UI', () => {
 			}
 		}
 		var end = new Date() - start;
-		console.info( 'Execution time:', `${end / 1000}s` );
+		console.info( 'Execution time:', `${ end / 1000 }s` );
 	} );
 
 	it.skip( 'Should have logical tabbing', async () => {
