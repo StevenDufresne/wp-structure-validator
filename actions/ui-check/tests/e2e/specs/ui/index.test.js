@@ -203,11 +203,6 @@ const hasAcceptableFocusState = async ( element, idx ) => {
 		return true;
 	}
 
-	// Move the browser down before we take a screenshot
-	await page.evaluate( ( yPos ) => {
-		window.scrollBy( 0, yPos );
-	}, dimensions.y );
-
 	// Take a screenshot before focus
 	const beforeSnap = await page.screenshot();
 
