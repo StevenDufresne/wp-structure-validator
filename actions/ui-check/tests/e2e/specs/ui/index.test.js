@@ -255,7 +255,7 @@ const hasAcceptableFocusState = async ( element, idx ) => {
 	// 		PNG.sync.write( afterImg )
 	// 	);
 	// }
-	console.log( 'Writing screenshot', idx );
+
 	await page.screenshot( {
 		path: `${ SCREENSHOT_FOLDER_PATH }/${ idx }.jpeg`,
 		type: 'jpeg',

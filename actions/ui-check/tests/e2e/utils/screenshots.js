@@ -50,6 +50,13 @@ export const makeGif = async ( width, height, folder ) => {
 		.readdirSync( folder )
 		.sort( ( a, b ) => parseInt( a ) - parseInt( b ) );
 
+	if ( jpegs.length < 1 ) {
+		return;
+    }
+    
+    // let's limit the number of images for size purposes
+    const jpegsToAddToGif = jpegs.slice(Math.max(jpegs.length - 10, 1));
+    
 	const getPixelsSync = util.promisify( getPixels );
 
 	const getPix = async ( file ) => {
@@ -61,8 +68,8 @@ export const makeGif = async ( width, height, folder ) => {
 		}
 	};
 
-	for ( var i = 0; i < jpegs.length; i++ ) {
-		const data = await getPix( jpegs[ i ] );
+	for ( var i = 0; i < jpegsToAddToGif.length; i++ ) {
+		const data = await getPix( jpegsToAddToGif[ i ] );
 
 		if ( data !== null ) {
 			gif.addFrame( data );
