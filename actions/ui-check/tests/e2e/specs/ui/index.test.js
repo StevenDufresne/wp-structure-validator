@@ -259,7 +259,7 @@ const hasAcceptableFocusState = async ( element, idx ) => {
 	await page.screenshot( {
 		path: `${ SCREENSHOT_FOLDER_PATH }/${ idx }.jpeg`,
 		type: 'jpeg',
-		quality: 70,
+		quality: 50,
 	} );
 
 	return passes;
