@@ -120,7 +120,7 @@ const testLiSubMenu = async ( listItem ) => {
 		if ( usesDisplayNone ) {
 			throw new FailedTestException(
 				getFailureMessage(
-					'Submenus cannot be hidden using `display: none`.'
+					'Submenus should not be hidden using `display: none`. Use `position: absolute` instead.'
 				)
 			);
 		}
