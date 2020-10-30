@@ -119,14 +119,20 @@ export const getTabbableElementsAsync = async () => {
 			};
 
 			// Is it most likely a nav item?
-			let parent = getOutermostUl( el );
+			const parentUL = getOutermostUl( el );
+
+			// We check parent visibility to exclude hidden nav items (ie: mobile nav that replicate the main nav)
+			const hasVisibleULParent = isVisible( parentUL );
 
 			return {
 				tagName: el.tagName,
 				disabled: el.disabled,
 				href: el.href,
 				innerText: el.innerText,
-				isLikelyNavItem: parent !== el && isVisible( parent ),
+				isLikelyNavItem: parentUL !== el && hasVisibleULParent,
+				isButtonInsideOfLi:
+					el.tagName.toLowerCase() === 'button' &&
+					el.parentElement.tagName.toLowerCase() === 'li',
 			};
 		}, elements[ i ] );
 
@@ -145,6 +151,11 @@ export const getTabbableElementsAsync = async () => {
 			! ( await elementIsVisibleAsync( elements[ i ] ) ) &&
 			! element.isLikelyNavItem
 		) {
+			continue;
+		}
+
+		// Themes use buttons for dropdowns in navigational items that don't get focus because of javascript.
+		if ( element.isButtonInsideOfLi ) {
 			continue;
 		}
 
