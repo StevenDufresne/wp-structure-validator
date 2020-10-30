@@ -196,7 +196,7 @@ const testSubMenus = async () => {
  * @param {Puppeteer|ElementHandle} element
  * @returns {boolean}
  */
-const hasAcceptableFocusState = async ( element, idx ) => {
+const hasAcceptableFocusState = async ( element ) => {
 	// Grab the element dimension
 	const dimensions = await element.boundingBox();
 
@@ -271,7 +271,7 @@ const testElementFocusState = async () => {
 	const elements = await getFocusableElementsAsync();
 
 	for ( let i = 0; i < elements.length; i++ ) {
-		const passes = await hasAcceptableFocusState( elements[ i ], i );
+		const passes = await hasAcceptableFocusState( elements[ i ] );
 
 		if ( ! passes ) {
 			const domElement = await getElementPropertyAsync(
