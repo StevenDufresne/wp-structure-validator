@@ -19,9 +19,12 @@ import {
 	elementIsVisibleAsync,
 	getTabbableElementsAsync,
 	getElementPropertyAsync,
+	makeGif,
 } from '../../utils';
 
 const SCREENSHOT_FOLDER_PATH = 'screenshots';
+const SCREENSHOT_FOCUS_TEST = `${ SCREENSHOT_FOLDER_PATH }/focus-test`;
+const SCREENSHOT_TABBING_TEST = `${ SCREENSHOT_FOLDER_PATH }/tabbing-test`;
 
 /**
  * Custom Error type to be throw in tests
@@ -198,14 +201,15 @@ const hasAcceptableFocusState = async ( element ) => {
 	const dimensions = await element.boundingBox();
 
 	// It's a hidden element
-	if ( dimensions === null || dimensions.x < 0 || dimensions.y < 0 ) {
+	if (
+		dimensions === null ||
+		dimensions.x < 0 ||
+		dimensions.y < 0 ||
+		dimensions.width === 0 ||
+		dimensions.height === 0
+	) {
 		return true;
 	}
-
-	// Move the browser down before we take a screenshot
-	await page.evaluate( ( yPos ) => {
-		window.scrollBy( 0, yPos );
-	}, dimensions.y );
 
 	// Take a screenshot before focus
 	const beforeSnap = await page.screenshot();
@@ -237,20 +241,20 @@ const hasAcceptableFocusState = async ( element ) => {
 	// Check to see that there is an acceptable level of change from before & after element focus
 	const passes = meetsChangeThreshold( getPercentOfOpaqueness( diff.data ) );
 
-	// Save the images if the element doesn't pass
+	//Save the images if the element doesn't pass
 	if ( ! passes ) {
-		if ( ! fs.existsSync( SCREENSHOT_FOLDER_PATH ) ) {
-			fs.mkdirSync( SCREENSHOT_FOLDER_PATH );
+		if ( ! fs.existsSync( SCREENSHOT_FOCUS_TEST ) ) {
+			fs.mkdirSync( SCREENSHOT_FOCUS_TEST );
 		}
 
 		//Save an image of the element
 		await element.screenshot( {
-			path: `${ SCREENSHOT_FOLDER_PATH }/element.png`,
+			path: `${ SCREENSHOT_FOCUS_TEST }/element.png`,
 		} );
 
 		// Save after screenshot
 		fs.writeFileSync(
-			`${ SCREENSHOT_FOLDER_PATH }/page.png`,
+			`${ SCREENSHOT_FOCUS_TEST }/page.png`,
 			PNG.sync.write( afterImg )
 		);
 	}
@@ -306,6 +310,10 @@ const testForLogicalTabbing = async () => {
 
 	const tabElements = await getTabbableElementsAsync();
 
+	if ( ! fs.existsSync( SCREENSHOT_TABBING_TEST ) ) {
+		fs.mkdirSync( SCREENSHOT_TABBING_TEST );
+	}
+
 	for ( let i = 0; i < tabElements.length; i++ ) {
 		await page.keyboard.press( 'Tab' );
 
@@ -314,6 +322,12 @@ const testForLogicalTabbing = async () => {
 			( el ) => el === document.activeElement,
 			tabElements[ i ]
 		);
+
+		await page.screenshot( {
+			path: `${ SCREENSHOT_TABBING_TEST }/${ i }.jpeg`,
+			type: 'jpeg',
+			quality: 50,
+		} );
 
 		if ( ! focusMatches ) {
 			const expectedElement = await getElementPropertyAsync(
@@ -383,7 +397,11 @@ describe( 'Accessibility: UI', () => {
 			await testForLogicalTabbing();
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
-				printMessage( 'warning', ex.messages );
+				// We will make a gif to help understand what went wrong
+				if ( process.env.UI_DEBUG ) {
+					await makeGif( 1280, 800, SCREENSHOT_TABBING_TEST, 100 );
+					printMessage( 'warning', ex.messages );
+				}
 			} else {
 				console.log( ex );
 			}
