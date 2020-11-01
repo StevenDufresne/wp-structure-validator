@@ -63,7 +63,7 @@ const testSkipLinks = async () => {
 	} catch ( e ) {
 		throw new FailedTestException( [
 			'[ Accessibility - Skip Link Test ]:',
-			"This tests whether the first 'tabbable' element on the page is a skip link with an '#' symbole.",
+			"This tests whether the first 'tabbable' element on the page is a skip link with an '#' symbol.",
 			'[ Result ]',
 			'Page: "/"',
 			'Unable to find a legitimate skip link. Make sure your theme includes skip links where necessary.',
