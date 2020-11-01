@@ -112,18 +112,19 @@ const testLiSubMenu = async ( listItem ) => {
 	const submenu = await listItem.$( 'ul' );
 
 	if ( link !== null && submenu !== null ) {
-		var usesDisplayNone = await page.evaluate(
-			( e ) => getComputedStyle( e ).display.toLowerCase() === 'none',
-			submenu
-		);
+		// This is commented out for the moment since this rules has not been enforced recently. We may want to turn it back on in the future
+		// var usesDisplayNone = await page.evaluate(
+		// 	( e ) => getComputedStyle( e ).display.toLowerCase() === 'none',
+		// 	submenu
+		// );
 
-		if ( usesDisplayNone ) {
-			throw new FailedTestException(
-				getFailureMessage(
-					'Submenus should not be hidden using `display: none`. Use `position: absolute` instead.'
-				)
-			);
-		}
+		// if ( usesDisplayNone ) {
+		// 	throw new FailedTestException(
+		// 		getFailureMessage(
+		// 			'Submenus should not be hidden using `display: none`. Use `position: absolute` instead.'
+		// 		)
+		// 	);
+		// }
 
 		// Test that hovering works
 		await link.hover();
