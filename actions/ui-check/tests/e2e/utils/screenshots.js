@@ -43,7 +43,7 @@ export const makeGif = async ( width, height, folder, limitOverride ) => {
 	const limit = limitOverride || 20;
 
 	// // Collect output
-	var file = fs.createWriteStream( `${ folder }/flow.gif` );
+	var file = fs.createWriteStream( `${ folder }/screenshots-in-order.gif` );
 	gif.pipe( file );
 	gif.setQuality( 40 );
 	gif.setFrameRate( 60 );
