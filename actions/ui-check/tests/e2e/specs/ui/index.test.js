@@ -310,9 +310,11 @@ const testForLogicalTabbing = async () => {
 		content: 'audio, video, iframe { display: none !important; }',
 	} );
 
+	let tabElements = await getTabbableElementsAsync();
+
 	// Let's assume that any issues 50 elements deep are not very concerning
 	// It speeds up the tests
-	let tabElements = await getTabbableElementsAsync().slice( 0, 50 );
+	tabElements.slice( 0, 50 );
 
 	if ( isDebugMode() ) {
 		if ( ! fs.existsSync( SCREENSHOT_TABBING_TEST ) ) {

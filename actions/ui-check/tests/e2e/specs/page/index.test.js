@@ -3,7 +3,7 @@
  */
 import { createURL } from '@wordpress/e2e-test-utils';
 import { getPageError } from '@wordpress/e2e-test-utils';
-const fetch = require('node-fetch');
+const fetch = require( 'node-fetch' );
 
 /**
  * Internal dependencies
@@ -18,10 +18,7 @@ import site_info from './siteinfo.json';
 
 // Some URLs like feeds aren't included in the site map.
 // TODO: should we test those separately? Not all of these tests are appropriate.
-let urls =  [
-	[ '/', '?feed=rss2', '' ],
-	...site_info.site_urls
-];
+let urls = [ [ '/', '?feed=rss2', '' ], ...site_info.site_urls ];
 
 // Some basic tests that apply to every page
 describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
@@ -129,8 +126,10 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 			't.co', // in embedded content
 			'', // mailto
 			new URL( page.url() ).hostname,
-			...site_info.theme_urls.map( link => new URL ( link ).hostname ),
-			...site_info.content_urls.map( link => new URL ( link ).hostname )
+			...site_info.theme_urls.map( ( link ) => new URL( link ).hostname ),
+			...site_info.content_urls.map(
+				( link ) => new URL( link ).hostname
+			),
 		];
 
 		// TODO: improve this so that instead of including a blanket exception for facebook.com and the theme/author hostnames,
