@@ -19,6 +19,7 @@ import {
 	elementIsVisibleAsync,
 	getTabbableElementsAsync,
 	getElementPropertyAsync,
+	isDebugMode,
 	makeGif,
 } from '../../utils';
 
@@ -309,10 +310,14 @@ const testForLogicalTabbing = async () => {
 		content: 'audio, video, iframe { display: none !important; }',
 	} );
 
-	const tabElements = await getTabbableElementsAsync();
+	// Let's assume that any issues 50 elements deep are not very concerning
+	// It speeds up the tests
+	let tabElements = await getTabbableElementsAsync().slice( 0, 50 );
 
-	if ( ! fs.existsSync( SCREENSHOT_TABBING_TEST ) ) {
-		fs.mkdirSync( SCREENSHOT_TABBING_TEST );
+	if ( isDebugMode() ) {
+		if ( ! fs.existsSync( SCREENSHOT_TABBING_TEST ) ) {
+			fs.mkdirSync( SCREENSHOT_TABBING_TEST );
+		}
 	}
 
 	for ( let i = 0; i < tabElements.length; i++ ) {
@@ -324,11 +329,14 @@ const testForLogicalTabbing = async () => {
 			tabElements[ i ]
 		);
 
-		await page.screenshot( {
-			path: `${ SCREENSHOT_TABBING_TEST }/${ i }.jpeg`,
-			type: 'jpeg',
-			quality: 50,
-		} );
+		// This can really slow down the tests, let's only run it in debug
+		if ( isDebugMode() ) {
+			await page.screenshot( {
+				path: `${ SCREENSHOT_TABBING_TEST }/${ i }.jpeg`,
+				type: 'jpeg',
+				quality: 50,
+			} );
+		}
 
 		if ( ! focusMatches ) {
 			const expectedElement = await getElementPropertyAsync(
