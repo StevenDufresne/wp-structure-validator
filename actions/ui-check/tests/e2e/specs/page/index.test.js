@@ -3,6 +3,7 @@
  */
 import { createURL } from '@wordpress/e2e-test-utils';
 import { getPageError } from '@wordpress/e2e-test-utils';
+const fetch = require('node-fetch');
 
 /**
  * Internal dependencies
@@ -13,20 +14,13 @@ import {
 	getElementPropertyAsync,
 } from '../../utils';
 
-// TODO: either dynamically fetch a list of URLs to check (REST API or site maps?)
-// or import the theme test content dataset and hard-code a list of URLs based on that.
-let urls = [
-	[
-		'/', // URL
-		'', // Query string starting with '?'
-		'home', // Body class to expect
-	],
-	[ '/', '?p=1', 'postid-1' ],
-	[ '/', '?page_id=2', 'page-id-2' ],
-	[ '/', '?author=1', 'author-1' ],
-	[ '/', '?cat=1', 'category-1' ],
-	[ '/', '?feed=rss2', '' ], // Feeds should probably be handled by separate tests.
-	// ...more pages
+import site_info from './siteinfo.json';
+
+// Some URLs like feeds aren't included in the site map.
+// TODO: should we test those separately? Not all of these tests are appropriate.
+let urls =  [
+	[ '/', '?feed=rss2', '' ],
+	...site_info.site_urls
 ];
 
 // Some basic tests that apply to every page
@@ -125,20 +119,32 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 			'example.net',
 			'wpthemetestdata.wordpress.com',
 			'wpthemetestdata.files.wordpress.com',
+			'tellyworth.wordpress.com', // in the theme test data as a comment
 			'codex.wordpress.org',
+			'facebook.com',
+			'twitter.com',
+			'pinterest.com',
+			'linkedin.com',
+			'google.com',
+			't.co', // in embedded content
+			'', // mailto
 			new URL( page.url() ).hostname,
-			// needs to allow for Theme URL or Author URL
+			...site_info.theme_urls.map( link => new URL ( link ).hostname ),
+			...site_info.content_urls.map( link => new URL ( link ).hostname )
 		];
 
+		// TODO: improve this so that instead of including a blanket exception for facebook.com and the theme/author hostnames,
+		// we have a separate whitelist containing URLs like https://facebook.com/sharing.php etc.
 		hrefs.forEach( ( href ) => {
 			let href_url = new URL( href, page.url() );
+			let hostname = href_url.hostname.replace( /^(www[.])/, '' );
 			errorWithMessageOnFail(
-				`${ href_url.hostname } found on ${ getDefaultUrl(
+				`${ hostname } found on ${ getDefaultUrl(
 					url,
 					queryString.replace( '?', '' )
 				) } is not an approved link.`,
 				() => {
-					expect( allowed_hosts ).toContain( href_url.hostname );
+					expect( allowed_hosts ).toContain( hostname );
 				}
 			);
 		} );
