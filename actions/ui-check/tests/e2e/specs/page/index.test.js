@@ -118,6 +118,8 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 			'wpthemetestdata.files.wordpress.com',
 			'tellyworth.wordpress.com', // in the theme test data as a comment
 			'codex.wordpress.org',
+			'gnu.org', // In the test data
+			'youtube.com', // In the test data
 			'facebook.com',
 			'twitter.com',
 			'pinterest.com',
