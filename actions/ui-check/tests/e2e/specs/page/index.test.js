@@ -120,6 +120,7 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 			'codex.wordpress.org',
 			'gnu.org', // In the test data
 			'youtube.com', // In the test data
+			'brainyquote.com', // In the test data
 			'facebook.com',
 			'twitter.com',
 			'pinterest.com',
