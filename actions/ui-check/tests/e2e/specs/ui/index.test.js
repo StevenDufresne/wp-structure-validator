@@ -314,7 +314,7 @@ const testForLogicalTabbing = async () => {
 
 	// Let's assume that any issues 50 elements deep are not very concerning
 	// It speeds up the tests
-	tabElements.slice( 0, 50 );
+	tabElements = tabElements.slice( 0, 50 );
 
 	if ( isDebugMode() ) {
 		if ( ! fs.existsSync( SCREENSHOT_TABBING_TEST ) ) {
