@@ -67,13 +67,32 @@ export const getFocusableElementsAsync = async () => {
 
 	for ( let i = 0; i < elements.length; i++ ) {
 		// Check if it disabled
-		const disabled = await (
-			await elements[ i ].getProperty( 'disabled' )
-		 ).jsonValue();
+		const elementProperties = await page.evaluate( ( e ) => {
+			return {
+				tag: e.tagName,
+				href: e.href,
+				disabled: e.disabled,
+				class: e.className,
+			};
+		}, elements[ i ] );
 
-		if ( ! disabled && ( await elementIsVisibleAsync( elements[ i ] ) ) ) {
-			final.push( elements[ i ] );
+		if ( elementProperties.disabled ) {
+			continue;
 		}
+
+		// Anchor tags without hrefs will not focus
+		if (
+			elementProperties.tag.toLowerCase() === 'a' &&
+			! elementProperties.href.length
+		) {
+			continue;
+		}
+
+		if ( ! ( await elementIsVisibleAsync( elements[ i ] ) ) ) {
+			continue;
+		}
+
+		final.push( elements[ i ] );
 	}
 
 	return final;
