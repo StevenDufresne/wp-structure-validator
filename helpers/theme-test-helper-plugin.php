@@ -71,7 +71,14 @@ function tw_get_test_info() {
 	}
 
 	// A list of all (most) of the public pages on the site.
-	$out[ 'site_urls' ] = $urls;
+	$out[ 'site_urls' ] = array_values(array_filter( $urls, function( $item ) {
+		static $seen = [];
+		if ( isset( $seen[ $item[2] ] ) ) {
+		   return false;
+		}
+		$seen[ $item[2] ] = true;
+		return true;
+	 } ) );
 
 	// Get a list of all content links
 	$posts = get_posts( [ 'post_type' => 'any', 'posts_per_page' => -1, 'post_status' => 'publish' ] );
