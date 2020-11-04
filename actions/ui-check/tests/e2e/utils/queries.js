@@ -64,15 +64,39 @@ export const getElementPropertyAsync = async ( element, property ) => {
 export const getFocusableElementsAsync = async () => {
 	const elements = await queryForFocusableElementsAsync();
 	const final = [];
+	const pathMap = {};
 
 	for ( let i = 0; i < elements.length; i++ ) {
 		// Check if it disabled
 		const elementProperties = await page.evaluate( ( e ) => {
+			/**
+			 * Recurses upwards and returns a list of tag names
+			 * @param {array} parts List of xPath parts
+			 * @param {HtmlElement} element
+			 * @param {number} levelsRemaining Number of times to recurse (Essentially, how many parents do we want..)
+			 */
+			const getLazyXPath = ( parts, element, levelsRemaining ) => {
+				if ( levelsRemaining < 1 || ! element.parentElement ) {
+					return parts;
+				} else {
+					getLazyXPath(
+						parts,
+						element.parentElement,
+						levelsRemaining - 1
+					);
+				}
+
+				parts.push( element.tagName );
+
+				return parts;
+			};
+
 			return {
 				tag: e.tagName,
 				href: e.href,
 				disabled: e.disabled,
 				class: e.className,
+				lazyXPath: getLazyXPath( [], e, 5 ).join( '>' ),
 			};
 		}, elements[ i ] );
 
@@ -92,7 +116,13 @@ export const getFocusableElementsAsync = async () => {
 			continue;
 		}
 
-		final.push( elements[ i ] );
+		// We track wether we already have a similar element
+		// We don't want to test the same elements since it takes times
+		if ( ! pathMap[ elementProperties.lazyXPath ] ) {
+			final.push( elements[ i ] );
+		}
+
+		pathMap[ elementProperties.lazyXPath ] = true;
 	}
 
 	return final;
