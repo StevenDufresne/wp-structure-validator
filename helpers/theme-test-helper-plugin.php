@@ -59,7 +59,10 @@ function tw_get_test_info() {
 	foreach( $sitemaps->registry->get_providers() as $provider ) {
 		foreach( array_keys( $provider->get_object_subtypes() ) as $subtype ) {
 			// No need to get multiple pages of results here, the first page of each subtype should have plenty of content.
-			foreach( $provider->get_url_list( 1, $subtype ) as $url ) {
+
+			$num_urls_per_template = 1; // Take one url per template for now.
+
+			foreach( array_slice( $provider->get_url_list( 1, $subtype ), 0, $num_urls_per_template ) as $url ) {
 				$parts = wp_parse_url( $url['loc'] );
 				$urls[] = [ 
 					$parts['path'],
