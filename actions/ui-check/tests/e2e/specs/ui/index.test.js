@@ -130,6 +130,9 @@ const testLiSubMenu = async ( listItem ) => {
 		// Test that hovering works
 		await link.hover();
 
+		// Give the hover some time to apply and show up in case of animation
+		await new Promise( ( resolve ) => setTimeout( resolve, 500 ) );
+
 		let submenuIsVisible = await elementIsVisibleAsync( submenu );
 
 		// If it didn't work on the link, try it with the li
@@ -155,6 +158,9 @@ const testLiSubMenu = async ( listItem ) => {
 
 		// Test that focus works
 		await link.focus();
+
+		// Give the focus some time to apply and show up in case of animation
+		await new Promise( ( resolve ) => setTimeout( resolve, 500 ) );
 
 		if ( ! ( await elementIsVisibleAsync( submenu ) ) ) {
 			throw new FailedTestException(
