@@ -146,7 +146,8 @@ class WPORG_CheckTheme {
 		}
 
 		if ( count( $error_list ) > 0 ) {
-			exit( 1 );
+			// Turning the exit off for now as we test this.
+			//exit( 1 );
 		}
 	}
 
